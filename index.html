@@ -1,0 +1,3395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Slop Pandemic</title>
+<meta name="description" content="Sie werden Zeuge, wie KI-Tools eine gesunde Mittelstandsfirma in 47 Tagen lahmlegen.">
+<meta property="og:title" content="AI Slop Pandemic">
+<meta property="og:description" content="Eine scrollbare Comic-Satire über die langsame Vergiftung einer Firma durch gedankenlosen KI-Einsatz.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#101010;
+  --paper:#F4EDE0;
+  --ink:#1A1A1A;
+  --mustard:#E8B931;
+  --hospital:#7CA68C;
+  --slop:#C84B3C;
+  --screen:#15171c;
+  --screen2:#242830;
+  --panel:#FBF7EE;
+  --note:#F1DFA6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto;overscroll-behavior-y:none}
+body{background:var(--bg);color:var(--paper);font-family:'Inter',system-ui,sans-serif;font-size:16px;-webkit-font-smoothing:antialiased;line-height:1.55;overscroll-behavior-y:none}
+button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+img,svg{display:block}
+
+/* ===== DIE ZÜNDSCHNUR (Hitchcocks Bombe, Tag 1 → 47) ===== */
+.fuse{
+  position:fixed;top:0;left:0;right:0;height:4px;z-index:96;pointer-events:none;
+  transition:opacity 1s ease;
+}
+.fuse-fill{
+  height:100%;width:2%;background:var(--slop);position:relative;
+  transition:width 1.2s ease;
+  box-shadow:0 1px 5px rgba(200,75,60,.5);
+}
+.fuse-fill::after{
+  content:'';position:absolute;right:-3px;top:-2.5px;width:9px;height:9px;border-radius:50%;
+  background:var(--mustard);
+  box-shadow:0 0 9px 3px rgba(232,185,49,.85);
+  animation:spark .45s infinite alternate;
+}
+@keyframes spark{from{transform:scale(.85);opacity:.85}to{transform:scale(1.2);opacity:1}}
+@keyframes fuseBoom{0%,100%{opacity:1}50%{opacity:.45}}
+.fuse.boom .fuse-fill{animation:fuseBoom 1.3s infinite;box-shadow:0 1px 10px rgba(200,75,60,.85)}
+.fuse.boom .fuse-fill::after{display:none}
+.fuse.gone{opacity:0}
+
+/* Panels sind saubere Inseln — Textur lebt nur im Hintergrund */
+.panel,.mail-card,.mutator-wrap,.marcus-screen,.dashboard-fake,.score-table,.doc-excerpt,
+.elevator-frame,.crash-screen,.props-strip,.copilot-popup,.type-panel,.ending-scene,
+.end-poster,.feed-item,.feed-tally,.agent-toast,.cast-solo-card .portrait,.format-step,
+.cure-grid,.healing,.door-sign{position:relative;z-index:91}
+
+/* ===== SOUND-SCHALTER ===== */
+.sound-toggle{
+  position:fixed;top:12px;left:16px;z-index:97;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;
+  padding:6px 11px;border:1.5px solid rgba(0,0,0,.35);
+  background:rgba(244,237,224,.85);color:var(--ink);
+  text-transform:uppercase;cursor:pointer;transition:background .3s ease,color .3s ease,border-color .3s ease;
+}
+body.theme-dark .sound-toggle{border-color:rgba(255,255,255,.3);background:rgba(0,0,0,.5);color:#ddd}
+.sound-toggle.on{background:var(--mustard);border-color:var(--ink);color:var(--ink)}
+
+/* ===== HUD: TAG COUNTER + KPI BAR ===== */
+.tag-counter{
+  position:fixed;top:14px;right:16px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--ink);background:rgba(244,237,224,.82);
+  padding:5px 11px;letter-spacing:.1em;
+  z-index:95;opacity:0;transition:opacity .6s ease,color .6s ease,background .6s ease,border-color .6s ease;
+  border:1px solid rgba(0,0,0,.2);
+  pointer-events:none;
+}
+.tag-counter.visible{opacity:1}
+body.theme-dark .tag-counter{color:#ddd;background:rgba(0,0,0,.5);border-color:rgba(255,255,255,.2)}
+
+.kpi-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--ink);color:var(--paper);
+  padding:9px 14px;display:flex;gap:min(4vw,34px);justify-content:center;align-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;
+  z-index:95;transform:translateY(100%);transition:transform .6s ease;
+  border-top:2px solid var(--mustard);
+}
+.kpi-bar.visible{transform:translateY(0)}
+.kpi{display:flex;gap:7px;align-items:baseline;white-space:nowrap}
+.kpi-label{opacity:.55;text-transform:uppercase;font-size:9.5px}
+.kpi-value{font-weight:600;color:var(--mustard)}
+.kpi-value.bad{color:var(--slop)}
+.kpi-value.changing{animation:kpiFlash .6s ease}
+.kpi.rwert{opacity:.6}
+.kpi.rwert .kpi-value{color:var(--paper)}
+.kpi.rwert .kpi-value.hot{color:var(--slop)}
+@media (max-width:600px){
+  .kpi-bar{font-size:9px;gap:12px;padding:8px 8px}
+  .kpi-label{font-size:8px}
+  .kpi{gap:4px}
+  .kpi.rwert{display:none}
+}
+@keyframes kpiFlash{0%,100%{filter:brightness(1)}50%{filter:brightness(1.9)}}
+
+/* ===== SECTION BASE ===== */
+.sec{position:relative}
+.sec.paper{
+  background:var(--paper);color:var(--ink);
+  background-image:radial-gradient(circle,rgba(0,0,0,.05) 1px,transparent 1px);
+  background-size:5px 5px;
+}
+.sec.dark{background:#0e0e0e;color:#e4e0d6}
+.wrap{max-width:780px;margin:0 auto;padding:10vh 22px}
+.wrap.narrow{max-width:640px}
+.wrap.wide{max-width:1100px}
+
+/* film grain for dark cards */
+.grain::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  mix-blend-mode:overlay;opacity:.18;
+}
+.vignette-shadow::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.55) 100%);
+}
+
+/* ===== REVEAL ENGINE ===== */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s ease}
+.rv.on{opacity:1;transform:none}
+.seq>*{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.seq.on>*{opacity:1;transform:none}
+.seq.on>*:nth-child(1){transition-delay:.05s}
+.seq.on>*:nth-child(2){transition-delay:.4s}
+.seq.on>*:nth-child(3){transition-delay:.75s}
+.seq.on>*:nth-child(4){transition-delay:1.1s}
+.seq.on>*:nth-child(5){transition-delay:1.45s}
+.seq.on>*:nth-child(6){transition-delay:1.8s}
+
+/* ===== PRE-ROLL ===== */
+.prs{
+  min-height:86vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:10vh 24px;position:relative;
+}
+.prs .line{
+  font-family:'Inter',sans-serif;font-weight:300;
+  font-size:clamp(19px,2.8vw,28px);line-height:1.6;
+  letter-spacing:.015em;color:#d9d9d9;max-width:760px;
+}
+.prs .line strong{font-weight:500;color:#f2f2f2}
+.poster{min-height:96vh}
+.poster .makers{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(244,237,224,.5);margin-bottom:18px;
+}
+.poster .film-title{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);
+  letter-spacing:.05em;line-height:.95;color:var(--paper);
+}
+.poster .film-sub{
+  font-family:'Crimson Text',serif;font-style:italic;font-size:clamp(15px,2vw,19px);
+  color:#bdb8ab;margin-top:16px;
+}
+.poster .cert{
+  margin-top:44px;border:1.5px solid rgba(244,237,224,.4);padding:12px 22px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(244,237,224,.6);
+}
+.fuse-hint{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(200,75,60,.85);margin-top:34px;
+}
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.scroll-hint .chev{animation:chevBounce 1.8s ease infinite;font-size:15px}
+@keyframes chevBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ===== CHAPTER CARDS ===== */
+.chapter{
+  min-height:66vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;background:#0c0c0c;color:#eee;position:relative;padding:14vh 24px;
+}
+.chapter .akt{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--mustard);margin-bottom:14px;
+}
+.chapter h2{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,76px);
+  letter-spacing:.05em;line-height:.95;
+}
+.chapter .sub{
+  font-family:'Crimson Text',serif;font-style:italic;font-size:16px;
+  color:#a9a49a;margin-top:14px;max-width:520px;
+}
+.chapter .daytick{
+  margin-top:34px;font-family:'IBM Plex Mono',monospace;font-size:13px;
+  letter-spacing:.14em;color:rgba(255,255,255,.55);
+}
+.chapter .daytick .n{
+  font-size:36px;font-weight:600;color:var(--paper);display:inline-block;min-width:64px;
+}
+.chapter .daytick .n.tick{animation:tickFlash .3s ease}
+@keyframes tickFlash{0%{transform:scale(1.18);color:var(--slop)}100%{transform:scale(1)}}
+
+/* ===== PANELS (comic grammar) ===== */
+.panel{
+  background:var(--panel);border:2px solid var(--ink);padding:20px 24px;
+  box-shadow:5px 5px 0 var(--ink);position:relative;
+  margin:0 auto 30px;max-width:680px;
+}
+.panel.dark-panel{background:var(--screen);color:#e8e8e8;border-color:var(--ink)}
+.panel-row{display:flex;align-items:flex-start;gap:16px}
+.panel-row + .panel-row{margin-top:14px}
+
+.caption{
+  display:inline-block;margin:0 auto 14px;padding:6px 14px;
+  background:var(--ink);color:var(--paper);
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.caption-wrap{text-align:center}
+.scene-title{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,4vw,34px);letter-spacing:.04em;
+  text-align:center;line-height:1.05;margin-bottom:22px;
+}
+
+.mini-portrait{
+  width:52px;height:52px;background:var(--paper);
+  border:2px solid var(--ink);border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;overflow:visible;
+  position:relative;
+}
+.mini-portrait svg{width:100%;height:100%;border-radius:50%}
+.mini-portrait.infected svg{filter:blur(.4px)}
+.mini-portrait .pname{
+  position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;
+  text-transform:uppercase;opacity:.55;white-space:nowrap;
+}
+
+.bubble{
+  background:rgba(0,0,0,.045);padding:12px 16px;
+  font-family:'Crimson Text',serif;font-size:16px;line-height:1.55;
+  flex:1;position:relative;min-width:0;
+}
+.bubble.thought{font-style:italic;background:rgba(232,185,49,.10);border-left:3px solid var(--mustard)}
+.bubble.berger{background:rgba(232,185,49,.16);border-left:3px solid var(--mustard);font-style:italic;transition:opacity 1.6s ease,filter 1.6s ease}
+.bubble.berger.ghost{opacity:.55;filter:grayscale(.7)}
+.bubble.summary{background:var(--screen);color:#e8e8e8;font-family:'Inter',sans-serif;font-size:14px;border-left:3px solid var(--hospital)}
+.bubble strong{font-weight:600}
+.bubble .sub{display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.5;margin-bottom:6px}
+.dark-panel .bubble{background:rgba(255,255,255,.06)}
+.dark-panel .bubble.berger{background:rgba(232,185,49,.14)}
+
+/* loading bar over heads */
+.lbar{
+  position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--slop);letter-spacing:.04em;
+  background:#fff;border:1px solid rgba(200,75,60,.45);padding:3px 7px;
+  z-index:5;box-shadow:2px 2px 0 rgba(0,0,0,.15);
+  opacity:0;transition:opacity .5s ease;
+}
+.lbar.live{opacity:1}
+.lbar .track{width:44px;height:3px;background:rgba(0,0,0,.12);position:relative;overflow:hidden;flex-shrink:0}
+.lbar .fill{position:absolute;left:0;top:0;height:100%;background:var(--mustard);width:0}
+.lbar.live .fill{animation:lfill 2.2s linear infinite}
+@keyframes lfill{0%{width:0}82%{width:100%}100%{width:100%}}
+
+/* ===== ACT 0 ===== */
+.establishing{text-align:center}
+.establishing .label{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;
+  opacity:.55;text-transform:uppercase;margin-bottom:22px;
+}
+.company-name{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,6vw,58px);
+  letter-spacing:.04em;line-height:1;margin-bottom:6px;
+}
+.slogan{font-family:'Crimson Text',serif;font-style:italic;font-size:16px;opacity:.65}
+
+.cast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:980px;margin:0 auto}
+@media (max-width:760px){.cast-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.cast-grid{grid-template-columns:1fr}}
+.cast-card{
+  background:rgba(0,0,0,.04);border:2px solid var(--ink);
+  padding:16px;display:flex;flex-direction:column;gap:6px;position:relative;
+}
+.cast-card.berger-card{
+  border-color:var(--mustard);background:rgba(232,185,49,.10);
+  box-shadow:4px 4px 0 var(--mustard);
+}
+.cast-portrait{
+  width:72px;height:72px;background:var(--paper);
+  border:2.5px solid var(--ink);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;margin-bottom:6px;overflow:visible;
+}
+.cast-portrait svg{width:100%;height:100%}
+.cast-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;line-height:1}
+.cast-role{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+.cast-detail{font-family:'Crimson Text',serif;font-style:italic;font-size:14px;opacity:.8;line-height:1.4;margin-top:2px}
+.cast-note{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;opacity:.5;margin-top:6px;line-height:1.5}
+.mug-corner{position:absolute;top:12px;right:12px;width:34px}
+
+/* mail card */
+.mail-card{
+  background:var(--panel);border:2px solid var(--ink);max-width:620px;margin:0 auto;
+  padding:28px 32px;font-family:'Crimson Text',serif;font-size:16px;line-height:1.7;
+  box-shadow:6px 6px 0 var(--ink);position:relative;
+}
+.mail-header{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;
+  opacity:.55;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;
+  border-bottom:1px solid rgba(0,0,0,.15);
+}
+.mail-body{white-space:pre-line}
+.mail-signature{margin-top:14px;font-style:italic;opacity:.75}
+
+/* berger aside panel */
+.berger-aside{
+  display:flex;align-items:center;gap:16px;max-width:480px;margin:26px auto 0;
+}
+.berger-aside .bubble{font-size:16px}
+
+/* copilot popup */
+.copilot-popup{
+  background:#fff;border:2px solid var(--ink);color:var(--ink);
+  padding:26px 30px;max-width:380px;margin:0 auto;text-align:left;
+  font-family:'Inter',sans-serif;box-shadow:8px 8px 0 var(--ink);
+}
+.copilot-popup .badge{
+  display:inline-block;background:#0078d4;color:#fff;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;
+  padding:3px 8px;text-transform:uppercase;margin-bottom:12px;
+}
+.copilot-popup h4{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.03em;margin-bottom:8px}
+.copilot-popup p{font-size:14px;opacity:.7;margin-bottom:16px;line-height:1.5}
+.copilot-popup .cta{
+  background:#0078d4;color:#fff;font-size:13px;font-weight:600;letter-spacing:.03em;
+  padding:9px 18px;border:0;
+}
+
+/* ===== PROPS STRIP (running gags) ===== */
+.props-strip{
+  background:var(--panel);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
+  max-width:680px;margin:0 auto;padding:26px 20px 18px;
+}
+.props-row{display:flex;align-items:flex-end;justify-content:space-around;gap:10px;min-height:120px;flex-wrap:wrap;row-gap:16px}
+.prop{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.prop svg{overflow:visible}
+.props-caption{
+  text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;opacity:.5;margin-top:14px;
+  border-top:1px solid rgba(0,0,0,.1);padding-top:10px;
+}
+.postit{
+  width:86px;height:86px;background:var(--note);box-shadow:2px 3px 5px rgba(0,0,0,.18);
+  transform:rotate(-3deg);padding:10px 8px;
+  font-family:'Crimson Text',serif;font-style:italic;font-size:11.5px;line-height:1.3;
+  display:flex;align-items:center;justify-content:center;text-align:center;color:#333;
+}
+@keyframes steamUp{0%{transform:translateY(0);opacity:0}30%{opacity:.7}100%{transform:translateY(-10px);opacity:0}}
+.steam path{animation:steamUp 2.4s ease infinite}
+.steam path:nth-child(2){animation-delay:.8s}
+
+/* ===== MUTATOR (Act 1) ===== */
+.mutator-wrap{display:flex;flex-direction:column;gap:0;max-width:720px;margin:0 auto}
+.mutator-mail{
+  background:var(--panel);border:2px solid var(--ink);border-bottom:none;
+  max-height:46vh;overflow-y:auto;padding:24px 28px;
+  font-family:'Crimson Text',serif;font-size:15px;line-height:1.65;
+  position:relative;color:var(--ink);
+}
+.mutator-mail::-webkit-scrollbar{width:8px}
+.mutator-mail::-webkit-scrollbar-thumb{background:rgba(0,0,0,.3)}
+.mutator-mail-header{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
+  opacity:.55;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;
+  border-bottom:1px solid rgba(0,0,0,.15);
+}
+.mutator-mail-body{white-space:pre-line;transition:opacity .3s ease}
+.mutator-mail-body.swap{opacity:0}
+.mutator-mail-body strong{font-weight:600}
+.mutator-mail-body em{display:block;font-style:italic;opacity:.55;font-size:12px;margin-top:16px;border-top:1px dashed rgba(0,0,0,.25);padding-top:10px}
+.mutator-controls{
+  background:var(--ink);color:var(--paper);padding:18px 24px;
+  display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.mutator-slider-block{flex:1;min-width:220px}
+.mutator-slider-label{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  opacity:.75;text-transform:uppercase;margin-bottom:10px;
+  display:flex;justify-content:space-between;
+}
+.mutator-slider-label #mutFactor{color:var(--mustard);font-weight:600;font-size:13px}
+.mutator-slider-block input[type=range]{
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:4px;background:rgba(255,255,255,.22);outline:none;border-radius:0;
+}
+.mutator-slider-block input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:22px;height:22px;
+  background:var(--mustard);border:2px solid var(--paper);cursor:pointer;border-radius:0;
+}
+.mutator-slider-block input[type=range]::-moz-range-thumb{
+  width:22px;height:22px;background:var(--mustard);
+  border:2px solid var(--paper);cursor:pointer;border-radius:0;
+}
+.mutator-stats{
+  display:flex;flex-direction:column;gap:6px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;min-width:210px;
+}
+.mutator-stat{display:flex;justify-content:space-between;gap:14px}
+.mutator-stat .label{opacity:.55;text-transform:uppercase}
+.mutator-stat .val{font-weight:600;color:var(--mustard)}
+.mutator-stat .val.no{color:var(--slop)}
+.mutator-sendrow{display:flex;justify-content:flex-end;background:var(--ink);padding:0 24px 18px}
+.mutator-send{
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.06em;
+  background:var(--mustard);color:var(--ink);
+  padding:12px 26px;border:2px solid var(--paper);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.mutator-send:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 rgba(255,255,255,.4)}
+.mutator-send:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none}
+
+/* notifications */
+.notif-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  z-index:300;opacity:0;pointer-events:none;transition:opacity .3s ease;padding:20px;
+}
+.notif-overlay.show{opacity:1;pointer-events:auto}
+.notif{
+  background:#fff;border:2px solid var(--ink);max-width:460px;padding:26px 28px;color:var(--ink);
+  font-family:'Inter',sans-serif;box-shadow:8px 8px 0 var(--ink);
+  transform:translateY(18px);transition:transform .3s ease;
+}
+.notif-overlay.show .notif{transform:translateY(0)}
+.notif-badge{
+  display:inline-block;background:#0078d4;color:#fff;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;
+  padding:3px 8px;text-transform:uppercase;margin-bottom:12px;
+}
+.notif h4{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.03em;margin-bottom:10px}
+.notif p{font-size:14px;opacity:.8;line-height:1.55;margin-bottom:20px}
+.notif-actions{display:flex;gap:12px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.notif-btn{font-size:13.5px;font-weight:600;padding:10px 18px;border:none;letter-spacing:.02em}
+.notif-btn-primary{background:#0078d4;color:#fff}
+.notif-btn-primary:hover{background:#106ebe}
+.notif-btn-secondary{background:transparent;color:#777;text-decoration:underline;font-size:12px;padding:10px 4px;font-weight:400}
+.notif-btn-secondary:hover{color:#222}
+.notif-btn-secondary.dimmer{opacity:.45}
+.notif-btn-secondary.dead{opacity:.3;cursor:not-allowed;text-decoration:none}
+
+/* ===== MARCUS SCREEN (post gate) ===== */
+.marcus-screen{
+  background:var(--screen);color:#e8e8e8;max-width:660px;margin:0 auto;
+  padding:26px 30px;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
+  font-family:'Inter',sans-serif;position:relative;
+}
+.marcus-screen-bar{
+  display:flex;justify-content:space-between;padding-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,.14);margin-bottom:18px;
+  font-size:10.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;opacity:.6;
+}
+.marcus-mail-incoming{
+  background:rgba(255,255,255,.06);padding:14px 18px;
+  border-left:3px solid var(--mustard);margin-bottom:16px;
+}
+.marcus-mail-from{font-size:10.5px;opacity:.6;font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
+.marcus-mail-subject{font-size:14.5px;font-weight:600}
+.marcus-mail-tag{
+  display:inline-block;background:var(--mustard);color:var(--ink);
+  font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;
+  padding:2px 7px;margin-left:8px;text-transform:uppercase;
+}
+/* the micro-moment: original opens briefly */
+.orig-peek{
+  position:absolute;left:8%;right:8%;top:16%;bottom:auto;height:0;
+  background:var(--panel);color:#222;border:2px solid var(--ink);
+  box-shadow:0 12px 30px rgba(0,0,0,.5);overflow:hidden;z-index:10;
+  transition:height .35s ease,opacity .3s ease;opacity:0;
+}
+.orig-peek.openp{height:220px;opacity:1}
+.orig-peek.closingp{opacity:0}
+.orig-peek .op-bar{
+  background:#eee;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#555;
+  padding:5px 10px;letter-spacing:.1em;display:flex;justify-content:space-between;
+  border-bottom:1px solid #ccc;position:sticky;top:0;
+}
+.orig-peek .op-body{
+  padding:12px 16px;font-family:'Crimson Text',serif;font-size:10.5px;line-height:1.55;
+  white-space:pre-line;transition:transform .5s ease;
+}
+.orig-peek.scrolled .op-body{transform:translateY(-14px)}
+.marcus-summarize-btn{
+  cursor:default;
+  display:flex;align-items:center;gap:10px;justify-content:center;
+  background:rgba(232,185,49,.12);color:var(--mustard);
+  padding:12px 16px;border:1px dashed var(--mustard);
+  font-size:13px;width:100%;transition:background .3s ease,transform .1s ease;
+}
+.marcus-summarize-btn.glow{background:rgba(232,185,49,.28)}
+.marcus-summarize-btn.pressed{transform:scale(.985);background:rgba(232,185,49,.35)}
+.marcus-summary{
+  background:rgba(255,255,255,.05);padding:18px 22px;margin-top:16px;
+  font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;
+  border-left:2px solid var(--hospital);
+  opacity:0;transition:opacity .6s ease;
+}
+.marcus-summary.showit{opacity:1}
+.marcus-summary-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;opacity:.55;margin-bottom:10px;
+}
+.evaporate-zone{margin-top:16px;min-height:52px;position:relative}
+.evaporate-line{
+  font-family:'Crimson Text',serif;font-size:13.5px;font-style:italic;color:#c9c4b8;
+  opacity:0;transition:opacity .8s ease;
+}
+.evaporate-line.vis{opacity:.85}
+.evaporate-line.gone{
+  opacity:0;filter:blur(4px);transform:translateY(14px);
+  transition:opacity 2.4s ease,filter 2.4s ease,transform 2.4s ease;
+}
+.evaporate-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--slop);opacity:0;transition:opacity .8s ease;
+  margin-top:6px;
+}
+.evaporate-tag.vis{opacity:.9}
+
+/* ===== ACT 2 VIGNETTES ===== */
+.vignette-head{text-align:center;margin-bottom:26px}
+.vignette-day{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;opacity:.55;margin-bottom:8px;
+}
+.vignette-title{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,42px);
+  letter-spacing:.04em;line-height:1;
+}
+
+/* dashboard fake */
+.dashboard-fake{
+  background:var(--screen);color:#e8e8e8;padding:18px 22px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+  border:2px solid var(--ink);max-width:560px;margin:0 auto 30px;
+  box-shadow:5px 5px 0 var(--ink);
+}
+.dashboard-title{font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.5;margin-bottom:12px;display:flex;justify-content:space-between}
+.dashboard-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.dashboard-row:last-child{border-bottom:none}
+.dashboard-row .green{color:var(--hospital)}
+.dashboard-row .red{color:var(--slop)}
+.dashboard-row .gray{color:#666}
+
+/* typewriter panel */
+.type-panel{max-width:600px;margin:0 auto 30px}
+.type-screen{
+  background:var(--panel);border:1px solid rgba(0,0,0,.2);padding:16px 20px;min-height:88px;
+  font-family:'Crimson Text',serif;font-size:15.5px;line-height:1.6;color:#222;
+}
+.type-screen .cursor{display:inline-block;width:2px;height:1.05em;background:#222;vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.type-screen.ai-mode{font-family:'Inter',sans-serif;font-size:13.5px;color:#333}
+.type-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--slop);margin-top:10px;opacity:0;transition:opacity .6s ease;
+}
+.type-tag.vis{opacity:.9}
+
+/* doc excerpt */
+.doc-excerpt{
+  background:var(--panel);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
+  max-width:620px;margin:0 auto 30px;padding:24px 28px;color:var(--ink);
+  font-family:'Crimson Text',serif;font-size:14.5px;line-height:1.65;
+}
+.doc-excerpt .doc-head{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;opacity:.55;margin-bottom:12px;display:flex;justify-content:space-between;
+}
+.doc-excerpt .phantom{color:var(--slop);font-weight:600}
+
+/* score table */
+.score-table{
+  background:var(--screen);color:#e8e8e8;padding:18px 22px;
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+  border:2px solid var(--ink);max-width:460px;margin:0 auto 30px;box-shadow:5px 5px 0 var(--ink);
+}
+.score-table .st-head{font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.5;margin-bottom:10px}
+.score-table .row{display:flex;justify-content:space-between;padding:5px 0}
+.score-table .green{color:var(--hospital)}
+.score-table .red{color:var(--slop)}
+.score-table .gray{color:#999}
+
+/* elevator */
+.elevator-frame{
+  background:var(--screen2);color:#ccc;padding:24px 28px;border:2px solid var(--ink);
+  max-width:540px;margin:0 auto 30px;display:flex;flex-direction:column;gap:16px;
+  position:relative;box-shadow:5px 5px 0 var(--ink);
+}
+.elevator-display{
+  position:absolute;top:12px;right:16px;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--mustard);
+  background:#111;padding:3px 10px;letter-spacing:.2em;border:1px solid #333;
+}
+.elevator-row{display:flex;align-items:flex-start;gap:14px}
+.elevator-thought{
+  font-family:'Crimson Text',serif;font-style:italic;font-size:15px;
+  background:rgba(255,255,255,.06);padding:10px 14px;flex:1;
+  border-left:2px solid rgba(232,185,49,.5);
+}
+.elevator-exit{
+  text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:.16em;opacity:.5;text-transform:uppercase;margin-top:4px;
+}
+
+/* format flow (V7) */
+.format-flow{
+  display:flex;align-items:stretch;gap:8px;overflow-x:auto;
+  padding:10px 4px 18px;max-width:100%;
+}
+.format-step{
+  flex:0 0 148px;background:var(--panel);border:2px solid var(--ink);color:var(--ink);
+  padding:14px 12px;display:flex;flex-direction:column;gap:8px;
+  text-align:center;min-height:150px;justify-content:center;
+  opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;
+  box-shadow:3px 3px 0 var(--ink);
+}
+.format-step .fgrow{height:6px;background:var(--ink);margin:2px auto 0;transition:width .6s ease}
+.format-step .fvisual svg{margin:0 auto}
+.format-step.on{opacity:1;transform:none}
+.format-step .ftitle{font-family:'IBM Plex Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;opacity:.55}
+.format-step .fbody{font-family:'Crimson Text',serif;font-size:13px;line-height:1.4}
+.format-step .fvisual{height:44px;display:flex;align-items:center;justify-content:center}
+.format-arrow{flex-shrink:0;align-self:center;font-size:20px;opacity:0;transition:opacity .5s ease;color:var(--ink)}
+.format-arrow.on{opacity:.7}
+.waveform{display:flex;gap:3px;align-items:center;height:30px}
+.waveform span{width:4px;background:var(--hospital);border-radius:2px;animation:wf 1s ease infinite alternate}
+.waveform span:nth-child(1){height:10px;animation-delay:0s}
+.waveform span:nth-child(2){height:22px;animation-delay:.15s}
+.waveform span:nth-child(3){height:14px;animation-delay:.3s}
+.waveform span:nth-child(4){height:26px;animation-delay:.45s}
+.waveform span:nth-child(5){height:12px;animation-delay:.6s}
+@keyframes wf{from{transform:scaleY(.6)}to{transform:scaleY(1.15)}}
+.health-tile{
+  background:var(--mustard);color:var(--ink);font-family:'IBM Plex Mono',monospace;
+  font-size:9px;letter-spacing:.08em;padding:8px 10px;font-weight:600;
+}
+.pagestack{position:relative;width:34px;height:40px}
+.pagestack i{position:absolute;inset:0;background:#fff;border:1.5px solid var(--ink)}
+.pagestack i:nth-child(1){transform:translate(4px,-4px)}
+.pagestack i:nth-child(2){transform:translate(2px,-2px)}
+.pagestack i:nth-child(3)::after{content:'';position:absolute;left:5px;right:5px;top:8px;height:2px;background:rgba(0,0,0,.3);box-shadow:0 6px 0 rgba(0,0,0,.3),0 12px 0 rgba(0,0,0,.3),0 18px 0 rgba(0,0,0,.3)}
+
+/* crash */
+.silence-gap{min-height:52vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a}
+.silence-gap .s-label{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.3em;
+  text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.crash-screen{
+  background:var(--screen);color:#fff;max-width:600px;margin:0 auto 30px;
+  padding:32px 36px;border:2px solid var(--slop);
+  box-shadow:0 0 0 5px rgba(200,75,60,.16);
+  font-family:'Crimson Text',serif;font-size:16px;line-height:1.7;position:relative;
+}
+.crash-screen-label{
+  position:absolute;top:-14px;left:-2px;background:var(--slop);color:#fff;
+  padding:4px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+}
+.crash-from{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;opacity:.5;margin-bottom:16px;text-transform:uppercase}
+.crash-amount{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:.03em;color:var(--slop);margin:16px 0;line-height:1}
+.crash-shout{
+  text-align:center;font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,5vw,38px);
+  letter-spacing:.05em;color:var(--slop);margin-top:10px;
+}
+.door-sign{
+  margin:0 auto;width:210px;background:var(--screen2);border:2px solid #555;
+  padding:16px 10px;text-align:center;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.34em;color:#ddd;
+}
+.door-sign small{display:block;font-size:8px;letter-spacing:.2em;opacity:.5;margin-top:6px}
+
+/* ===== ACT 3 (pinned) ===== */
+#act3wrap{height:560vh;position:relative;background:#141414}
+.a3sticky{
+  position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:5vh 20px 9vh;color:#e0e0e0;
+}
+.crisis-context{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.22em;opacity:.5;text-transform:uppercase;margin-bottom:18px;text-align:center}
+.crisis-figures{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;width:100%;max-width:620px}
+.crisis-figure{display:flex;flex-direction:column;align-items:center;gap:7px}
+.crisis-figure .head{
+  width:56px;height:56px;border:2px solid #9a9a9a;border-radius:50%;
+  background:#2a2a2a;filter:blur(.6px);opacity:.5;overflow:hidden;
+  transition:filter .5s ease,opacity .5s ease,border-color .5s ease,box-shadow .5s ease;
+}
+.crisis-figure .head svg{width:100%;height:100%;filter:invert(.88)}
+.crisis-figure.berger .head{filter:none;opacity:1;border-color:var(--mustard);box-shadow:0 0 14px rgba(232,185,49,.3)}
+.crisis-figure.berger .head svg{filter:invert(0)}
+.crisis-figure .name{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;opacity:.45;text-transform:uppercase}
+.crisis-figure.berger .name{color:var(--mustard);opacity:1}
+.crisis-figure.speaking .head{filter:none;opacity:1;border-color:#fff}
+.crisis-table{width:100%;max-width:620px;height:5px;background:#2a2e36;margin:16px 0 24px;position:relative}
+.crisis-table::after{content:'';position:absolute;left:0;right:0;top:5px;height:44px;background:linear-gradient(180deg,rgba(0,0,0,.4),transparent)}
+.crisis-window{width:100%;max-width:640px;height:min(46vh,420px);height:min(44dvh,420px);overflow:hidden;position:relative}
+.crisis-list{display:flex;flex-direction:column;gap:12px;transition:transform .7s ease}
+.crisis-line{
+  font-family:'Crimson Text',serif;font-size:17px;line-height:1.55;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .7s ease,transform .7s ease;
+  padding:8px 16px;border-left:3px solid transparent;
+}
+.crisis-line.show{opacity:1;transform:none}
+.crisis-line .speaker{
+  font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;font-size:13.5px;
+  display:block;margin-bottom:3px;opacity:.55;
+}
+.crisis-line.bl{border-left-color:var(--mustard);font-style:italic;background:rgba(232,185,49,.06)}
+.crisis-line.bl .speaker{color:var(--mustard);opacity:1}
+.crisis-line .stagedir{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-style:normal;
+  opacity:.4;display:block;margin-top:5px;
+}
+.crisis-line.silence{font-style:italic;text-align:center;font-size:13px;color:#8d8d8d}
+.crisis-line.silence.show{opacity:.65}
+.a3-scrollhint{
+  position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);
+  display:flex;align-items:center;gap:8px;transition:opacity .6s ease;
+}
+.a3-scrollhint .chev{animation:chevBounce 1.8s ease infinite}
+
+/* six weeks later */
+.blackgap{min-height:100vh;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:20vh 24px}
+.blackgap .later{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.blackgap h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,5.5vw,52px);letter-spacing:.04em;color:var(--paper);line-height:1.05}
+
+/* ===== ACT 4 ===== */
+.cure-intro{max-width:660px;margin:0 auto 40px;text-align:center}
+.cure-intro p{font-family:'Crimson Text',serif;font-style:italic;font-size:17px;line-height:1.55;opacity:.8}
+.cure-grid{display:grid;grid-template-columns:240px 1fr 240px;gap:22px;max-width:1120px;margin:0 auto}
+@media (max-width:920px){.cure-grid{grid-template-columns:1fr}.cure-plan{order:3}}
+.cure-section-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;opacity:.55;text-transform:uppercase;margin-bottom:10px}
+.cure-observations{display:flex;flex-direction:column;gap:10px}
+.observation{
+  background:var(--note);border:2px solid var(--ink);padding:12px 14px;
+  font-family:'Crimson Text',serif;font-style:italic;font-size:14px;line-height:1.45;
+  box-shadow:2px 2px 0 var(--ink);transform:rotate(-1deg);
+  transition:transform .3s ease,background .3s ease,box-shadow .3s ease;
+}
+.observation:nth-child(odd){transform:rotate(1deg)}
+.observation.highlight{background:var(--mustard);transform:rotate(0) translateY(-2px);box-shadow:4px 4px 0 var(--ink)}
+.cure-practices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-self:start}
+@media (max-width:560px){.cure-practices{grid-template-columns:1fr}}
+.practice{
+  background:#fff;border:2px solid var(--ink);padding:14px 16px;cursor:pointer;
+  transition:transform .15s ease,background .25s ease,box-shadow .15s ease,opacity .25s ease;
+  display:flex;flex-direction:column;gap:6px;text-align:left;
+}
+.practice:hover:not(.selected):not(.disabled){transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.practice.selected{background:var(--mustard);transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.practice.disabled{opacity:.3;cursor:not-allowed}
+.practice .num{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;opacity:.5}
+.practice .ptitle{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.03em;line-height:1.05}
+.practice .ptag{font-family:'Crimson Text',serif;font-style:italic;font-size:13.5px;line-height:1.4;opacity:.75}
+.cure-plan{display:flex;flex-direction:column;gap:10px}
+.plan-slot{
+  background:rgba(0,0,0,.04);border:2px dashed rgba(0,0,0,.4);
+  padding:16px 12px;min-height:58px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+  opacity:.45;text-transform:uppercase;display:flex;align-items:center;justify-content:center;
+  text-align:center;transition:all .3s ease;
+}
+.plan-slot.filled{
+  background:var(--mustard);border-style:solid;border-color:var(--ink);opacity:1;
+  font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.03em;
+  text-transform:none;cursor:pointer;line-height:1.1;
+}
+.plan-slot.filled:hover{background:#f0c44a}
+.cure-startrow{text-align:center;margin-top:36px}
+.cure-start{
+  padding:15px 32px;background:var(--ink);color:var(--paper);
+  font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.06em;
+  opacity:.3;pointer-events:none;
+  transition:opacity .3s ease,transform .15s ease,box-shadow .15s ease;
+}
+.cure-start.ready{opacity:1;pointer-events:auto;background:var(--slop);color:#fff}
+.cure-start.ready:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+
+/* healing */
+.healing{max-width:560px;margin:0 auto;text-align:center}
+.healing-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;opacity:.55;text-transform:uppercase;margin-bottom:10px}
+.healing-headline{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.03em;line-height:1.05;margin-bottom:24px}
+.healing-status{display:flex;flex-direction:column;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11.5px}
+.healing-row{
+  display:flex;justify-content:space-between;gap:12px;padding:12px 16px;
+  background:rgba(0,0,0,.04);border-left:3px solid var(--mustard);
+  opacity:0;transform:translateX(-10px);
+  transition:opacity .8s ease,transform .8s ease;text-align:left;align-items:center;
+}
+.healing-row.show{opacity:1;transform:none}
+.healing-row .htitle{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.03em}
+.healing-row .effect{color:var(--hospital);font-weight:600;font-size:10.5px;white-space:nowrap}
+
+/* ending */
+.ending{max-width:760px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px}
+.ending-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;opacity:.55;text-transform:uppercase}
+.ending-scene{
+  width:100%;background:var(--panel);border:2px solid var(--ink);
+  padding:28px 32px;box-shadow:6px 6px 0 var(--ink);
+  display:flex;flex-direction:column;gap:14px;text-align:left;
+}
+.ending-headline{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.03em;text-align:center;line-height:1.05;margin-bottom:6px}
+.ending-row{
+  display:flex;align-items:center;gap:16px;padding:9px 0;
+  border-bottom:1px solid rgba(0,0,0,.08);
+  font-family:'Crimson Text',serif;font-size:15.5px;line-height:1.55;
+}
+.ending-row:last-of-type{border-bottom:none}
+.ending-row .mini-portrait{width:44px;height:44px}
+.ending-row strong{font-weight:600}
+.ending-row em{font-style:italic;opacity:.85}
+.ending-easter{
+  margin-top:14px;padding:12px 14px;border:1px dashed rgba(0,0,0,.25);
+  background:rgba(0,0,0,.02);font-size:11.5px;opacity:.6;
+  display:flex;align-items:center;gap:12px;text-align:left;font-family:'Inter',sans-serif;
+}
+.ending-easter .ebadge{
+  background:#0078d4;color:#fff;padding:2px 7px;font-size:9px;
+  letter-spacing:.15em;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;flex-shrink:0;
+}
+.ending-message{font-family:'Crimson Text',serif;font-size:17px;line-height:1.7;max-width:560px;margin-top:16px}
+.ending-message strong{font-weight:600;display:block;margin-bottom:12px;font-size:26px;font-family:'Bebas Neue',sans-serif;letter-spacing:.04em}
+.ending-message em{display:block;margin-top:16px;opacity:.65;font-size:15px}
+.ending-replay{
+  margin-top:20px;font-size:12.5px;letter-spacing:.04em;font-family:'Inter',sans-serif;
+  background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 22px;
+}
+.ending-replay:hover{background:var(--ink);color:var(--paper)}
+.credits{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;
+  opacity:.4;margin-top:34px;text-transform:uppercase;line-height:2;
+}
+
+/* misc */
+.gated{display:none}
+.gated.open{display:block}
+.hiddenpart{display:none}
+.hiddenpart.open{display:block}
+.waveoff{transform-origin:70% 80%}
+.on .waveoff{animation:waveoffA 1.4s ease .9s 2}
+@keyframes waveoffA{0%,100%{transform:rotate(0)}25%{transform:rotate(-18deg)}55%{transform:rotate(10deg)}80%{transform:rotate(-10deg)}}
+
+/* ===== CAST SOLO (jede Figur bekommt ihren Auftritt) ===== */
+.cast-solo-card{
+  min-height:54vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;max-width:540px;margin:0 auto;padding:7vh 20px;position:relative;
+}
+.cs-index{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.24em;
+  opacity:.45;text-transform:uppercase;margin-bottom:24px;
+}
+.cast-solo-card .portrait{
+  width:128px;height:128px;background:var(--paper);
+  border:3px solid var(--ink);border-radius:50%;margin-bottom:22px;overflow:visible;
+}
+.cast-solo-card .portrait svg{width:100%;height:100%}
+.cs-name{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:.04em;line-height:1}
+.cs-role{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;opacity:.65;text-transform:uppercase;margin-top:8px}
+.cs-detail{font-family:'Crimson Text',serif;font-style:italic;font-size:18px;line-height:1.5;margin-top:14px;max-width:400px}
+.cs-extra{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;opacity:.55;margin-top:12px;line-height:1.8;max-width:380px}
+.cast-solo-card.berger-solo .portrait{border-color:var(--mustard);box-shadow:0 0 0 6px rgba(232,185,49,.22)}
+.berger-solo .mugpos{position:absolute;bottom:-6px;right:-22px}
+.berger-solo .cs-index{color:var(--slop);opacity:.75}
+
+/* ===== SLOP-FEED (die Produktion läuft) ===== */
+.slop-feed{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.feed-item{
+  display:flex;align-items:center;gap:16px;
+  background:var(--panel);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
+  padding:13px 18px;
+}
+.feed-icon{width:42px;flex-shrink:0;display:flex;justify-content:center;align-items:center}
+.feed-body{min-width:0}
+.feed-title{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;line-height:1.35}
+.feed-meta{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;opacity:.55;text-transform:uppercase;margin-top:4px}
+.feed-tally{
+  background:var(--ink);color:var(--paper);border:2px solid var(--ink);
+  padding:18px 22px;margin-top:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;line-height:2;
+  text-transform:uppercase;
+}
+.feed-tally .num{color:var(--mustard);font-weight:600}
+.feed-tally .zero{color:var(--slop);font-weight:600}
+.feed-tally .tline2{border-top:1px solid rgba(244,237,224,.2);margin-top:8px;padding-top:8px;font-size:10px;opacity:.9}
+
+/* ===== DENKRAUM-DIAGRAMM ===== */
+.think-wrap{max-width:660px;margin:0 auto;text-align:center;position:relative;z-index:91}
+.think-kicker{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--mustard);margin-bottom:16px}
+.think-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5.6vw,52px);letter-spacing:.04em;line-height:1;color:var(--paper)}
+.think-diagram{position:relative;display:flex;justify-content:space-between;gap:16px;margin:72px 0 10px;align-items:stretch}
+.tbox{
+  flex:1;border:2px solid rgba(244,237,224,.8);padding:20px 10px 16px;
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--paper);position:relative;
+}
+.tbox .tsub{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;opacity:.5;margin-top:8px;line-height:1.9}
+.tbox.mid{color:rgba(244,237,224,.7);border-style:dashed;border-color:rgba(244,237,224,.45)}
+.tbox.mid::before,.tbox.mid::after{
+  content:'';position:absolute;left:-6%;top:50%;width:112%;height:2.5px;
+  background:var(--slop);
+}
+.tbox.mid::before{transform:rotate(16deg)}
+.tbox.mid::after{transform:rotate(-16deg)}
+.think-bypass{position:absolute;left:6%;right:6%;top:-62px;height:70px;pointer-events:none}
+.think-bypass svg{width:100%;height:100%}
+.think-bypass-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--mustard);margin-top:20px;
+}
+.think-quiet{
+  font-family:'Crimson Text',serif;font-style:italic;font-size:17px;
+  color:rgba(244,237,224,.75);margin-top:36px;line-height:1.6;
+}
+@media (max-width:560px){
+  .think-diagram{gap:8px}
+  .tbox{font-size:10.5px;padding:14px 4px 12px}
+  .tbox .tsub{font-size:6.5px;letter-spacing:.08em}
+  .think-bypass{top:-48px;height:54px}
+}
+
+/* ===== AGENT-TOASTS ===== */
+.agent-stack{max-width:560px;margin:0 auto 26px;display:flex;flex-direction:column;gap:10px}
+.agent-toast{
+  background:#fff;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
+  padding:13px 17px;color:var(--ink);
+  font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.5;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.agent-toast .abadge{
+  flex-shrink:0;background:#0078d4;color:#fff;margin-top:2px;
+  font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;
+  padding:2px 6px;text-transform:uppercase;
+}
+.agent-toast .atime{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;opacity:.45;margin-top:4px;text-transform:uppercase}
+.agent-toast strong{font-weight:600}
+
+/* ===== PROMPT-PROTOKOLL (Marcus' Copilot-Verlauf) ===== */
+.prompt-log{
+  background:var(--screen);color:#e8e8e8;border:2px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);max-width:600px;margin:0 auto;
+  padding:22px 26px;position:relative;z-index:91;
+}
+.plog-head{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;
+  opacity:.55;text-transform:uppercase;margin-bottom:16px;
+  padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.12);
+}
+.plog-row{display:flex;gap:16px;align-items:baseline;padding:9px 0}
+.plog-day{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;
+  opacity:.45;flex-shrink:0;width:52px;text-transform:uppercase;
+}
+.plog-text{font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.5}
+.plog-row.hot .plog-text{color:var(--mustard)}
+.plog-row.hottest .plog-text{color:var(--slop);font-weight:600}
+.plog-answer{
+  margin-top:16px;padding:13px 16px;background:rgba(124,166,140,.12);
+  border-left:2px solid var(--hospital);
+  font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.55;
+}
+.plog-answer .sub{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.5;margin-bottom:6px}
+
+/* ===== MEETING OHNE MENSCHEN ===== */
+.attendee{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09);
+  font-family:'Inter',sans-serif;font-size:13.5px;
+}
+.attendee:last-of-type{border-bottom:none}
+.attendee .abadge2{
+  font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;
+  padding:3px 8px;text-transform:uppercase;background:rgba(232,185,49,.15);
+  color:var(--mustard);border:1px solid rgba(232,185,49,.4);white-space:nowrap;
+}
+.meeting-count{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.meeting-count .zero{color:var(--slop);font-weight:600}
+
+/* ===== HÖFLICHKEITS-LOOP ===== */
+.maillooop-row,.mailloop-row{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.02em;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85;
+}
+.mailloop-count{
+  font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.04em;
+  color:var(--mustard);margin-top:12px;
+}
+
+/* ===== INFEKTIONSKARTE ===== */
+.infect-wrap{max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:91}
+.infect-kicker{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--slop);margin-bottom:14px}
+.infect-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,4.4vw,38px);letter-spacing:.04em;line-height:1;color:var(--paper);margin-bottom:26px}
+.infect-map svg{width:100%;height:auto}
+.infect-caption{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,237,224,.55);margin-top:18px;line-height:2}
+
+/* ===== MEETING-MONSTER-TAFEL (Kanon: Okt 2025 gezähmt) ===== */
+.mboard{
+  border:2px solid var(--ink);background:var(--paper);padding:8px 10px 6px;
+  font-family:'IBM Plex Mono',monospace;text-align:center;
+}
+.mboard .mlabel{font-size:6.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;line-height:1.5}
+.mboard .mnum{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;margin-top:2px}
+.mboard .mnum.bad{color:var(--slop)}
+
+/* ===== DER KUNDE (Brenneker-Karte) ===== */
+.kunde-plate{
+  width:112px;height:112px;border:3px solid var(--ink);background:var(--panel);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin-bottom:22px;box-shadow:5px 5px 0 var(--ink);
+}
+.kunde-plate .kb{font-family:'Bebas Neue',sans-serif;font-size:56px;line-height:1}
+.kunde-plate .ky{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.2em;opacity:.5;margin-top:2px}
+
+/* ===== BEFUND-KARTE (Brain Fry) ===== */
+.befund{
+  display:flex;gap:20px;align-items:center;max-width:520px;margin:0 auto 30px;
+  background:var(--panel);border:2px solid var(--slop);
+  box-shadow:5px 5px 0 var(--ink);padding:18px 22px;text-align:left;
+}
+.befund svg{flex-shrink:0}
+.bf-k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--slop);margin-bottom:4px}
+.bf-name{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.04em;line-height:1}
+.bf-sub{font-family:'Crimson Text',serif;font-style:italic;font-size:14px;line-height:1.5;margin-top:8px}
+.bf-meta{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.5;margin-top:8px}
+
+/* ===== ZUSCHAUER-FRAGE (Wahl ohne Wirkung — Beobachter-Doktrin) ===== */
+.ask-panel{
+  max-width:520px;margin:0 auto 30px;background:var(--panel);
+  border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
+  padding:22px 26px;position:relative;z-index:91;text-align:center;
+}
+.ask-k{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:10px}
+.ask-q{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;line-height:1.05;margin-bottom:18px}
+.ask-opts{display:flex;flex-direction:column;gap:9px}
+.ask-btn{
+  border:2px solid var(--ink);background:#fff;padding:12px 14px;
+  font-family:'Inter',sans-serif;font-size:13.5px;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease,opacity .3s ease,background .3s ease;
+}
+.ask-btn:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.ask-btn.picked{background:var(--mustard);transform:none;box-shadow:none;cursor:default}
+.ask-btn.dim{opacity:.3;pointer-events:none}
+.ask-reply{
+  font-family:'Crimson Text',serif;font-style:italic;font-size:16px;
+  margin-top:16px;opacity:0;transition:opacity .6s ease;
+}
+.ask-reply.show{opacity:1}
+
+/* ===== KETTEN-REVEAL (Comic-Timing innerhalb einer Szene) ===== */
+.chain>*{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.chain>*.on{opacity:1;transform:none}
+
+/* ===== WERNTAL-MONITOR (großer KPI-Block links) ===== */
+.kpi-side{
+  position:fixed;left:16px;top:50%;transform:translateY(-50%);
+  width:172px;background:var(--paper);border:2px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);padding:16px 16px 12px;
+  z-index:95;opacity:0;pointer-events:none;transition:opacity .6s ease;
+  color:var(--ink);
+}
+.kpi-side.visible{opacity:1}
+.kpi-side .kst{
+  font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.2em;
+  text-transform:uppercase;opacity:.5;margin-bottom:14px;text-align:center;
+  border-bottom:1px solid rgba(0,0,0,.15);padding-bottom:8px;
+}
+.ks-item{margin-bottom:14px}
+.ks-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+.ks-val{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;margin:3px 0 5px}
+.ks-val.bad{color:var(--slop)}
+.ks-val.changing{animation:kpiFlash .6s ease}
+.ks-bar{height:6px;background:rgba(0,0,0,.12);position:relative}
+.ks-fill{position:absolute;left:0;top:0;height:100%;background:var(--hospital);transition:width 1s ease,background .6s ease}
+.ks-fill.bad{background:var(--slop)}
+.ks-r{font-family:'IBM Plex Mono',monospace;font-size:9.5px;opacity:.65;text-align:center;margin-top:4px;letter-spacing:.12em}
+.ks-r .hot{color:var(--slop);font-weight:600}
+@media (max-width:1239px){.kpi-side{display:none}}
+@media (min-width:1240px){.kpi-bar{display:none}}
+
+/* recall status line (after send) */
+.recall-line{
+  background:var(--ink);color:var(--paper);
+  padding:0 24px 18px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;transition:opacity 1s ease,max-height .6s ease;
+}
+.recall-line.show{opacity:.85;max-height:80px}
+.recall-line .fail{color:var(--mustard)}
+
+/* Copilot meeting recap card (act 3 payoff) */
+.recap-card{
+  position:absolute;bottom:13vh;bottom:13dvh;right:max(3vw,16px);width:min(260px,72vw);
+  background:#fff;color:var(--ink);border:2px solid var(--ink);
+  box-shadow:6px 6px 0 rgba(0,0,0,.55);padding:14px 16px;
+  font-family:'Inter',sans-serif;font-size:11.5px;line-height:1.6;
+  opacity:0;transform:translateY(14px);transition:opacity .9s ease,transform .9s ease;
+  pointer-events:none;z-index:5;
+}
+.recap-card.show{opacity:1;transform:none}
+.recap-card .rbadge{
+  display:inline-block;background:#0078d4;color:#fff;
+  font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.14em;
+  padding:2px 7px;text-transform:uppercase;margin-bottom:8px;
+}
+.recap-card .ritems{margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;opacity:.6;letter-spacing:.04em}
+
+/* soft ratings (act 4 ending, no score drama) */
+.soft-scores{
+  display:flex;gap:8px 26px;justify-content:center;flex-wrap:wrap;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+}
+.soft-scores>div{display:flex;gap:9px;align-items:baseline}
+.soft-scores .sl{opacity:.5}
+.soft-scores .sv{font-weight:600;color:var(--hospital)}
+.soft-scores .sv.low{color:var(--slop)}
+
+/* final poster (shareable frame) */
+.end-poster{
+  background:var(--mustard);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);
+  padding:34px 32px 24px;max-width:520px;width:100%;text-align:center;color:var(--ink);
+  margin-top:16px;
+}
+.end-poster .ep-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,4.6vw,38px);letter-spacing:.04em;line-height:1.05}
+.end-poster .ep-plan-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.65;margin-top:22px}
+.end-poster .ep-plan{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.end-poster .ep-plan .postit{
+  width:auto;height:auto;min-width:104px;max-width:150px;min-height:76px;padding:10px 9px;
+  font-size:12px;background:var(--paper);
+}
+.end-poster .ep-plan .postit:nth-child(2){transform:rotate(2deg)}
+.end-poster .ep-plan .postit:nth-child(3){transform:rotate(-1.5deg)}
+.end-poster .ep-hint{font-family:'Crimson Text',serif;font-style:italic;font-size:15px;margin-top:14px}
+.end-poster .ep-foot{
+  font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  opacity:.5;margin-top:22px;border-top:1.5px solid rgba(26,26,26,.35);padding-top:12px;
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .rv,.seq>*,.chain>*{opacity:1 !important;transform:none !important}
+  .format-step,.format-arrow,.crisis-line{opacity:1 !important;transform:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="fuse" id="fuse"><div class="fuse-fill" id="fuseFill"></div></div>
+<button class="sound-toggle" id="soundToggle" aria-pressed="false">Ton aus</button>
+<div class="tag-counter" id="tagCounter">Tag 1 von 47</div>
+
+<div class="kpi-bar" id="kpiBar">
+  <div class="kpi"><span class="kpi-label">Slop Load</span><span class="kpi-value" id="kpiSlop">3%</span></div>
+  <div class="kpi"><span class="kpi-label">Originaltreue</span><span class="kpi-value" id="kpiOrig">92%</span></div>
+  <div class="kpi"><span class="kpi-label">Entscheidungstempo</span><span class="kpi-value" id="kpiDec">87%</span></div>
+  <div class="kpi rwert"><span class="kpi-label">R</span><span class="kpi-value" id="kpiR">0,2</span></div>
+</div>
+
+<div class="kpi-side" id="kpiSide">
+  <div class="kst">Werntal-Monitor</div>
+  <div class="ks-item">
+    <div class="ks-label">Slop Load</div>
+    <div class="ks-val" id="ksSlop">3%</div>
+    <div class="ks-bar"><div class="ks-fill bad" id="ksSlopF" style="width:3%"></div></div>
+  </div>
+  <div class="ks-item">
+    <div class="ks-label">Originaltreue</div>
+    <div class="ks-val" id="ksOrig">92%</div>
+    <div class="ks-bar"><div class="ks-fill" id="ksOrigF" style="width:92%"></div></div>
+  </div>
+  <div class="ks-item">
+    <div class="ks-label">Entscheidungstempo</div>
+    <div class="ks-val" id="ksDec">87%</div>
+    <div class="ks-bar"><div class="ks-fill" id="ksDecF" style="width:87%"></div></div>
+  </div>
+  <div class="ks-r">R-Wert&nbsp;<span id="ksR">0,2</span></div>
+</div>
+
+<!-- ============ POSTER + PRE-ROLL ============ -->
+<section class="sec dark grain vignette-shadow">
+  <div class="ckpt" data-day="1" data-theme="dark" data-hud="0" data-ht="0,0"></div>
+
+  <div class="prs poster">
+    <div class="rv">
+      <svg viewBox="0 0 220 220" width="min(44vw,200px)" style="margin:0 auto 30px" aria-hidden="true">
+        <circle cx="110" cy="110" r="104" fill="#E8B931"/>
+        <g fill="#1A1A1A" opacity=".14">
+          <circle cx="52" cy="52" r="2.6"/><circle cx="76" cy="38" r="2.6"/><circle cx="102" cy="30" r="2.6"/>
+          <circle cx="130" cy="30" r="2.6"/><circle cx="158" cy="40" r="2.6"/><circle cx="178" cy="60" r="2.6"/>
+          <circle cx="36" cy="76" r="2.6"/><circle cx="30" cy="104" r="2.6"/>
+        </g>
+        <path d="M30,152 L30,112 L56,92 L82,112 L108,92 L134,112 L134,72 L148,72 L148,112 L190,112 L190,152 Z" fill="#1A1A1A"/>
+        <rect x="44" y="124" width="12" height="15" fill="#E8B931"/>
+        <rect x="66" y="124" width="12" height="15" fill="#E8B931"/>
+        <rect x="88" y="124" width="12" height="15" fill="#E8B931"/>
+        <rect x="110" y="124" width="12" height="15" fill="#E8B931"/>
+        <rect x="156" y="124" width="12" height="15" fill="#E8B931"/>
+        <circle cx="141" cy="58" r="4" fill="#C84B3C"/>
+        <circle cx="148" cy="42" r="5.5" fill="#C84B3C" opacity=".85"/>
+        <circle cx="157" cy="24" r="7" fill="#C84B3C" opacity=".68"/>
+        <line x1="14" y1="152" x2="206" y2="152" stroke="#1A1A1A" stroke-width="3"/>
+      </svg>
+      <div class="makers">Von den Machern von „Das Meeting-Monster“ (2025)</div>
+      <div class="film-title">AI SLOP<br>PANDEMIC</div>
+      <div class="film-sub">Ein Büro-Aufklärungsfilm in vier Akten</div>
+      <div class="cert rv">Freigegeben zur Vorführung in Großraumbüros</div>
+    </div>
+    <div class="scroll-hint"><span>Scrollen Sie. Langsam.</span><span class="chev"><svg viewBox="0 0 16 9" width="15" height="9" aria-hidden="true"><path d="M1,1 L8,8 L15,1" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+  </div>
+
+  <div class="prs"><div class="line rv">In 47 Tagen verliert die Firma auf dieser Seite<br><strong>ihren wichtigsten Kunden,</strong><br><strong>2,3 Millionen Euro</strong><br>und die Hälfte ihrer Glaubwürdigkeit.</div></div>
+  <div class="prs"><div class="line rv">Niemand wird der Firma Böses wollen.<br>Niemand wird absichtlich etwas Falsches tun.</div></div>
+  <div class="prs"><div class="line rv">Es beginnt mit einer E-Mail.<br>Einer guten E-Mail. Drei Sätze, ein klarer Auftrag.<br><strong>Sie wird nicht gelesen werden.</strong></div></div>
+  <div class="prs"><div class="line rv">Als Zuschauer werden Sie es kommen sehen.<br>Mit jedem Zentimeter, den Sie scrollen, kommt es näher.<br><strong>Aufhalten können Sie es nicht.</strong><div class="fuse-hint">Die rote Linie oben ist die Zündschnur. Sie brennt bereits.</div></div></div>
+  <div class="prs"><div class="line rv"><strong>Beobachten Sie genau.</strong></div></div>
+</section>
+
+<!-- ============ ACT 0 ============ -->
+<div class="chapter grain">
+  <div class="ckpt" data-day="1" data-theme="dark" data-hud="0" data-ht="0,0"></div>
+  <div class="rv">
+    <div class="akt">Akt 0</div>
+    <h2>Der gesunde Patient</h2>
+    <div class="sub">Eine Werkhalle in Süddeutschland. Montagmorgen, 8:30 Uhr.</div>
+  </div>
+</div>
+
+<section class="sec paper">
+  <div class="ckpt" data-day="1" data-theme="light" data-hud="1" data-kpi="3,92,87,0.2" data-ht="4,0.08"></div>
+  <div class="wrap">
+
+    <div class="establishing rv">
+      <div class="label">Montag · Tag 1 von 47</div>
+      <svg viewBox="0 0 280 160" width="280" height="160" style="margin:0 auto 26px">
+        <rect x="10" y="80" width="260" height="70" fill="none" stroke="#1A1A1A" stroke-width="3"/>
+        <polygon points="10,80 60,40 110,80" fill="none" stroke="#1A1A1A" stroke-width="3"/>
+        <polygon points="110,80 160,40 210,80" fill="none" stroke="#1A1A1A" stroke-width="3"/>
+        <polygon points="210,80 260,55 270,80" fill="none" stroke="#1A1A1A" stroke-width="3"/>
+        <rect x="225" y="20" width="14" height="50" fill="none" stroke="#1A1A1A" stroke-width="3"/>
+        <rect x="30" y="100" width="18" height="22" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="60" y="100" width="18" height="22" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="90" y="100" width="18" height="22" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="120" y="100" width="40" height="40" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <line x1="140" y1="100" x2="140" y2="140" stroke="#1A1A1A" stroke-width="2"/>
+        <line x1="120" y1="120" x2="160" y2="120" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="180" y="100" width="18" height="22" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="210" y="100" width="18" height="22" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="240" y="100" width="18" height="22" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+        <g transform="translate(155,150)">
+          <rect x="-6" y="-12" width="12" height="12" fill="#7CA68C" stroke="#1A1A1A" stroke-width="1.5"/>
+          <path d="M0,-12 Q-12,-22 -10,-32 M0,-12 Q12,-22 10,-32 M0,-12 L0,-30 M0,-12 Q-6,-20 -3,-28 M0,-12 Q6,-20 3,-28" stroke="#7CA68C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div class="company-name">WERNTAL-WERKE GMBH</div>
+      <div class="slogan">Seit 1962 zuverlässig.</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.5;margin-top:10px">Sondermaschinenbau · 180 Mitarbeiter</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="sec paper">
+  <div class="wrap">
+    <div class="caption-wrap rv"><div class="caption">Die Belegschaft · Sechs Menschen · Nehmen Sie sich Zeit</div></div>
+
+    <div class="cast-solo-card rv">
+      <div class="cs-index">1 / 6</div>
+      <div class="portrait" data-svg="sabine"></div>
+      <div class="cs-name">Sabine M.</div>
+      <div class="cs-role">Senior PM · 47</div>
+      <div class="cs-detail">Erster Tag nach Elternzeit.</div>
+      <div class="cs-extra">Schreibt die klarsten Mails der Firma. Noch.<br>Hat in der Elternzeit drei Prozesshandbücher gelesen. Freiwillig.<br>Kaffee: schwarz. Meetings: nur mit Agenda.</div>
+    </div>
+
+    <div class="cast-solo-card rv">
+      <div class="cs-index">2 / 6</div>
+      <div class="portrait" data-svg="marcus"></div>
+      <div class="cs-name">Marcus K.</div>
+      <div class="cs-role">Vertriebsleiter · 52</div>
+      <div class="cs-detail">7 Termine heute.</div>
+      <div class="cs-extra">Liest unterwegs. Das heißt: Er lässt sich vorlesen.<br>Kennt jeden Kunden beim Vornamen. Und jedes Autobahnkreuz.<br>Bauchgefühl-Trefferquote seit 1999: unheimlich gut. Traut ihr keiner mehr.</div>
+    </div>
+
+    <div class="cast-solo-card rv">
+      <div class="cs-index">3 / 6</div>
+      <div class="portrait" data-svg="hellwig"></div>
+      <div class="cs-name">Dr. Eva Hellwig</div>
+      <div class="cs-role">COO · 55</div>
+      <div class="cs-detail">Hat dieses Quartal 12 neue Dashboards bestellt.</div>
+      <div class="cs-extra">Mehr Daten, weniger Angst. Seit dem Beinahe-Burnout 2022.<br>Hat die Firma durch zwei Krisen geführt. Beide ohne Dashboard.<br>Passt seitdem gut auf sich auf: Pulsuhr, Schlaf-App, Stimmungs-Tracker.</div>
+    </div>
+
+    <div class="cast-solo-card berger-solo rv">
+      <div class="cs-index">4 / 6 · Merken Sie sich diese Frau.</div>
+      <div class="portrait" data-svg="berger"><span class="mugpos" data-mug></span></div>
+      <div class="cs-name">Frau Berger</div>
+      <div class="cs-role">Assistenz GF · 58</div>
+      <div class="cs-detail">Liest jede Mail im Original.</div>
+      <div class="cs-extra">Tasse: „Welt-Beste-Chefin“. Sie ist Assistenz. Sie benutzt sie trotzdem. Jeden Tag.<br>Kennt das Ablagesystem. Auch das von 1998.<br>Weiß, wer 2019 den Serverraum geflutet hat. Sagt es nicht.</div>
+    </div>
+
+    <div class="cast-solo-card rv">
+      <div class="cs-index">5 / 6</div>
+      <div class="portrait" data-svg="tobias"></div>
+      <div class="cs-name">Tobias R.</div>
+      <div class="cs-role">Junior Analyst · 26</div>
+      <div class="cs-detail">Hat noch nie eine Wettbewerbsanalyse ohne KI gemacht.</div>
+      <div class="cs-extra">Bringt freitags Kuchen mit. Selbst gebacken, nach KI-Rezept. Der Kuchen ist gut.<br>LinkedIn-Banner: „Lifelong Learner“. Stimmt sogar.<br>Duzt alle. Auch den Beirat. Einmal.</div>
+    </div>
+
+    <div class="cast-solo-card rv">
+      <div class="cs-index">6 / 6</div>
+      <div class="portrait" data-svg-jonas="I make IT work"></div>
+      <div class="cs-name">Jonas P.</div>
+      <div class="cs-role">IT · 34</div>
+      <div class="cs-detail">Beobachtet.</div>
+      <div class="cs-extra">Hat den KI-Stack ausgerollt. Auf Anweisung. Sauber, mit Schulungsplan.<br>Den Schulungsplan wollte niemand. Seitdem versucht er einzufangen, was er ausgerollt hat.<br>Führt eine Liste: „Dinge, die ich hätte sagen sollen“. Sie ist lang.</div>
+    </div>
+
+    <div class="cast-solo-card rv">
+      <div class="cs-index" style="color:var(--slop);opacity:.75">Und einer, der hier nicht arbeitet — aber vieles bezahlt.</div>
+      <div class="kunde-plate"><span class="kb">B.</span><span class="ky">Seit 1987</span></div>
+      <div class="cs-name">Brenneker GmbH</div>
+      <div class="cs-role">Der Kunde · größter Einzelkunde</div>
+      <div class="cs-detail">Bestellt jährlich. Reklamiert selten. Ruft lieber an.</div>
+      <div class="cs-extra">Jeder neunte Umsatz-Euro kommt von Brenneker.<br>Der Folgeauftrag für nächstes Jahr: 2,3 Millionen.<br>Die Zusage gilt als Formsache.</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec paper">
+  <div class="wrap">
+    <div class="rv" data-props data-photo="0" data-yucca="1" data-postit="1" data-shirt="I make IT work" data-mdays="271" data-monster="sleep" data-pcaption="Flur, Erdgeschoss · Tag 1 · Alles in Ordnung. Noch."></div>
+  </div>
+</section>
+
+<section class="sec paper">
+  <div class="wrap">
+    <div class="caption-wrap rv"><div class="caption">Montag, 8:47 Uhr · Das ist die E-Mail.</div></div>
+    <div class="mail-card rv" data-sfx="ping">
+      <div class="mail-header">
+        Von: Sabine M. · An: Marcus K. · CC: Dr. Hellwig, Frau Berger<br>
+        Betreff: Q3-Reporting Brenneker · Gesendet, 8:47
+      </div>
+      <div class="mail-body">Hi Marcus,
+
+kurz zum Q3-Reporting: drei Punkte.
+
+1. Wir haben den Liefertermin für Kunde Brenneker um 2 Wochen verfehlt – Materialengpass bei Zulieferer Hartmann.
+
+2. Brenneker droht, 30% des Folgeauftrags an Schulze-Industrie zu vergeben. Sie wollen bis Freitag eine Zusage, dass sich das nicht wiederholt.
+
+3. Mein Vorschlag: Du rufst Brenneker direkt an, ich bereite parallel einen Zweitlieferanten-Plan vor. Können wir bis Mittwoch sprechen?</div>
+      <div class="mail-signature">Sabine</div>
+    </div>
+    <div class="berger-aside rv">
+      <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+      <div class="bubble berger">„Schöne klare Mail.“</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec paper">
+  <div class="wrap narrow" style="text-align:center">
+    <div class="caption-wrap rv"><div class="caption">8:49 Uhr · Ein Pop-up auf Sabines Bildschirm</div></div>
+    <div class="rv"><div class="copilot-popup">
+      <div class="badge">Microsoft Copilot</div>
+      <h4>Diese Mail wirkt sehr direkt.</h4>
+      <p>Möchten Sie eine überarbeitete Version nachsenden? Die ursprüngliche Nachricht wird bei allen Empfängern ersetzt.</p>
+      <button class="cta">Version überarbeiten →</button>
+      <div style="margin-top:14px;font-size:11px;opacity:.55"><span style="display:inline-block;width:11px;height:11px;border:1.5px solid #777;vertical-align:-1px;margin-right:7px"></span>Nicht mehr anzeigen <span style="opacity:.75">(wird gelegentlich trotzdem angezeigt)</span></div>
+    </div></div>
+    <div class="berger-aside rv" style="max-width:420px">
+      <div class="mini-portrait" data-svg="sabine"><span class="pname">Sabine</span></div>
+      <div class="bubble thought">„Vielleicht… eine bessere Version draus machen?“</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACT 1 ============ -->
+<div class="chapter grain">
+  <div class="ckpt" data-day="1" data-theme="dark" data-hud="1" data-ht="4.5,0.09"></div>
+  <div class="rv">
+    <div class="akt">Akt 1</div>
+    <h2>Patient Zero</h2>
+    <div class="sub">Sie werden jetzt kurz mitmachen müssen. Es tut uns leid. So funktioniert es eben.</div>
+  </div>
+</div>
+
+<section class="sec paper" id="mutatorSec">
+  <div class="wrap">
+    <div class="caption-wrap rv"><div class="caption">Ziehen Sie den Regler. Sie müssen nicht wollen.</div></div>
+    <div class="mutator-wrap rv">
+      <div class="mutator-mail">
+        <div class="mutator-mail-header">
+          Von: Sabine M. · An: Marcus K. · CC: Dr. Hellwig, Frau Berger<br>
+          Betreff: Q3-Reporting Brenneker · Überarbeitung — ersetzt die gesendete Nachricht
+        </div>
+        <div class="mutator-mail-body" id="mutBody"></div>
+      </div>
+      <div class="mutator-controls">
+        <div class="mutator-slider-block">
+          <div class="mutator-slider-label">
+            <span>Aufblas-Faktor</span>
+            <span id="mutFactor">1×</span>
+          </div>
+          <input type="range" id="mutSlider" min="1" max="10" value="1" step="1" aria-label="Aufblas-Faktor von 1 bis 10">
+        </div>
+        <div class="mutator-stats">
+          <div class="mutator-stat"><span class="label">Wörter</span><span class="val" id="mutWords">67</span></div>
+          <div class="mutator-stat"><span class="label">Lesezeit</span><span class="val" id="mutTime">20 Sek</span></div>
+          <div class="mutator-stat"><span class="label">Handlungsaufforderung</span><span class="val" id="mutCta">sichtbar</span></div>
+          <div class="mutator-stat"><span class="label">Informationsgehalt</span><span class="val" id="mutInfo">67 Wörter</span></div>
+        </div>
+      </div>
+      <div class="mutator-sendrow"><button class="mutator-send" id="mutSend">Senden →</button></div>
+      <div class="recall-line" id="recallLine">Original ersetzt bei: Marcus K. ✓ · Dr. Hellwig ✓ · <span class="fail">Frau Berger — Nachricht bereits geöffnet. Ersetzen nicht möglich.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- notifications -->
+<div class="notif-overlay" id="notif1">
+  <div class="notif" role="dialog" aria-modal="true" aria-label="Copilot-Hinweis">
+    <div class="notif-badge">Microsoft Copilot</div>
+    <h4>Diese Nachricht wirkt sehr direkt.</h4>
+    <p>Möchten Sie Tonalität und Stakeholder-Fit verbessern?</p>
+    <div class="notif-actions">
+      <button class="notif-btn notif-btn-secondary" id="notif1Send">Trotzdem senden</button>
+      <button class="notif-btn notif-btn-primary" id="notif1Yes">Empfohlen: Verbessern</button>
+    </div>
+  </div>
+</div>
+<div class="notif-overlay" id="notif2">
+  <div class="notif" role="dialog" aria-modal="true" aria-label="Copilot-Rückfrage">
+    <div class="notif-badge">Microsoft Copilot</div>
+    <h4>Sind Sie sicher?</h4>
+    <p>Empfohlen für professionelles Erwartungsmanagement und konsistente Stakeholder-Kommunikation.</p>
+    <div class="notif-actions">
+      <button class="notif-btn notif-btn-secondary dimmer" id="notif2Send">Trotzdem senden</button>
+      <button class="notif-btn notif-btn-primary" id="notif2Yes">Empfohlen: Verbessern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EVERYTHING AFTER THE GATE ============ -->
+<div class="gated" id="afterGate">
+
+<section class="sec paper">
+  <div class="ckpt" data-day="1" data-theme="light" data-hud="1" data-kpi="17,84,79,0.5" data-ht="5,0.10"></div>
+  <div class="wrap" id="marcusPanelAnchor">
+    <div class="caption-wrap rv"><div class="caption">9:03 Uhr · Marcus’ Bildschirm · Termin 2 von 7</div></div>
+    <div class="marcus-screen rv" data-fx="marcusMoment" id="marcusScreen">
+      <div class="orig-peek" id="origPeek">
+        <div class="op-bar"><span id="peekWords">Q3-Reporting Brenneker · 420 Wörter</span><span>✕</span></div>
+        <div class="op-body">Lieber Marcus,
+
+im Sinne einer transparenten und proaktiven Kommunikation möchte ich Dich nachfolgend über drei strategisch relevante Aspekte unseres Q3-Reportings informieren, die einer zeitnahen, partnerschaftlichen Abstimmung bedürfen.
+
+Executive Summary
+Im Berichtszeitraum sind im Kontext unserer Kundenbeziehung Brenneker terminliche Herausforderungen aufgetreten, die – im Lichte sich verändernder Marktdynamiken…</div>
+      </div>
+      <div class="marcus-screen-bar"><span>Outlook · Posteingang</span><span>09:03</span></div>
+      <div class="marcus-mail-incoming">
+        <div class="marcus-mail-from">Sabine M. · 8:52</div>
+        <div class="marcus-mail-subject">Q3-Reporting Brenneker <span class="marcus-mail-tag">KI-erstellt</span></div>
+      </div>
+      <button class="marcus-summarize-btn" id="marcusSumBtn" tabindex="-1">
+        <svg viewBox="0 0 12 18" width="10" height="15" aria-hidden="true" style="flex-shrink:0"><path d="M7,1 L2,10 L5.5,10 L4,17 L10,7 L6.5,7 Z" fill="#E8B931" stroke="#1A1A1A" stroke-width=".8"/></svg>
+        <span id="marcusSumLabel">Zusammenfassen lassen</span>
+      </button>
+      <div class="marcus-summary" id="marcusSummary">
+        <div class="marcus-summary-label">Zusammenfassung der E-Mail</div>
+        • Q3-Reporting enthält strategisch relevante Aspekte zur Kundenbeziehung Brenneker<br>
+        • Operative Herausforderungen im Lieferprozess identifiziert<br>
+        • Empfehlung zur partnerschaftlichen Abstimmung im Rahmen der etablierten Kommunikationsformate<br>
+        • Sabine schlägt einen kollaborativen Lösungsansatz vor
+        <div class="evaporate-zone">
+          <div class="evaporate-line" id="evapLine">„Du rufst Brenneker direkt an … Zusage bis Freitag.“</div>
+          <div class="evaporate-tag" id="evapTag">— in der Zusammenfassung nicht enthalten</div>
+          <div class="evaporate-tag" id="mFeedback" style="color:rgba(232,232,232,.55);margin-top:10px">Marcus bewertet die Zusammenfassung: hilfreich ✓<br>„Ihr Feedback verbessert zukünftige Zusammenfassungen.“</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec paper">
+  <div class="wrap">
+    <div class="rv" data-props data-photo="0" data-yucca="2" data-postit="1" data-shirt="Have you tried turning it off?" data-mdays="271" data-monster="sleep" data-pcaption="Flur, Erdgeschoss · Tag 1, kurz nach 9 · Ein Blatt ist gefallen."></div>
+  </div>
+</section>
+
+<!-- Infektionskarte A: Tag 1 -->
+<section class="sec dark grain">
+  <div class="ckpt" data-day="1" data-theme="dark" data-hud="1"></div>
+  <div class="wrap">
+    <div class="infect-wrap rv">
+      <div class="infect-kicker">Übertragungswege · Stand Tag 1</div>
+      <div class="infect-title">Patient Zero hat gesendet.</div>
+      <div class="infect-map">
+        <svg viewBox="0 0 560 150" aria-hidden="true">
+          <defs><marker id="arA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#C84B3C"/></marker></defs>
+          <path d="M78,48 Q110,20 140,45" fill="none" stroke="#C84B3C" stroke-width="2.2" marker-end="url(#arA)"/>
+          <circle cx="55" cy="70" r="20" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="55" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">SABINE</text>
+          <circle cx="145" cy="70" r="20" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="145" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">MARCUS</text>
+          <circle cx="235" cy="70" r="20" fill="none" stroke="rgba(244,237,224,.45)" stroke-width="2"/>
+          <text x="235" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.5)" letter-spacing="1">HELLWIG</text>
+          <circle cx="325" cy="70" r="20" fill="none" stroke="rgba(244,237,224,.45)" stroke-width="2"/>
+          <text x="325" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.5)" letter-spacing="1">TOBIAS</text>
+          <circle cx="415" cy="70" r="20" fill="none" stroke="#E8B931" stroke-width="2.5"/>
+          <text x="415" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">BERGER</text>
+          <text x="415" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#E8B931" letter-spacing="1.5">IMMUN</text>
+          <circle cx="505" cy="70" r="20" fill="none" stroke="rgba(244,237,224,.45)" stroke-width="2"/>
+          <text x="505" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.5)" letter-spacing="1">JONAS</text>
+          <text x="505" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="rgba(244,237,224,.4)" letter-spacing="1.5">BEOBACHTET</text>
+        </svg>
+      </div>
+      <div class="infect-caption">Infiziert: 2 von 6 · Übertragungsweg: eine hilfreiche Empfehlung</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACT 2 ============ -->
+<div class="chapter grain">
+  <div class="ckpt" data-day="1" data-theme="dark" data-hud="1" data-ht="5.5,0.10"></div>
+  <div class="rv">
+    <div class="akt">Akt 2</div>
+    <h2>Die Vermehrung</h2>
+    <div class="sub">Sehen Sie zu, wie eine Firma das Denken auslagert.<br>Eingreifen können Sie nicht.</div>
+    <div class="daytick" data-fx="daytick" data-seq="3">Tag <span class="n">1</span> von 47</div>
+  </div>
+</div>
+
+<!-- V1 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="3" data-theme="light" data-hud="1" data-kpi="25,78,72,0.9" data-ht="5.5,0.10"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 3 · Mittwoch, 16:30 Uhr</div>
+      <div class="vignette-title">Sabine fragt nach.</div>
+    </div>
+    <div class="chain">
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="sabine"><span class="pname">Sabine</span></div>
+        <div class="bubble">„Hi Marcus, hast Du Brenneker schon erreicht?“</div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="marcus"><span class="pname">Marcus</span></div>
+        <div class="bubble thought">„Früher hätte ich einfach angerufen. Aber alle klingen jetzt so… strukturiert.“</div>
+      </div>
+    </div>
+    <div class="ask-panel" data-chain-wait="1">
+      <div class="ask-k">Kurze Frage, bevor es weitergeht</div>
+      <div class="ask-q">Was würden Sie an Marcus’ Stelle tun?</div>
+      <div class="ask-opts">
+        <button class="ask-btn" data-honest="0">Anrufen. Sofort.</button>
+        <button class="ask-btn" data-honest="0">Die Mail lesen. Sind ja nur drei Sätze.</button>
+        <button class="ask-btn" data-honest="1">Zusammenfassen lassen. Keine Zeit.</button>
+      </div>
+      <div class="ask-reply"></div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="marcus" data-lbar><span class="pname">Marcus</span></div>
+        <div class="bubble summary"><span class="sub">Zusammenfassung für Marcus</span>Sabine fragt nach Status.</div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="marcus" data-lbar><span class="pname">Marcus</span></div>
+        <div class="bubble"><span class="sub">Marcus’ KI-Antwort · 3 Sekunden Arbeit</span>„Ich habe das Thema auf dem Schirm und werde es zeitnah adressieren.“</div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="sabine" data-lbar><span class="pname">Sabine</span></div>
+        <div class="bubble summary"><span class="sub">Zusammenfassung für Sabine</span>Marcus stimmt zu, freut sich auf Austausch.</div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger" data-ghost>„Hat Marcus eigentlich Brenneker zurückgerufen?“</div>
+        <div style="flex-shrink:0;align-self:center">
+          <svg viewBox="0 0 60 60" width="52" height="52">
+            <ellipse cx="26" cy="20" rx="13" ry="15" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/>
+            <path d="M14,15 Q18,9 26,9 Q34,9 38,15" stroke="#1A1A1A" stroke-width="2.5" fill="none"/>
+            <circle cx="22" cy="20" r="1.4" fill="#1A1A1A"/><circle cx="30" cy="20" r="1.4" fill="#1A1A1A"/>
+            <g class="waveoff">
+              <path d="M40,44 Q46,36 50,28" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M50,28 L47,22 M50,28 L54,23 M50,28 L55,28" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            </g>
+            <path d="M12,52 Q12,42 20,40 L34,40 Q42,42 42,52" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
+          </svg>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.08em;opacity:.5;text-transform:uppercase;text-align:center;margin-top:2px">winkt ab</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- V2 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="16" data-theme="light" data-hud="1" data-kpi="35,68,65,1.4" data-ht="6,0.11"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 16 · Dienstag · Strategiemeeting</div>
+      <div class="vignette-title">„Unsere Daten zeigen…“</div>
+    </div>
+    <div class="chain">
+    <div class="rv"><div class="dashboard-fake">
+      <div class="dashboard-title"><span>Customer Insights Hub</span><span>Live Data Lake</span></div>
+      <div class="dashboard-row"><span class="green">Copilot-Nutzungsquote</span><span class="green">94 % ✓</span></div>
+      <div class="dashboard-row"><span class="green">► aktive Datenquellen</span><span class="green">3</span></div>
+      <div class="dashboard-row"><span class="gray">► „in Anbindung“ seit 2021</span><span class="gray">44</span></div>
+      <div class="dashboard-row"><span>Datensätze gesamt</span><span>12.000</span></div>
+      <div class="dashboard-row"><span class="red">davon leer</span><span class="red">11.400</span></div>
+      <div class="dashboard-row"><span class="gray">Dashboards, die Dashboards zusammenfassen</span><span class="gray">3</span></div>
+    </div></div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="hellwig"><span class="pname">Hellwig</span></div>
+        <div class="bubble thought">„Wenn ich es im Dashboard sehe, kann es mich nicht überraschen. Nie wieder.“</div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="hellwig" data-lbar><span class="pname">Hellwig</span></div>
+        <div class="bubble">„Unsere Daten zeigen eindeutig, dass wir hier eine Chance haben.“<span style="display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9px;letter-spacing:.1em;opacity:.45;margin-top:8px;text-transform:uppercase">Erkenntnis · KI-synthetisiert aus 600 nicht-leeren Zeilen</span></div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger" data-ghost>„Frau Dr. Hellwig, die Zahlen — wo kommen die her?“</div>
+      </div>
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="hellwig"><span class="pname">Hellwig</span></div>
+        <div class="bubble">„Aus der KI, Frau Berger. Alles in Ordnung.“</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- Der Vorschlag: "Wofür?" -->
+<section class="sec paper">
+  <div class="ckpt" data-day="18" data-theme="light" data-hud="1" data-kpi="40,63,60,1.6"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 18 · Strategiemeeting, Minute 4</div>
+      <div class="vignette-title">Der Vorschlag.</div>
+    </div>
+    <div class="chain">
+    <div class="panel rv" style="max-width:520px">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="tobias"><span class="pname">Tobias</span></div>
+        <div class="bubble">„Sollen wir kurz… selbst überlegen?“</div>
+      </div>
+    </div>
+    <div class="caption-wrap rv" style="margin:4px 0 18px" data-chain-delay="900"><div class="caption" style="background:transparent;color:var(--ink);opacity:.45;border:1px dashed rgba(0,0,0,.3)">4 Sekunden Stille</div></div>
+    <div class="panel rv" style="max-width:520px" data-chain-delay="1400">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="hellwig"><span class="pname">Hellwig</span></div>
+        <div class="bubble">„Wofür?“</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- V3 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="22" data-theme="light" data-hud="1" data-kpi="45,58,55,1.9" data-ht="6.5,0.11"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 22 · „Tobi, mach mal eine Wettbewerbsanalyse.“</div>
+      <div class="vignette-title">Steinhoff &amp; Becker GmbH</div>
+    </div>
+    <div class="chain">
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="marcus"><span class="pname">Marcus</span></div>
+        <div class="bubble">„Na Tobi, wie war das Wochenende?“</div>
+      </div>
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="tobias"><span class="pname">Tobias</span></div>
+        <div class="bubble">„Schick ich dir.“<span style="display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9px;letter-spacing:.1em;opacity:.45;margin-top:8px;text-transform:uppercase">Anhang: Wochenende_Rueckblick_final_v2.pdf · 40 Seiten</span></div>
+      </div>
+    </div>
+    <div class="type-panel rv" data-fx="tobitype">
+      <div class="panel-row" style="margin-bottom:12px">
+        <div class="mini-portrait infected" data-svg="tobias" data-lbar><span class="pname">Tobias</span></div>
+        <div style="flex:1;min-width:0">
+          <div class="type-screen" id="tobiScreen"><span id="tobiText"></span><span class="cursor"></span></div>
+          <div class="type-tag" id="tobiTag">KI-formuliert · Dauer: 0,8 Sekunden · Zweifel: entfernt</div>
+        </div>
+      </div>
+    </div>
+    <div class="doc-excerpt rv">
+      <div class="doc-head"><span>Wettbewerbsanalyse Q3 · Tobias R. · Websuche: deaktiviert (IT-Richtlinie)</span><span>Seite 1 von 40</span></div>
+      Im Marktumfeld dominieren neben den etablierten Playern (Müller-Tech, Brenner Industries) zunehmend agile Mittelstandsanbieter. Insbesondere die <span class="phantom">Steinhoff &amp; Becker GmbH</span> aus Nordrhein-Westfalen positioniert sich mit einem disruptiven Portfolio-Ansatz als ernstzunehmender Konkurrent…
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;opacity:.5;margin-top:14px;text-transform:uppercase">Steinhoff &amp; Becker GmbH: existiert nicht.</div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="marcus" data-lbar><span class="pname">Marcus</span></div>
+        <div class="bubble"><span class="sub">Marcus fragt seine KI: „Kennst du Steinhoff &amp; Becker?“</span>„Ein aufstrebender Anbieter mit starkem Portfolio-Ansatz. Definitiv im Blick behalten.“<span style="display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9px;letter-spacing:.1em;opacity:.45;margin-top:8px;text-transform:uppercase">Tobias’ KI hat sie erfunden. Marcus’ KI kennt sie trotzdem.</span></div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="hellwig" data-lbar><span class="pname">Hellwig</span></div>
+        <div class="bubble">„Wir müssen Steinhoff &amp; Becker im Blick behalten.“<span style="display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9px;letter-spacing:.1em;opacity:.45;margin-top:8px;text-transform:uppercase">Zwei Wochen später · Quartalsplanung, Seite 4</span></div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger" data-ghost>„Steinhoff &amp; Becker — kennen wir die?“</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- V4 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="22" data-theme="light" data-hud="1" data-kpi="52,52,45,2.3" data-ht="6.5,0.12"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 22 · „Tobi, mach mal einen Score.“</div>
+      <div class="vignette-title">Innovation Readiness Score™</div>
+    </div>
+    <div class="chain">
+    <div class="rv"><div class="score-table">
+      <div class="st-head">Innovation Readiness · 8 Abteilungen</div>
+      <div class="row"><span>Vertrieb</span><span class="green">7,3</span></div>
+      <div class="row"><span>Produktion</span><span class="gray">5,1</span></div>
+      <div class="row"><span>Marketing</span><span class="green">8,9</span></div>
+      <div class="row"><span>HR</span><span class="red">4,2</span></div>
+      <div class="row"><span>IT</span><span class="green">7,8</span></div>
+      <div class="row"><span>Finanzen</span><span class="gray">5,6</span></div>
+      <div class="row"><span>F&amp;E</span><span class="green">6,9</span></div>
+      <div class="row"><span>Logistik</span><span class="gray">5,3</span></div>
+    </div></div>
+    <div class="panel rv" style="background:#fafaf6">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;opacity:.55;text-transform:uppercase;margin-bottom:10px">Der vollständige Prompt hinter dieser Tabelle:</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.6">„Erstelle einen Innovation Readiness Score für die folgenden 8 Abteilungen auf einer Skala von 1–10. Sei realistisch.“</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.6;margin-top:12px;opacity:.7">Folge-Prompt, 14:31 Uhr: „Marketing einen Tick höher — die präsentieren es nachher.“</div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="hellwig"><span class="pname">Hellwig</span></div>
+        <div class="bubble">Drei Wochen später wird das Budget verteilt. Nach diesem Score.</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- Props check mid-act2 -->
+<section class="sec paper">
+  <div class="wrap">
+    <div class="rv" data-props data-photo="1" data-yucca="3" data-postit="1" data-shirt=" " data-mdays="292" data-monster="sleep" data-pcaption="Flur, Erdgeschoss · Tag 22 · Niemandem fällt etwas auf."></div>
+  </div>
+</section>
+
+<!-- Slop-Feed: die Produktion läuft -->
+<section class="sec paper">
+  <div class="ckpt" data-day="24" data-theme="light" data-hud="1" data-kpi="58,48,38,2.5" data-ht="7,0.12"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 24 · Niemand hat darum gebeten</div>
+      <div class="vignette-title">Die Produktion läuft.</div>
+    </div>
+    <div class="slop-feed chain">
+      <div class="feed-item rv">
+        <div class="feed-icon"><svg viewBox="0 0 28 36" width="24" height="31" aria-hidden="true"><rect x="8" y="2" width="12" height="18" rx="6" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><path d="M4,16 Q4,26 14,26 Q24,26 24,16" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><line x1="14" y1="26" x2="14" y2="33" stroke="#1A1A1A" stroke-width="2.5"/><line x1="8" y1="33" x2="20" y2="33" stroke="#1A1A1A" stroke-width="2.5"/></svg></div>
+        <div class="feed-body">
+          <div class="feed-title">Podcast „Q3 Insights — Deep Dive“</div>
+          <div class="feed-meta">22 Min · Marcus’ KI</div>
+        </div>
+      </div>
+      <div class="feed-item rv">
+        <div class="feed-icon"><svg viewBox="0 0 38 28" width="32" height="24" aria-hidden="true"><rect x="1.5" y="1.5" width="35" height="25" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><path d="M15,8 L26,14 L15,20 Z" fill="#1A1A1A"/></svg></div>
+        <div class="feed-body">
+          <div class="feed-title">Video-Avatar „Weekly Update KW 4“</div>
+          <div class="feed-meta">4 Min · Sabines KI · Sabine kommt darin nicht vor</div>
+        </div>
+      </div>
+      <div class="feed-item rv">
+        <div class="feed-icon"><div class="pagestack"><i></i><i></i><i></i></div></div>
+        <div class="feed-body">
+          <div class="feed-title">Whitepaper „Innovation Culture @ Werntal“</div>
+          <div class="feed-meta">40 Seiten · Tobias’ KI</div>
+        </div>
+      </div>
+      <div class="feed-item rv">
+        <div class="feed-icon"><svg viewBox="0 0 36 28" width="30" height="23" aria-hidden="true"><rect x="1.5" y="1.5" width="33" height="25" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><rect x="6" y="14" width="4.5" height="9" fill="#1A1A1A"/><rect x="13" y="9" width="4.5" height="14" fill="#1A1A1A"/><rect x="20" y="12" width="4.5" height="11" fill="#E8B931" stroke="#1A1A1A" stroke-width="1.2"/><rect x="27" y="7" width="4.5" height="16" fill="#1A1A1A"/></svg></div>
+        <div class="feed-body">
+          <div class="feed-title">Dashboard „Supplier Sentiment Live“</div>
+          <div class="feed-meta">14 Widgets · Hellwigs KI</div>
+        </div>
+      </div>
+      <div class="feed-item rv">
+        <div class="feed-icon"><svg viewBox="0 0 28 36" width="24" height="31" aria-hidden="true"><rect x="8" y="2" width="12" height="18" rx="6" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><path d="M4,16 Q4,26 14,26 Q24,26 24,16" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><line x1="14" y1="26" x2="14" y2="33" stroke="#1A1A1A" stroke-width="2.5"/><line x1="8" y1="33" x2="20" y2="33" stroke="#1A1A1A" stroke-width="2.5"/></svg></div>
+        <div class="feed-body">
+          <div class="feed-title">Podcast aus dem Whitepaper</div>
+          <div class="feed-meta">31 Min · Tobias’ KI</div>
+        </div>
+      </div>
+      <div class="feed-item rv">
+        <div class="feed-icon"><svg viewBox="0 0 36 28" width="30" height="23" aria-hidden="true"><rect x="1.5" y="1.5" width="33" height="25" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><circle cx="8" cy="8.5" r="1.7" fill="#1A1A1A"/><line x1="13" y1="8.5" x2="29" y2="8.5" stroke="#1A1A1A" stroke-width="2"/><circle cx="8" cy="14" r="1.7" fill="#1A1A1A"/><line x1="13" y1="14" x2="29" y2="14" stroke="#1A1A1A" stroke-width="2"/><circle cx="8" cy="19.5" r="1.7" fill="#1A1A1A"/><line x1="13" y1="19.5" x2="29" y2="19.5" stroke="#1A1A1A" stroke-width="2"/></svg></div>
+        <div class="feed-body">
+          <div class="feed-title">Zusammenfassung des Podcasts aus dem Whitepaper</div>
+          <div class="feed-meta">1 Seite · Marcus’ KI</div>
+        </div>
+      </div>
+      <div class="feed-tally rv" data-fx="countup">
+        Diese Woche erstellt: <span class="num" data-cnt="34">0</span> Dokumente · <span class="num" data-cnt="6">0</span> Podcasts · <span class="num" data-cnt="2">0</span> Video-Avatare
+        <div class="tline2">Vollständig gelesen: <span class="zero">0</span> · Angehört bis Ende: <span class="zero">0</span> <span style="opacity:.55">(Marcus: bis Ausfahrt Werntal-Ost)</span> · Weitergeleitet: <span class="num">alle</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Prompt-Protokoll: die Eskalation in fünf Eingaben -->
+<section class="sec paper">
+  <div class="ckpt" data-day="24" data-theme="light" data-hud="1"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 4 bis Tag 24 · Marcus’ Copilot-Verlauf</div>
+      <div class="vignette-title">Die Eingaben.</div>
+    </div>
+    <div class="prompt-log rv chain">
+      <div class="plog-head">Verlauf · nur Eingaben · chronologisch</div>
+      <div class="seq">
+        <div class="plog-row"><span class="plog-day">Tag 4</span><span class="plog-text">„Fasse die Mail von Sabine zusammen.“</span></div>
+        <div class="plog-row"><span class="plog-day">Tag 9</span><span class="plog-text">„Formuliere eine freundliche Antwort.“</span></div>
+        <div class="plog-row"><span class="plog-day">Tag 16</span><span class="plog-text">„Formuliere meine Meinung zum Zulieferer-Angebot. Kurz, überzeugt.“</span></div>
+        <div class="plog-row hot"><span class="plog-day">Tag 22</span><span class="plog-text">„Was halte ich von Brennekers Ton in letzter Zeit?“</span></div>
+        <div class="plog-row hottest"><span class="plog-day">Tag 24</span><span class="plog-text">„Sollte ich mir Sorgen machen?“</span></div>
+      </div>
+      <div class="plog-answer rv" data-chain-delay="1900" data-sfx="pop">
+        <span class="sub">Antwort · 0,6 Sekunden</span>
+        „Kein Grund zur Sorge, Marcus. Deine Kommunikation wirkt durchgehend professionell und wertschätzend.“
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Zwischenbefund: Der Denkraum verschwindet -->
+<section class="sec dark grain">
+  <div class="ckpt" data-day="24" data-theme="dark" data-hud="1" data-ht="7,0.13"></div>
+  <div class="wrap">
+    <div class="think-wrap rv">
+      <div class="think-kicker">Zwischenbefund</div>
+      <div class="think-title">Der Denkraum verschwindet.</div>
+      <div class="think-diagram">
+        <div class="think-bypass">
+          <svg viewBox="0 0 500 70" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M14,66 C130,-14 370,-14 478,58" fill="none" stroke="#E8B931" stroke-width="2.5" stroke-dasharray="7,7"/>
+            <polygon points="486,62 470,52 474,66" fill="#E8B931"/>
+          </svg>
+        </div>
+        <div class="tbox">Daten<div class="tsub">Eingang</div></div>
+        <div class="tbox mid">Denkpause<div class="tsub">ordnen · gewichten<br>Bedenken äußern</div></div>
+        <div class="tbox">Entscheidung<div class="tsub">Ausgang</div></div>
+      </div>
+      <div class="think-bypass-label">Die KI überspringt diesen Raum</div>
+      <div class="think-quiet">Die Denkpause war kein Aufwand.<br>Sie war die Arbeit.</div>
+      <div class="infect-caption" style="margin-top:30px">Selbst getroffene Entscheidungen pro Woche:&nbsp; 14 → 3 → <span style="color:var(--slop)">0</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- V5 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="25" data-theme="light" data-hud="1" data-kpi="62,46,35,2.6" data-ht="7,0.13"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 25 · Aufzug, 4. Stock → Erdgeschoss</div>
+      <div class="vignette-title">Niemand spricht.</div>
+    </div>
+    <div class="rv"><div class="elevator-frame" data-fx="elevator">
+      <div class="elevator-display" id="elevFloor">4</div>
+      <div class="elevator-row">
+        <div class="mini-portrait infected" data-svg="sabine"><span class="pname">Sabine</span></div>
+        <div class="elevator-thought">„Marcus liest meine Mails nicht mehr.“</div>
+      </div>
+      <div class="elevator-row">
+        <div class="mini-portrait infected" data-svg="marcus"><span class="pname">Marcus</span></div>
+        <div class="elevator-thought">„Sabine schreibt mit KI. Ich lese das nicht im Original.“</div>
+      </div>
+      <div class="elevator-exit">Beide steigen aus. Ohne ein Wort.</div>
+    </div></div>
+  </div>
+</section>
+
+<!-- V6 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="29" data-theme="light" data-hud="1" data-kpi="66,43,30,2.8" data-ht="7.5,0.13"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 29 · Eine spontane Pivot-Tabelle wird gebraucht</div>
+      <div class="vignette-title">„Service nicht verfügbar.“</div>
+    </div>
+    <div class="chain">
+    <div class="panel dark-panel rv" style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:28px">
+      <svg viewBox="0 0 40 34" width="34" height="29" style="margin:0 auto 10px" aria-hidden="true"><path d="M20,3 L37,31 L3,31 Z" fill="none" stroke="#C84B3C" stroke-width="3" stroke-linejoin="round"/><line x1="20" y1="13" x2="20" y2="22" stroke="#C84B3C" stroke-width="3"/><circle cx="20" cy="26.5" r="1.8" fill="#C84B3C"/></svg>
+      KI-Service vorübergehend nicht verfügbar.<br>
+      <span style="opacity:.5;font-size:10.5px">Bitte versuchen Sie es in wenigen Minuten erneut.</span>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="tobias"><span class="pname">Tobias</span></div>
+        <div class="bubble">„Frau Berger… wie ging das mit der Pivot-Tabelle nochmal?“<span style="display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9px;letter-spacing:.1em;opacity:.45;margin-top:8px;text-transform:uppercase">nach 11 Minuten Googeln · Anruf, kein Chat</span></div>
+      </div>
+    </div>
+    <div class="panel rv">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger">„Ja, Tobi. Soll ich Ihnen das schnell zeigen?“<span style="display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:9px;letter-spacing:.1em;opacity:.45;margin-top:8px;text-transform:uppercase">Dauer der Erklärung: 30 Sekunden</span></div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- Infektionskarte B: Tag 29 -->
+<section class="sec dark grain">
+  <div class="ckpt" data-day="29" data-theme="dark" data-hud="1"></div>
+  <div class="wrap">
+    <div class="infect-wrap rv">
+      <div class="infect-kicker">Übertragungswege · Stand Tag 29</div>
+      <div class="infect-title">Es hat alle erwischt.</div>
+      <div class="infect-map">
+        <svg viewBox="0 0 560 150" aria-hidden="true">
+          <defs><marker id="arB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#C84B3C"/></marker></defs>
+          <path d="M78,48 Q110,20 140,45" fill="none" stroke="#C84B3C" stroke-width="2" marker-end="url(#arB)"/>
+          <path d="M126,90 Q95,118 74,94" fill="none" stroke="#C84B3C" stroke-width="2" marker-end="url(#arB)"/>
+          <path d="M163,45 Q198,14 230,44" fill="none" stroke="#C84B3C" stroke-width="2" marker-end="url(#arB)"/>
+          <path d="M305,48 Q280,22 258,44" fill="none" stroke="#C84B3C" stroke-width="2" marker-end="url(#arB)"/>
+          <path d="M256,92 Q280,118 303,94" fill="none" stroke="#C84B3C" stroke-width="2" marker-end="url(#arB)"/>
+          <circle cx="55" cy="70" r="20" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="55" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">SABINE</text>
+          <circle cx="145" cy="70" r="20" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="145" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">MARCUS</text>
+          <circle cx="235" cy="70" r="20" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="235" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">HELLWIG</text>
+          <circle cx="325" cy="70" r="20" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="325" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">TOBIAS</text>
+          <circle cx="415" cy="70" r="20" fill="none" stroke="#E8B931" stroke-width="2.5"/>
+          <text x="415" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.75)" letter-spacing="1">BERGER</text>
+          <text x="415" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#E8B931" letter-spacing="1.5">IMMUN</text>
+          <circle cx="505" cy="70" r="20" fill="none" stroke="rgba(244,237,224,.45)" stroke-width="2"/>
+          <text x="505" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="rgba(244,237,224,.5)" letter-spacing="1">JONAS</text>
+          <text x="505" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="rgba(244,237,224,.4)" letter-spacing="1.5">BEOBACHTET</text>
+        </svg>
+      </div>
+      <div class="infect-caption">Infiziert: 4 · Beobachtet: 1 · Immun: 1 — sie liest Originale.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Agents: brain fry -->
+<section class="sec paper">
+  <div class="ckpt" data-day="33" data-theme="light" data-hud="1" data-kpi="72,40,26,3.0" data-ht="7.5,0.14"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 33 · Freitag, 16:51 Uhr · Jeder hat jetzt welche</div>
+      <div class="vignette-title">Die Agents.</div>
+    </div>
+    <div class="chain">
+    <div class="agent-stack seq" data-sfx="pop3">
+      <div class="agent-toast">
+        <span class="abadge">Agent</span>
+        <div><strong>MarktRadar</strong> hat 3 Wettbewerbsberichte erstellt.<span class="atime">vor 2 Min</span></div>
+      </div>
+      <div class="agent-toast">
+        <span class="abadge">Agent</span>
+        <div><strong>InboxZero</strong> hat 47 Mails beantwortet. 12 davon an andere Agents.<span class="atime">vor 5 Min</span></div>
+      </div>
+      <div class="agent-toast">
+        <span class="abadge">Agent</span>
+        <div><strong>MeetingPrep</strong> hat ein Briefing erstellt — für ein Meeting, das <strong>KalenderOpt</strong> gestern abgesagt hat.<span class="atime">vor 11 Min</span></div>
+      </div>
+    </div>
+    <div class="panel dark-panel rv" style="max-width:560px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;opacity:.55;text-transform:uppercase;margin-bottom:12px">Heute Nacht, 02:14 – 06:47 · InboxZero (Werntal) ↔ Empfangs-Agent (Brenneker)</div>
+      <div class="mailloop-row">AW: Vielen Dank für Ihre schnelle Rückmeldung</div>
+      <div class="mailloop-row">AW: AW: Sehr gerne — danke Ihnen für die gute Zusammenarbeit!</div>
+      <div class="mailloop-row">AW: AW: AW: Das freut uns sehr. Beste Grüße nach Werntal!</div>
+      <div class="mailloop-row">AW: AW: AW: AW: Vielen Dank, ebenso! Bei Fragen jederzeit gern.</div>
+      <div class="mailloop-row" style="opacity:.45">AW: AW: AW: AW: AW: Vielen Dank für Ihre schnelle Rückmeldung</div>
+      <div class="mailloop-count">41 Mails</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--slop);margin-top:8px;text-transform:uppercase">Keine davon beantwortet Brennekers Frage.</div>
+    </div>
+    <div class="panel rv" style="max-width:560px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;line-height:2;opacity:.75;text-transform:uppercase">
+        Tobias betreibt 12 Agents.<br>
+        Die Agents haben 3 weitere angelegt.<br>
+        Was Agent 7 tut, weiß niemand mehr.
+      </div>
+    </div>
+    <div class="panel rv" style="max-width:560px">
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="sabine"><span class="pname">Sabine</span></div>
+        <div class="bubble thought">„Ich hab heute nichts geschrieben. Nichts gelesen. Nichts entschieden.<br>Warum bin ich so müde?“</div>
+      </div>
+    </div>
+    <div class="befund rv">
+      <svg viewBox="0 0 92 62" width="80" height="54" aria-hidden="true">
+        <path d="M30,14 Q27,8 30,3" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+        <path d="M44,12 Q47,6 44,1" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+        <path d="M22,38 Q17,27 27,22 Q30,14 40,16 Q50,13 53,23 Q60,28 52,37 Q38,43 22,38Z" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/>
+        <path d="M31,23 Q35,27 31,31 M42,20 Q40,26 46,29" fill="none" stroke="#1A1A1A" stroke-width="1.5"/>
+        <ellipse cx="38" cy="42" rx="28" ry="7" fill="none" stroke="#1A1A1A" stroke-width="2.5"/>
+        <path d="M12,44 Q14,54 38,54 Q62,54 64,44" fill="none" stroke="#1A1A1A" stroke-width="2.5"/>
+        <line x1="65" y1="41" x2="89" y2="35" stroke="#1A1A1A" stroke-width="3.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div class="bf-k">Befund</div>
+        <div class="bf-name">Brain Fry</div>
+        <div class="bf-sub">Erschöpfung ohne Tätigkeit. Das Gehirn hat ausgelagert — und wartet.</div>
+        <div class="bf-meta">Erstbeschreibung: 2026 · Verbreitung: rasant</div>
+      </div>
+    </div>
+    <div class="panel rv" style="max-width:560px">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger" data-ghost>„Und wer liest das alles?“</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- Meeting ohne Menschen -->
+<section class="sec paper">
+  <div class="ckpt" data-day="36" data-theme="light" data-hud="1" data-kpi="75,39,24,3.0"></div>
+  <div class="wrap">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 36 · Montag, 9:00 Uhr</div>
+      <div class="vignette-title">Weekly Sync.</div>
+    </div>
+    <div class="chain">
+    <div class="marcus-screen rv" style="max-width:560px">
+      <div class="marcus-screen-bar"><span>Teams · Weekly Sync Q3</span><span>09:00 – 09:30</span></div>
+      <div class="meeting-count">Teilnehmer: 6 · Menschen im Call: <span class="zero">0</span></div>
+      <div class="seq">
+        <div class="attendee"><span>Sabine M.</span><span class="abadge2">abwesend — Agent nimmt teil</span></div>
+        <div class="attendee"><span>Marcus K.</span><span class="abadge2">abwesend — Agent nimmt teil</span></div>
+        <div class="attendee"><span>Dr. Eva Hellwig</span><span class="abadge2">abwesend — Agent nimmt teil</span></div>
+        <div class="attendee"><span>Tobias R.</span><span class="abadge2">abwesend — Agent nimmt teil</span></div>
+        <div class="attendee"><span>Jonas P.</span><span class="abadge2">abwesend — Agent nimmt teil</span></div>
+        <div class="attendee"><span>Frau Berger</span><span class="abadge2" style="border-style:solid;border-color:var(--mustard);background:rgba(232,185,49,.28)">kein Agent — wartet im Raum</span></div>
+      </div>
+      <div class="marcus-summary showit" style="margin-top:18px">
+        <div class="marcus-summary-label">Meeting-Recap · automatisch erstellt</div>
+        7 Action Items erstellt — zugewiesen an: die Menschen.<br>
+        Stimmung: die beste seit Einführung der Messung.
+      </div>
+    </div>
+    <div class="panel rv" style="max-width:560px;margin-top:26px">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger" data-ghost>„Ich war die Einzige im Raum.“</div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- V7 -->
+<section class="sec paper">
+  <div class="ckpt" data-day="37" data-theme="light" data-hud="1" data-kpi="78,38,22,3.1" data-ht="8,0.15"></div>
+  <div class="wrap wide">
+    <div class="vignette-head rv">
+      <div class="vignette-day">Tag 37 · Dieselbe Information. Fünf Verpackungen.</div>
+      <div class="vignette-title">Die Format-Inflation</div>
+    </div>
+    <div class="rv" data-fx="flow"><div class="format-flow" id="formatFlow">
+      <div class="format-step" style="flex-basis:118px">
+        <div class="ftitle">Original</div>
+        <div class="fvisual"><svg viewBox="0 0 40 28" width="34" height="24" aria-hidden="true"><rect x="2" y="2" width="36" height="24" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><path d="M2,3 L20,16 L38,3" fill="none" stroke="#1A1A1A" stroke-width="2.5"/></svg></div>
+        <div class="fbody">Sabines Mail.<br>Drei Sätze. Klar.</div>
+        <div class="fgrow" style="width:12px"></div>
+      </div>
+      <div class="format-arrow">→</div>
+      <div class="format-step" style="flex-basis:132px">
+        <div class="ftitle">Zusammenfassung</div>
+        <div class="fvisual"><svg viewBox="0 0 36 28" width="30" height="23" aria-hidden="true"><rect x="1.5" y="1.5" width="33" height="25" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><circle cx="8" cy="8.5" r="1.7" fill="#1A1A1A"/><line x1="13" y1="8.5" x2="29" y2="8.5" stroke="#1A1A1A" stroke-width="2"/><circle cx="8" cy="14" r="1.7" fill="#1A1A1A"/><line x1="13" y1="14" x2="29" y2="14" stroke="#1A1A1A" stroke-width="2"/><circle cx="8" cy="19.5" r="1.7" fill="#1A1A1A"/><line x1="13" y1="19.5" x2="29" y2="19.5" stroke="#1A1A1A" stroke-width="2"/></svg></div>
+        <div class="fbody">Vier Bullets.<br>Der Anruf fehlt.</div>
+        <div class="fgrow" style="width:30px"></div>
+      </div>
+      <div class="format-arrow">→</div>
+      <div class="format-step" style="flex-basis:148px">
+        <div class="ftitle">Podcast</div>
+        <div class="fvisual"><div class="waveform"><span></span><span></span><span></span><span></span><span></span></div></div>
+        <div class="fbody">Marcus hört sie.<br>22 Minuten. Im Auto.</div>
+        <div class="fgrow" style="width:54px"></div>
+      </div>
+      <div class="format-arrow">→</div>
+      <div class="format-step" style="flex-basis:162px">
+        <div class="ftitle">Transkript</div>
+        <div class="fvisual"><div class="pagestack"><i></i><i></i><i></i></div></div>
+        <div class="fbody">Tobias verschriftlicht<br>den Podcast. 10 Seiten.</div>
+        <div class="fgrow" style="width:80px"></div>
+      </div>
+      <div class="format-arrow">→</div>
+      <div class="format-step" style="flex-basis:176px">
+        <div class="ftitle">Dashboard</div>
+        <div class="fvisual"><div class="health-tile">CUSTOMER HEALTH<br>BRENNEKER: GELB</div></div>
+        <div class="fbody">Hellwig lässt daraus<br>einen KPI bauen.</div>
+        <div class="fgrow" style="width:106px"></div>
+      </div>
+      <div class="format-arrow">→</div>
+      <div class="format-step" style="flex-basis:190px">
+        <div class="ftitle">Beirats-Reporting</div>
+        <div class="fvisual"><svg viewBox="0 0 36 28" width="32" height="25" aria-hidden="true"><rect x="1.5" y="1.5" width="33" height="25" fill="none" stroke="#1A1A1A" stroke-width="2.5"/><rect x="6" y="16" width="4.5" height="7" fill="#1A1A1A"/><rect x="13" y="11" width="4.5" height="12" fill="#1A1A1A"/><rect x="20" y="7" width="4.5" height="16" fill="#E8B931" stroke="#1A1A1A" stroke-width="1.2"/><rect x="27" y="13" width="4.5" height="10" fill="#1A1A1A"/></svg></div>
+        <div class="fbody">„Customer Health bei<br>Brenneker: gelb.“</div>
+        <div class="fgrow" style="width:132px"></div>
+      </div>
+    </div></div>
+    <div class="panel rv" style="margin-top:16px">
+      <div class="panel-row">
+        <div class="mini-portrait" data-svg="berger"><span class="pname">Frau Berger</span></div>
+        <div class="bubble berger" data-ghost>„Frau Dr. Hellwig… Brenneker ist bei Schulze.“</div>
+      </div>
+      <div class="panel-row">
+        <div class="mini-portrait infected" data-svg="hellwig" data-lbar><span class="pname">Hellwig</span></div>
+        <div class="bubble">Schaut aufs Dashboard. Das Dashboard ist gelb. Gelb ist nicht rot.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Props check pre-crash -->
+<section class="sec paper">
+  <div class="ckpt" data-day="40" data-theme="light" data-hud="1" data-kpi="78,38,22,3.1" data-ht="8,0.15"></div>
+  <div class="wrap">
+    <div class="rv" data-props data-photo="3" data-yucca="3" data-postit="1" data-shirt="404: Faith not found" data-mdays="310" data-monster="awake" data-pcaption="Flur, Erdgeschoss · Tag 40 · Das Foto ist gefallen. Und das Monster riecht Meetings."></div>
+  </div>
+</section>
+
+<!-- Infektionskarte C: Tag 40, der Erreger verlässt das Haus -->
+<section class="sec dark grain">
+  <div class="ckpt" data-day="40" data-theme="dark" data-hud="1"></div>
+  <div class="wrap">
+    <div class="infect-wrap rv">
+      <div class="infect-kicker">Übertragungswege · Stand Tag 40</div>
+      <div class="infect-title">Der Erreger verlässt das Haus.</div>
+      <div class="infect-map">
+        <svg viewBox="0 0 560 160" aria-hidden="true">
+          <defs><marker id="arC" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#C84B3C"/></marker></defs>
+          <path d="M126,52 Q300,-16 468,58" fill="none" stroke="#C84B3C" stroke-width="2.2" stroke-dasharray="7,6" marker-end="url(#arC)"/>
+          <text x="298" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="#C84B3C" letter-spacing="2">NICHT-ANTWORT · 35 TAGE</text>
+          <circle cx="42" cy="78" r="17" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="42" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="rgba(244,237,224,.75)" letter-spacing="1">SABINE</text>
+          <circle cx="112" cy="78" r="17" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="112" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="rgba(244,237,224,.75)" letter-spacing="1">MARCUS</text>
+          <circle cx="182" cy="78" r="17" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="182" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="rgba(244,237,224,.75)" letter-spacing="1">HELLWIG</text>
+          <circle cx="252" cy="78" r="17" fill="#C84B3C" stroke="#F4EDE0" stroke-width="2"/>
+          <text x="252" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="rgba(244,237,224,.75)" letter-spacing="1">TOBIAS</text>
+          <circle cx="322" cy="78" r="17" fill="none" stroke="#E8B931" stroke-width="2.5"/>
+          <text x="322" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="rgba(244,237,224,.75)" letter-spacing="1">BERGER</text>
+          <text x="322" y="129" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="6.5" fill="#E8B931" letter-spacing="1.5">IMMUN</text>
+          <circle cx="392" cy="78" r="17" fill="none" stroke="rgba(244,237,224,.45)" stroke-width="2"/>
+          <text x="392" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="rgba(244,237,224,.5)" letter-spacing="1">JONAS</text>
+          <rect x="462" y="58" width="72" height="40" fill="none" stroke="#C84B3C" stroke-width="2" stroke-dasharray="5,4"/>
+          <text x="498" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" fill="#C84B3C" letter-spacing="1">BRENNEKER</text>
+          <text x="498" y="129" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="6.5" fill="rgba(200,75,60,.7)" letter-spacing="1.5">EXTERN</text>
+        </svg>
+      </div>
+      <div class="infect-caption">Neuer Übertragungsweg: Stille.<br>Brenneker wartet seit Tag 5 auf einen Anruf.</div>
+    </div>
+  </div>
+</section>
+
+<!-- V8: Crash -->
+<div class="silence-gap">
+  <div class="ckpt" data-day="47" data-theme="dark" data-hud="1" data-ht="8,0.16"></div>
+  <div class="s-label rv">Tag 47 · 17:03 Uhr · Plötzlich ist es still.</div>
+</div>
+
+<section class="sec dark grain">
+  <div class="wrap">
+    <div class="rv" data-sfx="ping"><div class="crash-screen">
+      <div class="crash-screen-label">Eingehende Nachricht</div>
+      <div class="crash-from">Von: Brenneker GmbH · An: Hellwig, E. · CC: Berger</div>
+      Sehr geehrte Damen und Herren,<br><br>
+      wie nach Ablauf der Frist angekündigt, hatten wir zunächst 30 % des Folgeauftrags an die Schulze-Industrie GmbH vergeben. Nachdem wir seither — sechs Wochen — keinerlei Rückmeldung Ihrerseits erhalten haben, haben wir heute den gesamten Folgeauftrag in Höhe von
+      <div class="crash-amount">2,3 Mio. EUR</div>
+      an Schulze übertragen.<br><br>
+      Wir bedauern diese Entwicklung.<br><br>
+      Mit freundlichen Grüßen<br>
+      Brenneker GmbH
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-style:italic;opacity:.45;margin-top:18px;border-top:1px dashed rgba(255,255,255,.25);padding-top:10px">Diese Nachricht wurde mit Unterstützung von KI-Tools erstellt.</div>
+    </div></div>
+    <div class="rv" style="text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,237,224,.6);margin:30px 0;line-height:2.1">2,3 Millionen sind: die neue Fünf-Achs-Fräse. Der Hallenkran.<br>Zwei Ausbildungsplätze. Und die Gehaltsrunde.</div>
+    <div class="crash-shout rv">„KRISENMEETING. SOFORT.“</div>
+    <div class="rv" style="margin-top:9vh"><div class="door-sign">INNOVATION<small>Konferenzraum 2.OG</small></div></div>
+  </div>
+</section>
+
+<!-- ============ ACT 3 (pinned) ============ -->
+<div id="act3wrap">
+  <div class="ckpt" data-day="47" data-theme="dark" data-hud="1" data-kpi="78,38,22,3.1" data-ht="8,0.18" data-heartbeat="1"></div>
+  <div class="a3sticky">
+    <div class="crisis-context">Akt 3 · Tag 47 · Konferenzraum „Innovation“</div>
+    <div class="crisis-figures">
+      <div class="crisis-figure" id="cf-sabine"><div class="head" data-svg="sabine"></div><div class="name">Sabine</div></div>
+      <div class="crisis-figure" id="cf-marcus"><div class="head" data-svg="marcus"></div><div class="name">Marcus</div></div>
+      <div class="crisis-figure" id="cf-hellwig"><div class="head" data-svg="hellwig"></div><div class="name">Hellwig</div></div>
+      <div class="crisis-figure berger" id="cf-berger"><div class="head" data-svg="berger"></div><div class="name">Berger</div></div>
+      <div class="crisis-figure" id="cf-tobias"><div class="head" data-svg="tobias"></div><div class="name">Tobias</div></div>
+      <div class="crisis-figure" id="cf-jonas"><div class="head" data-svg-jonas="404: Faith not found"></div><div class="name">Jonas</div></div>
+    </div>
+    <div class="crisis-table"></div>
+    <div class="crisis-window"><div class="crisis-list" id="crisisList"></div></div>
+    <div class="a3-scrollhint" id="a3hint"><span>Weiterscrollen</span><span class="chev"><svg viewBox="0 0 16 9" width="13" height="8" aria-hidden="true"><path d="M1,1 L8,8 L15,1" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+    <div class="recap-card" id="recapCard">
+      <div class="rbadge">Microsoft Copilot · Meeting-Recap</div>
+      Konstruktiver Austausch zu aktuellen Q3-Herausforderungen. Stimmung: lösungsorientiert.
+      <div class="ritems">7 Action Items erstellt ✓</div>
+    </div>
+  </div>
+</div>
+
+<div class="blackgap">
+  <div class="ckpt" data-day="47" data-daytext="Tag 47 + 6 Wochen" data-theme="dark" data-hud="1" data-ht="7,0.12" data-heartbeat="0"></div>
+  <div class="later rv">Sechs Wochen später</div>
+  <h2 class="rv">„Was probieren wir<br>nächste Woche aus?“</h2>
+</div>
+
+<!-- ============ ACT 4 ============ -->
+<div class="chapter grain">
+  <div class="rv">
+    <div class="akt">Akt 4</div>
+    <h2>Die Kur</h2>
+    <div class="sub">Jetzt sind Sie dran. Wirklich diesmal.</div>
+  </div>
+</div>
+
+<section class="sec paper" id="act4sec">
+  <div class="ckpt" data-day="47" data-daytext="Tag 47 + 6 Wochen" data-theme="light" data-hud="1" data-kpi="78,38,22,3.1" data-ht="7,0.12"></div>
+  <div class="wrap wide">
+    <div class="cure-intro rv">
+      <p>Sie sitzen mit Hellwig und Frau Berger zusammen. Niemand sagt „Governance“.<br>Und niemand schlägt vor, die KI abzuschaffen — das wäre so klug, wie das Telefon abzuschaffen.<br>Wählen Sie drei Dinge, die Sie nächste Woche wirklich ausprobieren.</p>
+    </div>
+    <div class="cure-grid rv">
+      <div class="cure-observations">
+        <div class="cure-section-label">Was Frau Berger gesehen hat</div>
+        <div id="observationList" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+      <div>
+        <div class="cure-section-label" style="text-align:center">Acht Praktiken — wähle drei</div>
+        <div class="cure-practices" id="practiceList"></div>
+      </div>
+      <div class="cure-plan">
+        <div class="cure-section-label">Plan für nächste Woche</div>
+        <div class="plan-slot" data-slot="0">— leer —</div>
+        <div class="plan-slot" data-slot="1">— leer —</div>
+        <div class="plan-slot" data-slot="2">— leer —</div>
+      </div>
+    </div>
+    <div class="cure-startrow rv"><button class="cure-start" id="cureStart">Nächste Woche starten →</button></div>
+  </div>
+</section>
+
+<section class="sec paper hiddenpart" id="healingSec">
+  <div class="wrap">
+    <div class="healing">
+      <div class="healing-label">Eine Woche später</div>
+      <div class="healing-headline">Wir versuchen es.</div>
+      <div class="healing-status" id="healingStatus"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec paper hiddenpart" id="endingSec">
+  <div class="wrap wide">
+    <div class="ending" id="endingBox"></div>
+  </div>
+</section>
+
+</div><!-- /afterGate -->
+
+<script>
+'use strict';
+
+/* ============ SOUND (Web Audio, synthetisiert, opt-in) ============ */
+const Sound = (() => {
+  let ctx = null, master = null, noiseBuf = null;
+  let roomSrc = null, roomGain = null, roomOn = false;
+  let typingTimer = null, typingPaused = false, heartTimer = null;
+  let on = false;
+
+  function ensure() {
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain();
+      master.gain.value = 0.22;
+      master.connect(ctx.destination);
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+  }
+  function brown() {
+    if (!noiseBuf) {
+      const len = ctx.sampleRate * 2;
+      noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }
+    }
+    return noiseBuf;
+  }
+  function env(g, t0, peak, dur) {
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(peak, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  }
+  function tone(freq, dur, peak, type, delay, glideTo) {
+    const t0 = ctx.currentTime + (delay || 0);
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq * (1 + (Math.random() - 0.5) * 0.01), t0);
+    if (glideTo) o.frequency.exponentialRampToValueAtTime(glideTo, t0 + dur);
+    env(g, t0, peak, dur);
+    o.connect(g); g.connect(master);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+  }
+  function noiseHit(dur, peak, fType, fFreq, delay, sweepTo) {
+    const t0 = ctx.currentTime + (delay || 0);
+    const s = ctx.createBufferSource(); s.buffer = brown(); s.loop = true;
+    const f = ctx.createBiquadFilter(); f.type = fType; f.frequency.setValueAtTime(fFreq, t0); f.Q.value = 0.8;
+    if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t0 + dur);
+    const g = ctx.createGain(); env(g, t0, peak, dur);
+    s.connect(f); f.connect(g); g.connect(master);
+    s.start(t0); s.stop(t0 + dur + 0.05);
+  }
+
+  const cues = {
+    ping()  { tone(880, 0.38, 0.30); tone(1318, 0.5, 0.16, 'sine', 0.07); },
+    pop()   { tone(560 + Math.random() * 60, 0.11, 0.22, 'triangle', 0, 340); },
+    pop3()  { for (let i = 0; i < 3; i++) tone(540 + i * 40, 0.11, 0.18, 'triangle', i * 0.42, 330); },
+    tick()  { noiseHit(0.03, 0.14, 'highpass', 2800); },
+    key()   { noiseHit(0.022, 0.05 + Math.random() * 0.03, 'bandpass', 1800 + Math.random() * 2200); },
+    cold()  { noiseHit(0.03, 0.22, 'bandpass', 2200); noiseHit(0.03, 0.09, 'bandpass', 2200, 0.14); noiseHit(0.03, 0.04, 'bandpass', 2200, 0.28); },
+    suck()  { noiseHit(0.55, 0.20, 'lowpass', 1400, 0, 90); tone(280, 0.55, 0.10, 'sine', 0, 62); },
+    grow(v) { noiseHit(0.20, 0.07 + v * 0.012, 'lowpass', 240 + v * 90); },
+    thump() { tone(54, 0.22, 0.42); tone(50, 0.18, 0.30, 'sine', 0.17); },
+    chime() { tone(659, 0.9, 0.14); tone(880, 1.2, 0.10, 'sine', 0.14); tone(1319, 1.4, 0.05, 'sine', 0.28); },
+  };
+
+  function setRoom(active) {
+    if (!on || !ctx) return;
+    if (active && !roomOn) {
+      roomSrc = ctx.createBufferSource(); roomSrc.buffer = brown(); roomSrc.loop = true;
+      const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 230;
+      roomGain = ctx.createGain(); roomGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      roomGain.gain.exponentialRampToValueAtTime(0.045, ctx.currentTime + 1.4);
+      roomSrc.connect(f); f.connect(roomGain); roomGain.connect(master);
+      roomSrc.start(); roomOn = true;
+    } else if (!active && roomOn) {
+      const src = roomSrc, g = roomGain;
+      g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.12);   // der Raum bricht ab
+      setTimeout(() => { try { src.stop(); } catch (e) {} }, 700);
+      roomOn = false;
+    }
+  }
+  function setTyping(active) {
+    if (active && on && !typingTimer) {
+      typingTimer = setInterval(() => { if (!typingPaused && on) cues.key(); }, 105 + Math.random() * 60);
+    } else if (!active && typingTimer) {
+      clearInterval(typingTimer); typingTimer = null;
+    }
+  }
+  function setHeart(active) {
+    if (active && on && !heartTimer) {
+      heartTimer = setInterval(() => { if (on) cues.thump(); }, 1400);
+    } else if (!active && heartTimer) {
+      clearInterval(heartTimer); heartTimer = null;
+    }
+  }
+
+  return {
+    enabled: () => on,
+    cue(name, arg) { if (!on || !ctx) return; try { cues[name] && cues[name](arg); } catch (e) {} },
+    room: setRoom, typing: setTyping, heart: setHeart,
+    pauseTyping(p) { typingPaused = p; },
+    toggle() {
+      on = !on;
+      sessionStorage.setItem('slopSound', on ? '1' : '0');
+      if (on) { ensure(); setRoom(true); }
+      else { if (ctx) { const wasOn = on; on = true; setRoom(false); on = wasOn; } setTyping(false); setHeart(false); }
+      return on;
+    },
+    armOn() { on = true; },                          // Standard: an — Audio startet bei der ersten Geste
+    wake() { if (on && !ctx) { ensure(); setRoom(true); } },
+  };
+})();
+
+const RESUMED = sessionStorage.getItem('slopGateOpen') === '1';
+if ('scrollRestoration' in history) history.scrollRestoration = RESUMED ? 'auto' : 'manual';
+const SMOOTH = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ============ CHARACTER SVGs ============ */
+const SVG = {
+  sabine: `<svg viewBox="0 0 88 88"><ellipse cx="44" cy="42" rx="22" ry="26" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/><path d="M22,38 Q22,18 44,16 Q66,18 66,38 Q66,28 60,24 Q50,22 44,24 Q38,22 28,24 Q22,28 22,38Z" fill="#1A1A1A"/><rect x="29" y="38" width="13" height="8" fill="none" stroke="#1A1A1A" stroke-width="2"/><rect x="46" y="38" width="13" height="8" fill="none" stroke="#1A1A1A" stroke-width="2"/><line x1="42" y1="42" x2="46" y2="42" stroke="#1A1A1A" stroke-width="2"/><path d="M38,56 Q44,58 50,56" stroke="#1A1A1A" stroke-width="2" fill="none"/><path d="M14,82 Q14,72 28,68 L60,68 Q74,72 74,82" fill="#7CA68C" stroke="#1A1A1A" stroke-width="3"/></svg>`,
+  marcus: `<svg viewBox="0 0 88 88"><ellipse cx="44" cy="42" rx="24" ry="26" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/><path d="M22,32 Q30,22 44,22 Q58,22 66,32" stroke="#1A1A1A" stroke-width="3" fill="none"/><circle cx="36" cy="42" r="2" fill="#1A1A1A"/><circle cx="52" cy="42" r="2" fill="#1A1A1A"/><path d="M38,58 Q44,56 50,58" stroke="#1A1A1A" stroke-width="2" fill="none"/><path d="M14,82 Q14,72 28,68 L36,72 L44,80 L52,72 L60,68 Q74,72 74,82" fill="#fff" stroke="#1A1A1A" stroke-width="3"/><line x1="44" y1="80" x2="44" y2="68" stroke="#1A1A1A" stroke-width="2"/></svg>`,
+  hellwig: `<svg viewBox="0 0 88 88"><ellipse cx="44" cy="42" rx="22" ry="26" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/><path d="M22,34 Q22,18 44,16 Q66,18 66,34 Q60,28 44,28 Q28,28 22,34Z" fill="#7CA68C" stroke="#1A1A1A" stroke-width="3"/><line x1="32" y1="42" x2="40" y2="42" stroke="#1A1A1A" stroke-width="2.5"/><line x1="48" y1="42" x2="56" y2="42" stroke="#1A1A1A" stroke-width="2.5"/><line x1="38" y1="56" x2="50" y2="56" stroke="#1A1A1A" stroke-width="2"/><path d="M14,82 L20,68 L36,72 L44,82 L52,72 L68,68 L74,82" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="3"/></svg>`,
+  berger: `<svg viewBox="0 0 88 88"><ellipse cx="44" cy="42" rx="22" ry="26" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/><ellipse cx="44" cy="22" rx="14" ry="8" fill="#1A1A1A"/><path d="M22,32 Q26,22 36,20 M66,32 Q62,22 52,20" stroke="#1A1A1A" stroke-width="2.5" fill="none"/><circle cx="36" cy="44" r="6" fill="none" stroke="#1A1A1A" stroke-width="2"/><circle cx="52" cy="44" r="6" fill="none" stroke="#1A1A1A" stroke-width="2"/><line x1="42" y1="44" x2="46" y2="44" stroke="#1A1A1A" stroke-width="2"/><path d="M30,47 Q23,57 25,67 M58,47 Q65,57 63,67" stroke="#1A1A1A" stroke-width="1.2" fill="none" stroke-dasharray="1.6,1.6"/><path d="M36,56 Q44,60 52,56" stroke="#1A1A1A" stroke-width="2" fill="none"/><path d="M14,82 Q14,72 28,68 L60,68 Q74,72 74,82" fill="#fff" stroke="#1A1A1A" stroke-width="3"/></svg>`,
+  tobias: `<svg viewBox="0 0 88 88"><ellipse cx="44" cy="42" rx="20" ry="24" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/><path d="M14,42 Q14,24 32,18 L56,18 Q74,24 74,42 L74,52 Q66,46 60,46 L28,46 Q22,46 14,52Z" fill="#E8B931" stroke="#1A1A1A" stroke-width="3"/><ellipse cx="44" cy="44" rx="15" ry="18" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/><circle cx="38" cy="44" r="1.8" fill="#1A1A1A"/><circle cx="50" cy="44" r="1.8" fill="#1A1A1A"/><line x1="40" y1="54" x2="48" y2="54" stroke="#1A1A1A" stroke-width="1.5"/><path d="M14,82 L14,68 Q14,62 22,60 L66,60 Q74,62 74,68 L74,82" fill="#E8B931" stroke="#1A1A1A" stroke-width="3"/></svg>`,
+};
+function jonasSVG(shirt) {
+  const fs = shirt.length > 24 ? 4.3 : shirt.length > 14 ? 5.5 : 7;
+  const txt = shirt.trim() ? `<text x="44" y="78" font-family="IBM Plex Mono,monospace" font-size="${fs}" font-weight="600" text-anchor="middle" fill="#1A1A1A">${shirt}</text>` : '';
+  return `<svg viewBox="0 0 88 88"><ellipse cx="44" cy="42" rx="22" ry="26" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/><path d="M22,34 Q22,20 44,18 Q66,20 66,34 Q62,30 56,30 Q50,28 44,30 Q38,28 32,30 Q26,30 22,34Z" fill="#1A1A1A"/><circle cx="36" cy="42" r="2" fill="#1A1A1A"/><circle cx="52" cy="42" r="2" fill="#1A1A1A"/><path d="M38,56 Q44,60 50,54" stroke="#1A1A1A" stroke-width="2" fill="none"/><path d="M14,82 Q14,72 28,68 L60,68 Q74,72 74,82" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="3"/>${txt}</svg>`;
+}
+function mugSVG(steam) {
+  return `<svg viewBox="0 0 44 48" width="34" height="38">
+    ${steam ? '<g class="steam"><path d="M16,10 Q14,6 16,2" stroke="#999" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M24,10 Q26,6 24,2" stroke="#999" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>' : ''}
+    <rect x="8" y="14" width="24" height="26" rx="2" fill="#fff" stroke="#1A1A1A" stroke-width="2"/>
+    <path d="M32,20 Q40,20 40,27 Q40,34 32,34" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+    <text x="20" y="25" font-family="IBM Plex Mono,monospace" font-size="4.6" font-weight="600" text-anchor="middle" fill="#C84B3C">WELT-</text>
+    <text x="20" y="30.5" font-family="IBM Plex Mono,monospace" font-size="4.6" font-weight="600" text-anchor="middle" fill="#C84B3C">BESTE</text>
+    <text x="20" y="36" font-family="IBM Plex Mono,monospace" font-size="4.6" font-weight="600" text-anchor="middle" fill="#C84B3C">CHEFIN</text>
+  </svg>`;
+}
+const YUCCA = {
+  1: `<svg viewBox="0 0 80 100" width="64" height="80"><rect x="30" y="72" width="20" height="24" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/><path d="M40,72 Q18,52 22,30 M40,72 Q62,52 58,30 M40,72 L40,26 M40,72 Q28,50 32,34 M40,72 Q52,50 48,34 M40,72 Q14,64 10,48 M40,72 Q66,64 70,48" stroke="#7CA68C" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="40" cy="22" r="5" fill="#E8B931" stroke="#1A1A1A" stroke-width="1.5"/></svg>`,
+  2: `<svg viewBox="0 0 80 100" width="64" height="80"><rect x="30" y="72" width="20" height="24" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/><path d="M40,72 Q18,52 22,30 M40,72 Q62,52 58,30 M40,72 L40,26 M40,72 Q52,50 48,34" stroke="#7CA68C" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M40,72 Q28,60 24,58" stroke="#E8B931" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M14,92 Q18,88 20,90" stroke="#E8B931" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  3: `<svg viewBox="0 0 80 100" width="64" height="80"><rect x="30" y="72" width="20" height="24" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/><path d="M40,72 Q30,62 26,60 M40,72 Q54,62 56,56 M40,72 Q42,56 40,48" stroke="#E8B931" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M12,92 Q16,88 18,90 M60,94 Q64,90 66,92 M30,94 Q34,92 36,94" stroke="#E8B931" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/></svg>`,
+  4: `<svg viewBox="0 0 80 100" width="64" height="80"><rect x="30" y="72" width="20" height="24" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="2.5"/><path d="M40,72 Q36,64 34,62 M40,72 Q46,66 47,63" stroke="#1A1A1A" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/><path d="M10,92 Q14,88 16,90 M58,94 Q62,90 64,92 M26,94 Q30,92 32,94 M46,95 Q50,93 52,95" stroke="#1A1A1A" stroke-width="2" fill="none" stroke-linecap="round" opacity=".4"/></svg>`,
+};
+// Das Meeting-Monster (gezähmt Okt. 2025 — Kanon-Verweis auf den Vorläufer)
+function monsterSVG(awake) {
+  const face = awake
+    ? '<circle cx="26" cy="30" r="4" fill="#fff" stroke="#1A1A1A" stroke-width="1.5"/><circle cx="40" cy="30" r="4" fill="#fff" stroke="#1A1A1A" stroke-width="1.5"/><circle cx="27" cy="30" r="1.6" fill="#C84B3C"/><circle cx="41" cy="30" r="1.6" fill="#C84B3C"/><path d="M22,42 L26,38 L30,42 L34,38 L38,42 L42,38 L46,42" stroke="#1A1A1A" stroke-width="2" fill="none"/>'
+    : '<path d="M22,30 Q26,33 30,30 M36,30 Q40,33 44,30" stroke="#1A1A1A" stroke-width="2" fill="none"/><path d="M26,43 Q33,46 40,43" stroke="#1A1A1A" stroke-width="2" fill="none"/><text x="50" y="16" font-family="IBM Plex Mono,monospace" font-size="9" fill="#1A1A1A" opacity=".6">z</text><text x="57" y="9" font-family="IBM Plex Mono,monospace" font-size="7" fill="#1A1A1A" opacity=".4">z</text>';
+  return `<svg viewBox="0 0 66 60" width="50" height="45">
+    <path d="M14,52 Q8,30 16,20 Q22,12 33,12 Q44,12 50,20 Q58,30 52,52 Q42,56 33,56 Q24,56 14,52Z" fill="${awake ? '#E8B931' : '#F4EDE0'}" stroke="#1A1A1A" stroke-width="2.5"/>
+    <path d="M20,15 L16,5 L26,11 M46,15 L50,5 L40,11" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linejoin="round"/>
+    ${face}
+  </svg>`;
+}
+
+function founderSVG(state) {
+  // state 0=straight 1=tilt 2=very tilted 3=fallen+cracked
+  const crack = state >= 3 ? '<path d="M18,12 L30,30 L26,42 L38,58" stroke="#1A1A1A" stroke-width="1.2" fill="none"/>' : '';
+  const rot = [0, 4, 9, 86][state] || 0;
+  const dy = state >= 3 ? 14 : 0;
+  return `<div style="transform:rotate(${rot}deg) translateY(${dy}px);transition:transform .5s ease">
+    <svg viewBox="0 0 64 80" width="52" height="66">
+      <rect x="4" y="4" width="56" height="72" fill="#fff" stroke="#1A1A1A" stroke-width="3"/>
+      <rect x="10" y="10" width="44" height="52" fill="#F4EDE0" stroke="#1A1A1A" stroke-width="1.5"/>
+      <ellipse cx="32" cy="30" rx="10" ry="12" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+      <path d="M22,28 Q22,18 32,17 Q42,18 42,28 Q38,24 32,24 Q26,24 22,28Z" fill="#1A1A1A"/>
+      <path d="M27,34 Q32,33 37,34" stroke="#1A1A1A" stroke-width="1.5" fill="none"/>
+      <path d="M27,38 L37,38" stroke="#1A1A1A" stroke-width="2"/>
+      <path d="M18,62 Q18,52 26,50 L38,50 Q46,52 46,62" fill="#1A1A1A"/>
+      <text x="32" y="72" font-family="IBM Plex Mono,monospace" font-size="6" text-anchor="middle" fill="#1A1A1A" letter-spacing="1">GRÜNDER 1962</text>
+      ${crack}
+    </svg>
+  </div>`;
+}
+
+/* inject portraits */
+$$('[data-svg]').forEach(el => { el.innerHTML = SVG[el.dataset.svg] + el.innerHTML; });
+$$('[data-svg-jonas]').forEach(el => { el.innerHTML = jonasSVG(el.dataset.svgJonas) + el.innerHTML.replace(/<svg[\s\S]*?<\/svg>/, ''); });
+$$('[data-mug]').forEach(el => { el.innerHTML = mugSVG(false); });
+$$('.mini-portrait svg, .cast-portrait svg, .crisis-figure .head svg, .mug-corner svg').forEach(s => s.setAttribute('aria-hidden', 'true'));
+
+/* props strips (ein Builder für alle Vorkommen) */
+$$('[data-props]').forEach(el => buildPropsInto(el));
+
+/* ============ HUD / CHECKPOINTS ============ */
+const fuse = $('#fuse');
+const fuseFill = $('#fuseFill');
+const tagCounter = $('#tagCounter');
+const kpiBar = $('#kpiBar');
+let curKpi = null;
+
+function setKPI(slop, orig, dec, r) {
+  const key = [slop, orig, dec, r].join(',');
+  if (key === curKpi) return;
+  curKpi = key;
+  const flash = id => { const el = $(id); el.classList.remove('changing'); void el.offsetWidth; el.classList.add('changing'); };
+  $('#kpiSlop').textContent = slop + '%';
+  $('#kpiOrig').textContent = orig + '%';
+  $('#kpiDec').textContent = dec + '%';
+  $('#kpiR').textContent = String(r).replace('.', ',');
+  $('#kpiSlop').classList.toggle('bad', slop >= 50);
+  $('#kpiOrig').classList.toggle('bad', orig <= 50);
+  $('#kpiDec').classList.toggle('bad', dec <= 50);
+  $('#kpiR').classList.toggle('hot', parseFloat(r) >= 1);
+  ['#kpiSlop', '#kpiOrig', '#kpiDec'].forEach(flash);
+  // Werntal-Monitor (linker Rand, Desktop)
+  $('#ksSlop').textContent = slop + '%';
+  $('#ksOrig').textContent = orig + '%';
+  $('#ksDec').textContent = dec + '%';
+  $('#ksR').innerHTML = parseFloat(r) >= 1 ? '<span class="hot">' + String(r).replace('.', ',') + '</span>' : String(r).replace('.', ',');
+  $('#ksSlop').classList.toggle('bad', slop >= 50);
+  $('#ksOrig').classList.toggle('bad', orig <= 50);
+  $('#ksDec').classList.toggle('bad', dec <= 50);
+  $('#ksSlopF').style.width = slop + '%';
+  $('#ksOrigF').style.width = orig + '%';
+  $('#ksDecF').style.width = dec + '%';
+  $('#ksOrigF').classList.toggle('bad', orig <= 50);
+  $('#ksDecF').classList.toggle('bad', dec <= 50);
+  ['#ksSlop', '#ksOrig', '#ksDec'].forEach(flash);
+}
+
+let activeCkpt = null;
+const ckpts = $$('.ckpt');
+function applyCkpt(c) {
+  if (c === activeCkpt) return;
+  activeCkpt = c;
+  const d = c.dataset;
+  if (d.daytext) tagCounter.textContent = d.daytext;
+  else if (d.day) tagCounter.textContent = 'Tag ' + d.day + ' von 47';
+  document.body.classList.toggle('theme-dark', d.theme === 'dark');
+  tagCounter.classList.toggle('visible', d.hud === '1');
+  kpiBar.classList.toggle('visible', d.hud === '1');
+  $('#kpiSide').classList.toggle('visible', d.hud === '1');
+  if (d.kpi) { const [s, o, e, r] = d.kpi.split(','); setKPI(+s, +o, +e, r); }
+  // Die Zündschnur brennt mit dem Tag-Zähler: Tag 1 → Tag 47
+  const day = parseInt(d.day || '1');
+  const afterCrash = !!(d.daytext && d.daytext.includes('+'));
+  fuseFill.style.width = Math.min(100, Math.max(2, day / 47 * 100)).toFixed(1) + '%';
+  fuse.classList.toggle('boom', day >= 47 && !afterCrash);   // Akt 3: die Bombe ist hochgegangen, es pulsiert
+  fuse.classList.toggle('gone', afterCrash);                 // sechs Wochen später: keine Lunte mehr
+  // Klangregie: Raumton reißt bei Tag 47 ab; Herzschlag nur im Krisenmeeting
+  const inCrisis = d.heartbeat === '1';
+  Sound.room(afterCrash || day < 47 || inCrisis);
+  Sound.heart(inCrisis);
+  if (!inCrisis) { Sound.typing(false); Sound.pauseTyping(false); }
+  if (afterCrash && !wasAfterCrash) Sound.cue('cold');       // Schwarzbild: ein kalter Klick
+  wasAfterCrash = afterCrash;
+}
+let wasAfterCrash = false;
+function updateCkpts() {
+  const mid = innerHeight * 0.6;
+  let active = null;
+  for (const c of ckpts) {
+    if (!c.offsetParent && c.offsetWidth === 0 && c.offsetHeight === 0 && !c.getClientRects().length) continue;
+    if (c.getBoundingClientRect().top < mid) active = c;
+  }
+  if (active) applyCkpt(active);
+}
+
+/* ============ REVEAL ENGINE ============ */
+const fxDone = new WeakSet();
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    if (e.target.classList.contains('chain')) {   // Szene mit Comic-Timing: strikt nacheinander
+      runChain(e.target);
+      io.unobserve(e.target);
+      return;
+    }
+    e.target.classList.add('on');
+    if (e.target.dataset.sfx) Sound.cue(e.target.dataset.sfx);
+    if (e.target.dataset.fx && !fxDone.has(e.target)) {
+      fxDone.add(e.target);
+      runFx(e.target.dataset.fx, e.target);
+    }
+    // loading bars inside
+    e.target.querySelectorAll('[data-lbar]').forEach(p => attachLbar(p));
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.22, rootMargin: '0px 0px -6% 0px' });
+// Elemente INNERHALB einer Kette werden nicht einzeln beobachtet — die Kette taktet sie
+$$('.rv, .seq, [data-rv], .chain').forEach(el => {
+  if (!el.classList.contains('chain') && el.closest('.chain')) return;
+  io.observe(el);
+});
+
+async function runChain(el) {
+  if (fxDone.has(el)) return;
+  fxDone.add(el);
+  el.classList.add('on');
+  for (const child of Array.from(el.children)) {
+    if (child.dataset.chainDelay) await sleep(+child.dataset.chainDelay);
+    child.classList.add('on');
+    if (child.dataset.sfx) Sound.cue(child.dataset.sfx);
+    child.querySelectorAll('.seq').forEach(s => s.classList.add('on'));
+    if (child.matches('[data-lbar]')) attachLbar(child);
+    child.querySelectorAll('[data-lbar]').forEach(p => attachLbar(p));
+    const fx = child.dataset.fx;
+    if (fx && !fxDone.has(child)) { fxDone.add(child); runFx(fx, child); }
+    if (child.dataset.chainWait) {
+      // Die Kette hält an, bis der Zuschauer geantwortet hat (ändern wird es nichts)
+      await new Promise(resolve => { child._chainResolve = resolve; });
+      await sleep(400);
+      continue;
+    }
+    await sleep(650);
+  }
+}
+
+/* Zuschauer-Frage: jede Antwort wird gewürdigt — und ignoriert */
+$$('.ask-panel').forEach(panel => {
+  panel.addEventListener('click', ev => {
+    const btn = ev.target.closest('.ask-btn');
+    if (!btn || panel.dataset.answered) return;
+    Sound.cue('tick');
+    panel.dataset.answered = '1';
+    btn.classList.add('picked');
+    panel.querySelectorAll('.ask-btn').forEach(b => { if (b !== btn) b.classList.add('dim'); });
+    const reply = panel.querySelector('.ask-reply');
+    reply.textContent = btn.dataset.honest === '1'
+      ? 'Immerhin ehrlich. Marcus sieht das genauso.'
+      : 'Vernünftig. Aber Sie sind nicht Marcus.';
+    reply.classList.add('show');
+    setTimeout(() => { if (panel._chainResolve) panel._chainResolve(); }, 1300);
+  });
+});
+
+// Berger's Kassandra bubbles fade to "ungehört" — but only once the bubble
+// itself has been on screen long enough to be read
+const ghostIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    setTimeout(() => e.target.classList.add('ghost'), 6500);
+    ghostIO.unobserve(e.target);
+  });
+}, { threshold: 0.85 });
+$$('[data-ghost]').forEach(b => ghostIO.observe(b));
+
+/* loading bars over heads */
+const LBAR_POOL = ['Generating response...', 'Summarizing reality...', 'Optimizing tone...', 'Aligning with stakeholders...', 'Synthesizing insights...', 'Crafting narrative...', 'Verifying assumptions...', 'Refining messaging...'];
+let lbarIdx = 0, lbarTimer = null;
+const lbarTxts = [];
+function attachLbar(portrait) {
+  if (portrait.querySelector('.lbar')) return;
+  const bar = document.createElement('span');
+  bar.className = 'lbar';
+  bar.innerHTML = '<span class="txt"></span><span class="track"><span class="fill"></span></span>';
+  portrait.appendChild(bar);
+  const txt = bar.querySelector('.txt');
+  txt.textContent = LBAR_POOL[lbarTxts.length % LBAR_POOL.length];
+  lbarTxts.push(txt);
+  setTimeout(() => bar.classList.add('live'), 300 + Math.random() * 600);
+  if (!lbarTimer) {
+    lbarTimer = setInterval(() => {   // one shared clock for every bar on the page
+      lbarIdx++;
+      lbarTxts.forEach((t, i) => { t.textContent = LBAR_POOL[(lbarIdx + i) % LBAR_POOL.length]; });
+    }, 2400);
+  }
+}
+
+/* ============ FX TIMELINES ============ */
+async function runFx(name, el) {
+  if (name === 'countup') {
+    await sleep(500);
+    el.querySelectorAll('[data-cnt]').forEach(async s => {
+      const to = +s.dataset.cnt;
+      for (let v = 0; v <= to; v++) {
+        s.textContent = v;
+        await sleep(Math.max(28, 900 / Math.max(to, 1)));
+      }
+    });
+  }
+
+  if (name === 'daytick') {
+    const seq = el.dataset.seq.split(',').map(Number);
+    const n = el.querySelector('.n');
+    for (const day of seq) {
+      await sleep(700);
+      n.textContent = day;
+      Sound.cue('tick');
+      n.classList.remove('tick'); void n.offsetWidth; n.classList.add('tick');
+    }
+  }
+
+  if (name === 'marcusMoment') {
+    const peek = $('#origPeek');
+    const btn = $('#marcusSumBtn');
+    Sound.cue('ping');                     // die Mail ist da
+    await sleep(900);
+    peek.classList.add('openp');           // Marcus opens the original
+    await sleep(1100);
+    peek.classList.add('scrolled');        // scrolls three pixels
+    await sleep(900);
+    peek.classList.add('closingp');        // closes it again
+    await sleep(400);
+    peek.style.display = 'none';
+    await sleep(400);
+    btn.classList.add('glow');             // ...and reaches for the button
+    await sleep(500);
+    btn.classList.add('pressed');
+    Sound.cue('tick');
+    await sleep(250);
+    btn.classList.remove('pressed');
+    $('#marcusSumLabel').innerHTML = '<span style="font-family:IBM Plex Mono,monospace;font-size:11px;color:var(--slop)">Summarizing reality...</span>';
+    Sound.cue('suck');                     // das Saugen (Briefing D2)
+    await sleep(1400);
+    $('#marcusSumLabel').textContent = 'Zusammenfassung erstellt.';
+    $('#marcusSummary').classList.add('showit');
+    Sound.cue('pop');
+    await sleep(1400);
+    const evap = $('#evapLine');
+    evap.classList.add('vis');             // the crucial sentence appears...
+    await sleep(1800);
+    evap.classList.add('gone');            // ...and evaporates
+    await sleep(1000);
+    $('#evapTag').classList.add('vis');
+    await sleep(1800);
+    $('#mFeedback').classList.add('vis');  // ...und Marcus trainiert das System
+  }
+
+  if (name === 'tobitype') {
+    const target = $('#tobiText');
+    const screen = $('#tobiScreen');
+    const honest = 'Ich bin mir bei der Liste nicht sicher…';
+    const ai = 'Die Wettbewerbslandschaft wurde umfassend analysiert. Eine detaillierte Übersicht der relevanten Marktteilnehmer entnehmen Sie bitte Anhang A (40 Seiten).';
+    await sleep(600);
+    for (const ch of honest) { target.textContent += ch; await sleep(52); }
+    await sleep(1100);                     // he looks at it
+    while (target.textContent.length) {    // and deletes it
+      target.textContent = target.textContent.slice(0, -1);
+      await sleep(16);
+    }
+    await sleep(500);
+    screen.classList.add('ai-mode');
+    for (const ch of ai) { target.textContent += ch; await sleep(6); }
+    await sleep(300);
+    $('#tobiTag').classList.add('vis');
+  }
+
+  if (name === 'elevator') {
+    const disp = $('#elevFloor');
+    const floors = ['4', '3', '2', '1', 'EG'];
+    for (const f of floors) { disp.textContent = f; await sleep(1100); }
+  }
+
+  if (name === 'flow') {
+    const steps = el.querySelectorAll('.format-step');
+    const arrows = el.querySelectorAll('.format-arrow');
+    for (let i = 0; i < steps.length; i++) {
+      steps[i].classList.add('on');
+      await sleep(620);
+      if (i < arrows.length) { arrows[i].classList.add('on'); await sleep(200); }
+    }
+  }
+}
+
+/* ============ MUTATOR (the one interaction) ============ */
+const MUT_STAGES = {
+  1: { text: `Hi Marcus,
+
+kurz zum Q3-Reporting: drei Punkte.
+
+1. Wir haben den Liefertermin für Kunde Brenneker um 2 Wochen verfehlt – Materialengpass bei Zulieferer Hartmann.
+
+2. Brenneker droht, 30% des Folgeauftrags an Schulze-Industrie zu vergeben. Sie wollen bis Freitag eine Zusage, dass sich das nicht wiederholt.
+
+3. Mein Vorschlag: Du rufst Brenneker direkt an, ich bereite parallel einen Zweitlieferanten-Plan vor. Können wir bis Mittwoch sprechen?
+
+Sabine`, words: 67, cta: true },
+  3: { text: `Lieber Marcus,
+
+im Sinne einer transparenten Kommunikation möchte ich Dich nachfolgend über drei strategisch relevante Aspekte unseres Q3-Reportings informieren.
+
+1. Wir konnten den Liefertermin für Kunde Brenneker im vereinbarten Zeitfenster nicht realisieren – aufgrund einer zulieferseitigen Materialengpass-Situation bei Hartmann (Verzögerung: 14 Kalendertage).
+
+2. Es ergeben sich Implikationen für die Geschäftsbeziehung: Brenneker hat avisiert, ca. 30% des Folgeauftragsvolumens an Schulze-Industrie zu vergeben, sofern bis Freitag keine belastbare Zusicherung vorliegt.
+
+3. Mein präferiertes Vorgehensmodell: Direkte Kontaktaufnahme Deinerseits, parallel zur Erarbeitung eines Zweitlieferanten-Konzepts. Abstimmung idealerweise bis Mittwoch.
+
+Liebe Grüße
+Sabine`, words: 140, cta: true },
+  5: { text: `Lieber Marcus,
+
+im Sinne einer transparenten und proaktiven Kommunikation möchte ich Dich nachfolgend über drei strategisch relevante Aspekte unseres Q3-Reportings informieren, die einer zeitnahen, partnerschaftlichen Abstimmung bedürfen.
+
+**Executive Summary**
+Im Berichtszeitraum sind im Kontext unserer Kundenbeziehung Brenneker terminliche Herausforderungen aufgetreten, die einer ganzheitlichen Betrachtung und kollaborativen Lösungsfindung bedürfen.
+
+**1. Liefertermin-Compliance Q3**
+Im Rahmen der operativen Auftragsabwicklung mit dem Kunden Brenneker konnte der ursprünglich vereinbarte Liefertermin nicht im vorgesehenen Zeitfenster realisiert werden.
+
+**2. Wettbewerbliche Implikationen**
+Es ergeben sich aus dieser Konstellation potenziell signifikante Auswirkungen auf die zukünftige Geschäftsbeziehung.
+
+**3. Lösungsansatz und Next Steps**
+Mein präferiertes Vorgehensmodell umfasst einen zweigleisigen Ansatz im Rahmen unserer etablierten Eskalationsformate.
+
+Liebe Grüße
+Sabine`, words: 240, cta: false },
+  7: { text: `Lieber Marcus,
+
+im Sinne einer transparenten und proaktiven Kommunikation möchte ich Dich nachfolgend über drei strategisch relevante Aspekte unseres Q3-Reportings informieren, die einer zeitnahen, partnerschaftlichen Abstimmung bedürfen.
+
+**Executive Summary**
+
+Im Berichtszeitraum sind im Kontext unserer Kundenbeziehung Brenneker terminliche Herausforderungen aufgetreten, die – im Lichte sich verändernder Marktdynamiken und intensivierter Wettbewerbsaktivitäten – einer ganzheitlichen Betrachtung und kollaborativen Lösungsfindung bedürfen.
+
+**1. Liefertermin-Compliance Q3**
+
+Im Rahmen der operativen Auftragsabwicklung mit dem Kunden Brenneker konnte der ursprünglich vereinbarte Liefertermin nicht im vorgesehenen Zeitfenster realisiert werden. Die diesbezügliche Verzögerung beträgt 14 Kalendertage und ist primär auf eine zulieferseitige Materialengpass-Situation bei unserem Partner Hartmann zurückzuführen.
+
+**2. Wettbewerbliche Implikationen**
+
+Es ergeben sich aus dieser Konstellation potenziell signifikante Auswirkungen auf die zukünftige Geschäftsbeziehung. Eine belastbare Zusicherung hinsichtlich der Nicht-Wiederholbarkeit erscheint im Sinne des Erwartungsmanagements geboten.
+
+**3. Lösungsansatz und Next Steps**
+
+Mein präferiertes Vorgehensmodell umfasst einen zweigleisigen Ansatz: Eine direkte Kontaktaufnahme auf C-Level, parallel zur Erarbeitung eines Zweitlieferanten-Konzepts.
+
+Für Rückfragen stehe ich jederzeit gerne zur Verfügung.
+
+Liebe Grüße
+Sabine
+
+*Diese Nachricht wurde mit Unterstützung von KI-Tools erstellt.*`, words: 360, cta: false },
+  10: { text: `Lieber Marcus,
+
+im Sinne einer transparenten und proaktiven Kommunikation möchte ich Dich nachfolgend über drei strategisch relevante Aspekte unseres Q3-Reportings informieren, die einer zeitnahen, partnerschaftlichen Abstimmung bedürfen.
+
+**Executive Summary**
+
+Im Berichtszeitraum sind im Kontext unserer Kundenbeziehung Brenneker terminliche Herausforderungen aufgetreten, die – im Lichte sich verändernder Marktdynamiken und intensivierter Wettbewerbsaktivitäten – einer ganzheitlichen Betrachtung und kollaborativen Lösungsfindung bedürfen.
+
+**1. Liefertermin-Compliance Q3**
+
+Im Rahmen der operativen Auftragsabwicklung mit dem Kunden Brenneker konnte der ursprünglich vereinbarte Liefertermin nicht im vorgesehenen Zeitfenster realisiert werden. Die diesbezügliche Verzögerung beträgt 14 Kalendertage und ist primär auf eine zulieferseitige Materialengpass-Situation bei unserem Partner Hartmann zurückzuführen.
+
+**2. Wettbewerbliche Implikationen**
+
+Es ergeben sich aus dieser Konstellation potenziell signifikante Auswirkungen auf die zukünftige Geschäftsbeziehung. Kunde Brenneker hat avisiert, einen substantiellen Anteil (ca. 30%) des Folgeauftragsvolumens an einen Wettbewerber (Schulze-Industrie) zu vergeben, sofern bis Freitag der laufenden Kalenderwoche keine belastbare Zusicherung hinsichtlich der Nicht-Wiederholbarkeit vorliegt.
+
+**3. Lösungsansatz und Next Steps**
+
+Mein präferiertes Vorgehensmodell umfasst einen zweigleisigen Ansatz: Eine direkte Kontaktaufnahme Deinerseits mit dem Kunden auf C-Level, parallel zur Erarbeitung eines Zweitlieferanten-Konzepts meinerseits. Eine Abstimmungsrunde wäre aus meiner Sicht idealerweise bis Mittwoch zu terminieren.
+
+Für Rückfragen stehe ich jederzeit gerne zur Verfügung.
+
+Liebe Grüße
+Sabine
+
+*Diese Nachricht wurde mit Unterstützung von KI-Tools erstellt.*`, words: 420, cta: false },
+};
+
+function nearestStage(val) {
+  return [1, 3, 5, 7, 10].reduce((p, c) => Math.abs(c - val) < Math.abs(p - val) ? c : p);
+}
+function renderMutMail(stage) {
+  return MUT_STAGES[stage].text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^\*(.+?)\*$/gm, '<em>$1</em>');
+}
+function fmtTime(words) {
+  const secs = Math.round(words / 200 * 60);
+  if (secs < 60) return secs + ' Sek';
+  return Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0') + ' Min';
+}
+
+const slider = $('#mutSlider');
+const mutBody = $('#mutBody');
+let currentStage = 1;
+mutBody.innerHTML = renderMutMail(1);
+
+function updateMutator(val) {
+  val = Math.round(val);
+  $('#mutFactor').textContent = val + '×';
+  const stage = nearestStage(val);
+  if (stage !== currentStage) {
+    currentStage = stage;
+    mutBody.classList.add('swap');
+    setTimeout(() => {
+      mutBody.innerHTML = renderMutMail(stage);
+      mutBody.parentElement.scrollTop = 0;
+      mutBody.classList.remove('swap');
+    }, 220);
+  }
+  // piecewise interpolation along the real stage anchors
+  const anchors = [[1, 67], [3, 140], [5, 240], [7, 360], [10, 420]];
+  let words = 420;
+  for (let i = 0; i < anchors.length - 1; i++) {
+    const [a, wa] = anchors[i], [b, wb] = anchors[i + 1];
+    if (val >= a && val <= b) { words = Math.round(wa + (wb - wa) * (val - a) / (b - a)); break; }
+  }
+  $('#mutWords').textContent = words;
+  $('#mutTime').textContent = fmtTime(words);
+  const cta = MUT_STAGES[stage].cta;
+  const ctaEl = $('#mutCta');
+  ctaEl.textContent = cta ? 'sichtbar' : 'verschwunden';
+  ctaEl.classList.toggle('no', !cta);
+  // die ehrlichste Zahl im Raum
+  const infoEl = $('#mutInfo');
+  infoEl.textContent = val < 3 ? '67 Wörter' : 'konstant: 67 Wörter';
+  infoEl.classList.toggle('no', val >= 5);
+}
+let lastGrow = 0;
+slider.addEventListener('input', e => {
+  updateMutator(+e.target.value);
+  const now = performance.now();
+  if (now - lastGrow > 110) { lastGrow = now; Sound.cue('grow', +e.target.value); }
+});
+
+function animateSliderTo(target) {
+  const start = +slider.value;
+  const duration = 800;
+  const t0 = performance.now();
+  return new Promise(resolve => {
+    const tick = now => {
+      const t = Math.min((now - t0) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = start + (target - start) * eased;
+      slider.value = val;
+      updateMutator(val);
+      if (t < 1) requestAnimationFrame(tick);
+      else { slider.value = target; updateMutator(target); resolve(); }
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+/* gate logic */
+let gateOpened = false;
+$('#mutSend').addEventListener('click', () => {
+  if (gateOpened) return;
+  Sound.cue('tick');
+  if (+slider.value >= 7) doSend();
+  else { $('#notif1').classList.add('show'); $('#notif1Yes').focus(); Sound.cue('pop'); }
+});
+$('#notif1Yes').addEventListener('click', async () => {
+  $('#notif1').classList.remove('show');
+  await sleep(250);
+  // never nudge downwards, and the second obedient click escalates past the gate
+  await animateSliderTo(+slider.value < 5 ? 5 : 7);
+});
+$('#notif1Send').addEventListener('click', async () => {
+  $('#notif1').classList.remove('show');
+  await sleep(250);
+  $('#notif2').classList.add('show');
+  $('#notif2Yes').focus();
+  Sound.cue('pop');
+});
+$('#notif2Yes').addEventListener('click', async () => {
+  $('#notif2').classList.remove('show');
+  await sleep(250);
+  await animateSliderTo(7);
+});
+let notif2Clicks = 0;
+$('#notif2Send').addEventListener('click', () => {
+  notif2Clicks++;
+  const btn = $('#notif2Send');
+  if (notif2Clicks === 1) {
+    btn.classList.add('dead');
+    btn.textContent = 'In Ihrem Plan nicht enthalten.';
+  }
+  // there is no escape.
+});
+
+async function doSend() {
+  gateOpened = true;
+  sessionStorage.setItem('slopGateOpen', '1');
+  const sentStage = nearestStage(+slider.value);
+  $('#peekWords').textContent = 'Q3-Reporting Brenneker · ' + MUT_STAGES[sentStage].words + ' Wörter';
+  const btn = $('#mutSend');
+  btn.textContent = 'Wird gesendet…';
+  btn.disabled = true;
+  await sleep(900);
+  btn.textContent = 'Gesendet.';
+  Sound.cue('ping');
+  $('#recallLine').classList.add('show');   // ...bei Frau Berger schlägt das Ersetzen fehl
+  await sleep(2400);
+  $('#afterGate').classList.add('open');
+  await sleep(400);
+  const anchor = $('#marcusPanelAnchor');
+  anchor.setAttribute('tabindex', '-1');
+  anchor.focus({ preventScroll: true });
+  anchor.scrollIntoView({ behavior: SMOOTH, block: 'start' });
+}
+
+/* ============ ACT 3: scroll-pinned dialogue ============ */
+const CRISIS_LINES = [
+  { silence: true, text: 'Tastaturklappern. Alle Laptops auf. Alle scrollen. Niemand spricht.', w: 1.0 },
+  { speaker: 'Hellwig', fig: 'hellwig', text: '„Wir haben Brenneker verloren. 2,3 Millionen nächstes Jahr. Was ist passiert?“', w: 1.3 },
+  { silence: true, text: 'Niemand schaut hoch.', w: 0.8 },
+  { speaker: 'Marcus', fig: 'marcus', text: '„Laut Analyse waren es marktdynamische Verschiebungen und zulieferseitige Volatilität.“', stagedir: 'scrollt dabei durch sein KI-Briefing', w: 1.3 },
+  { speaker: 'Tobias', fig: 'tobias', text: '„Ich hab eine Root-Cause-Analyse. Sieben Hauptursachen…“', stagedir: 'öffnet eine Folie', w: 1.1 },
+  { speaker: 'Frau Berger', fig: 'berger', berger: true, text: '„Sabine hat Marcus am Montag geschrieben. Brenneker wollte bis Freitag eine Zusage. Marcus sollte anrufen. Marcus hat nicht angerufen.“', w: 1.8 },
+  { silence: true, text: 'Stille. Nur die Lüfter.', w: 0.9 },
+  { speaker: 'Frau Berger', fig: 'berger', berger: true, text: '„Ich hab die Original-Mail noch. Drei Sätze. Stand alles drin.“', w: 1.4 },
+  { speaker: 'Hellwig', fig: 'hellwig', text: '„Können Sie sie mir schicken?“', stagedir: 'öffnet ihr KI-Tool. Schließt es wieder. Schaut Frau Berger an.', w: 1.3 },
+  { speaker: 'Frau Berger', fig: 'berger', berger: true, text: '„Sie haben sie auch. In CC. Sie haben sie nur nicht gelesen.“', w: 1.8 },
+];
+
+const crisisList = $('#crisisList');
+CRISIS_LINES.forEach(l => {
+  const div = document.createElement('div');
+  if (l.silence) {
+    div.className = 'crisis-line silence';
+    div.innerHTML = '<span class="stagedir">' + l.text + '</span>';
+  } else {
+    div.className = 'crisis-line' + (l.berger ? ' bl' : '');
+    div.innerHTML = '<span class="speaker">' + l.speaker + '</span>' + l.text +
+      (l.stagedir ? '<span class="stagedir">— ' + l.stagedir + '</span>' : '');
+  }
+  crisisList.appendChild(div);
+});
+const crisisEls = $$('#crisisList .crisis-line');
+const totalW = CRISIS_LINES.reduce((a, l) => a + l.w, 0);
+const thresholds = [];
+{
+  let acc = 0;
+  CRISIS_LINES.forEach(l => { thresholds.push(0.04 + (acc / totalW) * 0.86); acc += l.w; });
+}
+
+function updateAct3() {
+  const wrap = $('#act3wrap');
+  if (!wrap.offsetParent && !wrap.getClientRects().length) return;
+  const r = wrap.getBoundingClientRect();
+  const total = wrap.offsetHeight - innerHeight;
+  const p = Math.max(0, Math.min(1, -r.top / total));
+  let lastShown = -1;
+  crisisEls.forEach((el, i) => {
+    const show = p >= thresholds[i];
+    el.classList.toggle('show', show);
+    if (show) lastShown = i;
+  });
+  // speaking highlight
+  $$('.crisis-figure').forEach(f => f.classList.remove('speaking'));
+  if (lastShown >= 0) {
+    const line = CRISIS_LINES[lastShown];
+    if (line.fig && line.fig !== 'berger') {
+      const f = $('#cf-' + line.fig);
+      if (f) f.classList.add('speaking');
+    }
+  }
+  // slide dialogue window so latest line is visible
+  const win = $('.crisis-window');
+  if (lastShown >= 0) {
+    const lastEl = crisisEls[lastShown];
+    const offset = lastEl.offsetTop + lastEl.offsetHeight - win.offsetHeight;
+    crisisList.style.transform = 'translateY(' + (-Math.max(0, offset)) + 'px)';
+  } else {
+    crisisList.style.transform = 'translateY(0)';
+  }
+  $('#a3hint').style.opacity = p > 0.04 && p < 0.92 ? '' : '0';
+  // after Bergers last line, the machine files its version of the meeting
+  const recapNow = p >= 0.93;
+  if (recapNow && !recapShown) Sound.cue('pop');
+  recapShown = recapNow;
+  $('#recapCard').classList.toggle('show', recapNow);
+  // Akt-3-Klangbild: Tastaturklappern — das verstummt, wenn Frau Berger spricht
+  Sound.typing(p > 0.015 && p < 0.94);
+  Sound.pauseTyping(lastShown >= 0 && !!CRISIS_LINES[lastShown].berger);
+}
+let recapShown = false;
+
+/* ============ ACT 4 ============ */
+const PRACTICES = [
+  { id: 1, title: 'Drei-Sätze-Test', tag: 'Wenn der Kern nicht in drei Sätze passt, ist er noch nicht klar.', effect: { slop: -8, orig: 4, dec: 2 }, power: 6, matches: [4] },
+  { id: 2, title: 'Original neben Zusammenfassung', tag: 'Sonst ist sie nur Gerücht mit Bulletpoints.', effect: { slop: -6, orig: 14, dec: 3 }, power: 11, matches: [0, 4] },
+  { id: 3, title: 'Anrufen statt schreiben', tag: 'Wenn die Beziehung auf dem Spiel steht, ist eine Mail nur aufgeschobene Verantwortung.', effect: { slop: -3, orig: 7, dec: 12 }, power: 11, matches: [3, 4] },
+  { id: 4, title: 'Wer entscheidet, schreibt', tag: 'KI darf vorbereiten. Verantworten muss ein Mensch.', effect: { slop: -3, orig: 8, dec: 7 }, power: 8, matches: [0, 4] },
+  { id: 5, title: 'Die ehrliche Zahl', tag: 'Jede Zahl bekommt einen Beipackzettel: Woher? Wie viele? Wie sicher?', effect: { slop: -7, orig: 11, dec: 2 }, power: 9, matches: [1] },
+  { id: 6, title: 'Ein Format pro Sache', tag: 'Wer Information neu verpackt, braucht einen Grund. „Weil es geht“ ist keiner.', effect: { slop: -13, orig: 6, dec: 2 }, power: 9, matches: [3] },
+  { id: 7, title: 'Räume ohne Hilfsmittel', tag: 'Manche Gespräche führt man ohne Krücken: Strategie, Krise, Kunde, Konflikt.', effect: { slop: -3, orig: 6, dec: 3 }, power: 6, matches: [2] },
+  { id: 8, title: 'Eine Nacht drüber', tag: 'Was die KI heute schreibt, schicken Sie morgen. Oder gar nicht.', effect: { slop: -9, orig: 4, dec: -2 }, power: 5, matches: [3, 0] },
+];
+const OBSERVATIONS = [
+  'Marcus liest Mails nicht im Original.',
+  'Hellwig zitiert Daten, die niemand geprüft hat.',
+  'Tobias kann Excel nicht ohne KI.',
+  'Information wandert durch fünf Formate, bevor sie ankommt.',
+  'Niemand spricht aus, was alle wissen.',
+];
+const cureState = { selected: [] };
+
+$('#observationList').innerHTML = OBSERVATIONS.map((o, i) =>
+  '<div class="observation" data-obs="' + i + '">„' + o + '“</div>').join('');
+$('#practiceList').innerHTML = PRACTICES.map(p => `
+  <div class="practice" data-id="${p.id}">
+    <div class="num">Praktik ${p.id}</div>
+    <div class="ptitle">${p.title}</div>
+    <div class="ptag">${p.tag}</div>
+  </div>`).join('');
+
+$$('.practice').forEach(el => {
+  el.addEventListener('click', () => togglePractice(+el.dataset.id));
+  el.addEventListener('mouseenter', () => {
+    PRACTICES.find(p => p.id === +el.dataset.id).matches.forEach(m => {
+      const ob = $('[data-obs="' + m + '"]');
+      if (ob) ob.classList.add('highlight');
+    });
+  });
+  el.addEventListener('mouseleave', () => $$('.observation.highlight').forEach(o => o.classList.remove('highlight')));
+});
+$$('.plan-slot').forEach(slot => {
+  slot.addEventListener('click', () => {
+    if (healingRan) return;
+    const idx = +slot.dataset.slot;
+    if (cureState.selected[idx] !== undefined) {
+      cureState.selected.splice(idx, 1);
+      renderPlan();
+    }
+  });
+});
+function togglePractice(id) {
+  if (healingRan) return;
+  Sound.cue('tick');
+  const idx = cureState.selected.indexOf(id);
+  if (idx >= 0) cureState.selected.splice(idx, 1);
+  else { if (cureState.selected.length >= 3) return; cureState.selected.push(id); }
+  renderPlan();
+}
+function renderPlan() {
+  $$('.practice').forEach(el => {
+    const id = +el.dataset.id;
+    el.classList.toggle('selected', cureState.selected.includes(id));
+    el.classList.toggle('disabled', cureState.selected.length >= 3 && !cureState.selected.includes(id));
+  });
+  $$('.plan-slot').forEach((slot, i) => {
+    const id = cureState.selected[i];
+    if (id !== undefined) {
+      slot.textContent = PRACTICES.find(x => x.id === id).title;
+      slot.classList.add('filled');
+    } else {
+      slot.textContent = '— leer —';
+      slot.classList.remove('filled');
+    }
+  });
+  $('#cureStart').classList.toggle('ready', cureState.selected.length === 3);
+}
+renderPlan();
+
+let healingRan = false;
+$('#cureStart').addEventListener('click', async () => {
+  if (healingRan || cureState.selected.length !== 3) return;
+  healingRan = true;
+
+  let newSlop = 78, newOrig = 38, newDec = 22, powerSum = 0;
+  const allMatches = new Set();
+  for (const id of cureState.selected) {
+    const p = PRACTICES.find(x => x.id === id);
+    newSlop = Math.max(0, newSlop + p.effect.slop);
+    newOrig = Math.min(100, newOrig + p.effect.orig);
+    newDec = Math.max(0, Math.min(100, newDec + p.effect.dec));
+    powerSum += p.power;
+    p.matches.forEach(m => allMatches.add(m));
+  }
+  // Wirkung = Substanz der Praktiken + wie viele der 5 Beobachtungen sie wirklich adressieren.
+  // Drei Praktiken, die alle dasselbe heilen, lassen den Rest der Firma krank.
+  const score = powerSum + allMatches.size * 10;
+  const tier = score >= 68 ? 'voll' : score < 50 ? 'schlecht' : 'teil';
+
+  $('#healingSec').classList.add('open');
+  await sleep(150);
+  $('#healingSec').scrollIntoView({ behavior: SMOOTH, block: 'start' });
+  await sleep(1100);
+
+  const status = $('#healingStatus');
+  for (let i = 0; i < cureState.selected.length; i++) {
+    const p = PRACTICES.find(x => x.id === cureState.selected[i]);
+    const e = p.effect;
+    const effects = [];
+    if (e.slop) effects.push(e.slop + '% Slop');
+    if (e.orig) effects.push((e.orig > 0 ? '+' : '') + e.orig + '% Original');
+    if (e.dec) effects.push((e.dec > 0 ? '+' : '') + e.dec + '% Tempo');
+    const div = document.createElement('div');
+    div.className = 'healing-row';
+    div.innerHTML = '<span class="htitle">' + p.title + '</span><span class="effect">' + effects.join(' · ') + '</span>';
+    status.appendChild(div);
+    await sleep(80);
+    div.classList.add('show');
+    Sound.cue('pop');
+    const f = (i + 1) / cureState.selected.length;
+    curKpi = null;
+    setKPI(Math.round(78 + (newSlop - 78) * f), Math.round(38 + (newOrig - 38) * f), Math.round(22 + (newDec - 22) * f), (3.1 - 2.6 * f).toFixed(1));
+    await sleep(1600);
+  }
+  await sleep(1200);
+  showEnding(tier, { newSlop, newOrig, newDec });
+});
+
+function showEnding(tier, k) {
+  const box = $('#endingBox');
+  let label, headline, scenes, easter = '', propsHtml = '';
+
+  if (tier === 'voll') {
+    label = 'Werntal erholt sich';
+    headline = 'Die Werntal-Werke atmen wieder.';
+    scenes = [
+      { char: 'sabine', text: '<strong>Sabine</strong> schreibt eine Drei-Satz-Mail. <em>„Marcus, Termin Brenneker-Nachfolger: Donnerstag, 14:00. Bitte kurz Bescheid.“</em>' },
+      { char: 'marcus', text: '<strong>Marcus</strong> telefoniert. Mit Hörer am Ohr. Vier Minuten. Geklärt.' },
+      { char: 'hellwig', text: '<strong>Hellwigs</strong> neues Dashboard hat drei Zahlen. Jede mit Quelle. Gebaut von der KI — ausgewählt von Hellwig.' },
+      { char: 'tobias', text: '<strong>Tobias</strong> schreibt die Analyse selbst — und lässt die KI sie <em>gegen</em>lesen. Sie findet zwei Fehler. Er freut sich.' },
+      { char: 'jonas', text: '<strong>Jonas</strong> schult jetzt jeden Neuen: erst denken, dann prompten. Sein Schulungsplan wird plötzlich gewollt. Sein T-Shirt: „Ctrl + Alt + Restart“.' },
+      { char: '', text: 'Von Tobias’ zwölf Agents sind zwei geblieben. Beide haben einen Auftrag, einen Besitzer und einen Feierabend.' },
+      { char: 'berger', text: '<strong>Frau Berger</strong> trinkt Kaffee aus der Welt-Beste-Chefin-Tasse. Sie dampft. Niemand sagt „Governance“.' },
+      { char: '', text: 'Und Brenneker? <em>Ist nicht zurückgekommen.</em> Manches heilt nicht.' },
+    ];
+    easter = '<div class="ebadge">Microsoft Copilot</div><div>Try the new Copilot Agent — your AI assistant team.&nbsp; <em>Niemand hat es bisher angeklickt.</em></div>';
+    propsHtml = '<div data-props-end data-photo="0" data-yucca="1" data-postit="0" data-shirt="Ctrl + Alt + Restart" data-mug="steam" data-mdays="42" data-monster="sleep" data-pcaption="Flur, Erdgeschoss · Das Post-it ist weg. Jemand hat entkalkt. Das Monster schläft wieder."></div>';
+  } else if (tier === 'teil') {
+    label = 'Teilweise geheilt';
+    headline = 'Manches ist besser geworden.';
+    scenes = [
+      { char: 'sabine', text: '<strong>Sabine</strong> liest eine Mail komplett, bevor sie antwortet. Manchmal.' },
+      { char: 'marcus', text: '<strong>Marcus</strong> scrollt noch durch Zusammenfassungen. Aber er greift jetzt öfter zum Hörer.' },
+      { char: 'hellwig', text: '<strong>Hellwig</strong> fragt nach Quellen. Manchmal.' },
+      { char: 'berger', text: '<strong>Frau Berger</strong> nickt. Es ist ein Anfang.' },
+      { char: '', text: 'Brenneker ist nicht zurückgekommen.' },
+    ];
+    propsHtml = '<div data-props-end data-photo="1" data-yucca="2" data-postit="1" data-shirt="Ctrl + Alt + Restart" data-mug="1" data-mdays="42" data-monster="sleep" data-pcaption="Flur, Erdgeschoss · Die Yucca erholt sich. Das Post-it hängt noch."></div>';
+  } else {
+    label = 'Es geht weiter';
+    headline = 'Frau Bergers Stuhl ist leer.';
+    scenes = [
+      { char: 'hellwig', text: 'Im Konferenzraum „Innovation“: Stille. Drei Laptops auf, keiner liest mit.' },
+      { char: 'tobias', text: '<strong>Tobias</strong> schickt eine 80-Seiten-Analyse. KI-erstellt. Niemand öffnet sie.' },
+      { char: 'marcus', text: '<strong>Marcus</strong> lässt sich die Quartalsplanung als Podcast vorlesen. Im Auto.' },
+      { char: '', text: 'Frau Berger hat zum Monatsende gekündigt. Die Original-Mails hat sie ausgedruckt dagelassen.' },
+    ];
+    propsHtml = '<div data-props-end data-photo="3" data-yucca="4" data-postit="1" data-shirt=" " data-mdays="0" data-monster="awake" data-pcaption="Flur, Erdgeschoss · Die Yucca ist tot. Das Monster ist zurück. Es gibt jetzt ein Daily dazu."></div>';
+  }
+
+  // drei weiche Bewertungen — keine Punktzahl, kein Drama (Briefing D5)
+  const origGain = k.newOrig - 38, slopCut = 78 - k.newSlop;
+  const softReal = origGain >= 28 ? 'wieder da' : origGain >= 18 ? 'kommt zurück' : 'kaum';
+  const softKlar = slopCut >= 20 ? 'deutlich' : slopCut >= 12 ? 'spürbar' : 'kaum';
+  const softErholt = tier === 'voll' ? 'ja' : tier === 'teil' ? 'langsam' : 'noch nicht';
+
+  const chosen = cureState.selected.map(id => PRACTICES.find(p => p.id === id).title);
+
+  box.innerHTML = `
+    <div class="ending-label">${label}</div>
+    <div class="soft-scores">
+      <div><span class="sl">Realitätskontakt</span><span class="sv${origGain < 18 ? ' low' : ''}">${softReal}</span></div>
+      <div><span class="sl">Klarheitsgewinn</span><span class="sv${slopCut < 12 ? ' low' : ''}">${softKlar}</span></div>
+      <div><span class="sl">Werntal erholt sich</span><span class="sv${tier === 'schlecht' ? ' low' : ''}">${softErholt}</span></div>
+    </div>
+    <div class="ending-scene">
+      <div class="ending-headline">${headline}</div>
+      ${scenes.map(s => `
+        <div class="ending-row">
+          ${s.char ? '<div class="mini-portrait">' + (SVG[s.char] || '') + '</div>' : '<div style="width:44px;flex-shrink:0"></div>'}
+          <div>${s.text}</div>
+        </div>`).join('')}
+      ${easter ? '<div class="ending-easter">' + easter + '</div>' : ''}
+    </div>
+    ${propsHtml}
+    <div class="end-poster">
+      <div class="ep-head">KI IST NICHT DAS PROBLEM.<br>GEDANKENLOSER EINSATZ IST DAS PROBLEM.</div>
+      <div class="ep-plan-label">Ihr Plan für Montag</div>
+      <div class="ep-plan">${chosen.map(t => '<div class="postit">' + t + '</div>').join('')}</div>
+      <div class="ep-hint">Eine davon reicht für den Anfang.</div>
+      <div class="ep-foot">Werntal-Werke GmbH · Seit 1962 zuverlässig</div>
+    </div>
+    <button class="ending-replay" onclick="sessionStorage.removeItem('slopGateOpen');location.reload()">Nochmal von vorn</button>
+    <div class="credits">Die Werntal-Werke GmbH ist frei erfunden.<br>Die Mails leider nicht ganz.<br><br>P.S. Dieses Stück ist mit KI entstanden.<br>Sie sehen: Es geht.</div>
+  `;
+
+  // render the props strip inside ending
+  const pe = box.querySelector('[data-props-end]');
+  if (pe) {
+    const tmp = document.createElement('div');
+    tmp.dataset.props = '';
+    ['photo', 'yucca', 'postit', 'shirt', 'mug', 'mdays', 'monster', 'pcaption'].forEach(k => {
+      if (pe.dataset[k] !== undefined) tmp.dataset[k] = pe.dataset[k];
+    });
+    // reuse builder
+    buildPropsInto(tmp);
+    pe.replaceWith(tmp.firstChild);
+  }
+
+  $('#endingSec').classList.add('open');
+  if (tier !== 'schlecht') setTimeout(() => Sound.cue('chime'), 900);  // das schlechte Ende bleibt still
+  setTimeout(() => $('#endingSec').scrollIntoView({ behavior: SMOOTH, block: 'start' }), 200);
+}
+
+function buildPropsInto(el) {
+  const photo = parseInt(el.dataset.photo || '0');
+  const yucca = el.dataset.yucca || '1';
+  const postit = el.dataset.postit !== '0';
+  const shirt = el.dataset.shirt;
+  const mug = el.dataset.mug;
+  const mdays = el.dataset.mdays;
+  const awake = el.dataset.monster === 'awake';
+  let inner = '<div class="props-strip"><div class="props-row">';
+  inner += `<div class="prop">${founderSVG(photo)}</div>`;
+  inner += `<div class="prop">${YUCCA[yucca]}</div>`;
+  if (mdays !== undefined) {
+    inner += `<div class="prop"><div class="mboard"><div class="mlabel">Tage ohne<br>unnötiges Meeting</div><div class="mnum${awake ? ' bad' : ''}">${mdays}</div></div></div>`;
+    inner += `<div class="prop">${monsterSVG(awake)}<div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;opacity:.5;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">${awake ? 'Es ist wach.' : 'Es schläft.'}</div></div>`;
+  }
+  if (postit) inner += `<div class="prop"><div class="postit">Bitte Kaffee-maschine entkalken!</div></div>`;
+  if (shirt !== undefined) inner += `<div class="prop"><div style="width:64px;height:64px;border:2px solid #1A1A1A;border-radius:50%;overflow:hidden;background:#F4EDE0">${jonasSVG(shirt)}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:8px;opacity:.5;margin-top:3px;text-transform:uppercase;letter-spacing:.08em">Jonas</div></div>`;
+  if (mug) inner += `<div class="prop">${mugSVG(mug === 'steam')}</div>`;
+  inner += '</div>';
+  if (el.dataset.pcaption) inner += `<div class="props-caption">${el.dataset.pcaption}</div>`;
+  inner += '</div>';
+  el.innerHTML = inner;
+}
+
+/* ============ SCROLL LOOP ============ */
+let lastScrollRun = 0, trailing = null;
+function runScrollWork() {
+  lastScrollRun = performance.now();
+  updateCkpts();
+  updateAct3();
+}
+function onScroll() {
+  const now = performance.now();
+  if (now - lastScrollRun < 40) {          // ~25fps is plenty for checkpoints
+    clearTimeout(trailing);
+    trailing = setTimeout(runScrollWork, 60); // trailing call so the final position always lands
+    return;
+  }
+  runScrollWork();
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onScroll);
+
+/* Sound: standardmäßig AN — Audio startet bei der ersten Geste; ausschaltbar */
+const soundBtn = $('#soundToggle');
+const setSoundBtn = onState => {
+  soundBtn.textContent = onState ? 'Ton an' : 'Ton aus';
+  soundBtn.classList.toggle('on', onState);
+  soundBtn.setAttribute('aria-pressed', onState ? 'true' : 'false');
+};
+soundBtn.addEventListener('click', () => setSoundBtn(Sound.toggle()));
+if (sessionStorage.getItem('slopSound') !== '0') {
+  Sound.armOn();
+  setSoundBtn(true);
+  const wakeEvents = ['pointerdown', 'keydown', 'touchend'];
+  const wake = () => {
+    Sound.wake();
+    wakeEvents.forEach(ev => removeEventListener(ev, wake));
+  };
+  wakeEvents.forEach(ev => addEventListener(ev, wake));
+}
+
+// Pull-to-Refresh / Reload mitten im Stück: Gate-Zustand überlebt die Session
+if (RESUMED) {
+  gateOpened = true;
+  $('#afterGate').classList.add('open');
+  const b = $('#mutSend');
+  b.textContent = 'Gesendet.';
+  b.disabled = true;
+  $('#recallLine').classList.add('show');
+} else {
+  scrollTo(0, 0);
+}
+updateCkpts();
+updateAct3();
+</script>
+</body>
+</html>
