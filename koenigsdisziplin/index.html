@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Königsdisziplin</title>
+<style>
+  :root {
+    --bg: #060d18;
+    --ink: #dfeaf5;
+    --dim: #8fa5bd;
+    --cyan: #7fd8ff;
+    --warm: #ffb066;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg); }
+  body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  canvas { display: block; position: fixed; inset: 0; z-index: 0; }
+
+  .veil {
+    position: fixed; inset: 0; z-index: 30;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+    background:
+      radial-gradient(120% 90% at 50% 110%, rgba(255, 158, 82, 0.08), rgba(255, 158, 82, 0) 55%),
+      radial-gradient(90% 70% at 50% -10%, rgba(58, 121, 189, 0.16), rgba(58, 121, 189, 0) 60%),
+      var(--bg);
+  }
+  .veil .shield { width: 84px; height: auto; margin-bottom: 38px; filter: drop-shadow(0 0 18px rgba(127, 216, 255, 0.55)); animation: breathe 4.6s ease-in-out infinite; }
+  @keyframes breathe { 0%, 100% { opacity: 0.82; } 50% { opacity: 1; } }
+  .veil h1 {
+    font-size: clamp(24px, 3.8vw, 46px);
+    font-weight: 200; letter-spacing: 0.42em; text-indent: 0.42em;
+    text-transform: uppercase; color: #eef5fc;
+    animation: breathe 4.6s ease-in-out infinite;
+  }
+  .veil .sub { margin-top: 16px; font-size: clamp(12px, 1.15vw, 15px); font-weight: 300; letter-spacing: 0.26em; text-indent: 0.26em; color: var(--dim); text-transform: uppercase; }
+  .veil .frameline { margin-top: 34px; font-size: clamp(12px, 1.05vw, 14px); font-weight: 300; letter-spacing: 0.06em; color: #6d84a0; }
+  .veil .foot { position: absolute; bottom: 34px; font-size: 12px; letter-spacing: 0.14em; color: #5d7188; }
+
+  #enterBtn {
+    margin-top: 46px; padding: 15px 58px;
+    font-family: inherit; font-size: 14px; font-weight: 400;
+    letter-spacing: 0.32em; text-indent: 0.32em; text-transform: uppercase;
+    color: var(--ink); background: transparent;
+    border: 1px solid rgba(127, 216, 255, 0.35); border-radius: 2px;
+    cursor: pointer; transition: all 0.45s ease; outline: none;
+  }
+  #enterBtn:disabled { color: #4d6076; border-color: rgba(127, 216, 255, 0.12); cursor: default; }
+  #enterBtn:not(:disabled) { box-shadow: 0 0 22px rgba(127, 216, 255, 0.18), inset 0 0 14px rgba(127, 216, 255, 0.06); animation: ready 3s ease-in-out infinite; }
+  #enterBtn:not(:disabled):hover { background: rgba(127, 216, 255, 0.08); border-color: rgba(127, 216, 255, 0.7); }
+  @keyframes ready { 0%, 100% { box-shadow: 0 0 22px rgba(127, 216, 255, 0.14); } 50% { box-shadow: 0 0 30px rgba(127, 216, 255, 0.30); } }
+  #loadbar { width: 240px; height: 1px; margin-top: 28px; background: rgba(127, 216, 255, 0.12); }
+  #loadbar i { display: block; height: 100%; width: 0%; background: rgba(127, 216, 255, 0.65); transition: width 0.45s linear; }
+
+  #gate { display: none; z-index: 40; }
+  #gate h2 { font-size: 20px; font-weight: 300; letter-spacing: 0.2em; text-indent: 0.2em; text-transform: uppercase; margin-bottom: 18px; }
+  #gate p { max-width: 34em; line-height: 1.7; color: var(--dim); font-weight: 300; font-size: 15px; }
+
+  #fader { position: fixed; inset: 0; z-index: 20; background: #000; opacity: 1; pointer-events: none; transition: opacity 1.6s ease; }
+
+  #hint {
+    position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%);
+    z-index: 10; padding: 10px 22px; border-radius: 3px;
+    font-size: 12px; letter-spacing: 0.18em; color: #b8c9db;
+    background: rgba(6, 13, 24, 0.55); border: 1px solid rgba(127, 216, 255, 0.14);
+    opacity: 0; transition: opacity 1.6s ease; pointer-events: none; white-space: nowrap;
+  }
+  #resume {
+    position: fixed; inset: 0; z-index: 25; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4, 9, 17, 0.72); cursor: pointer;
+  }
+  #resume span { font-size: 13px; letter-spacing: 0.3em; text-indent: 0.3em; text-transform: uppercase; color: var(--ink); padding: 16px 40px; border: 1px solid rgba(127, 216, 255, 0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="veil" id="gate">
+  <svg class="shield" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 6 C66 14 82 18 92 20 C92 52 88 84 50 112 C12 84 8 52 8 20 C18 18 34 14 50 6 Z" stroke="#7fd8ff" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M50 32 C57 42 65 50 65 62 C65 74 58 83 50 85 C42 83 35 74 35 62 C35 55 38 50 42 45 C42 53 46 57 50 57 C47 50 47 40 50 32 Z" stroke="#9fe2ff" stroke-width="3"/>
+  </svg>
+  <h2>Für den grossen Screen gemacht</h2>
+  <p>Diese Erfahrung ist für den grossen Screen gemacht. Bitte am Laptop oder Desktop öffnen.</p>
+</div>
+
+<div class="veil" id="start">
+  <svg class="shield" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 6 C66 14 82 18 92 20 C92 52 88 84 50 112 C12 84 8 52 8 20 C18 18 34 14 50 6 Z" stroke="#7fd8ff" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M50 32 C57 42 65 50 65 62 C65 74 58 83 50 85 C42 83 35 74 35 62 C35 55 38 50 42 45 C42 53 46 57 50 57 C47 50 47 40 50 32 Z" stroke="#9fe2ff" stroke-width="3"/>
+  </svg>
+  <h1>Königsdisziplin</h1>
+  <div class="sub">Zukunft der Arbeit &middot; HR meets (AI-)Strategy</div>
+  <div class="frameline">Technologie, Mensch, Organisation und Zukunft &mdash; gleichzeitig.</div>
+  <button id="enterBtn" disabled>Wird vorbereitet &hellip;</button>
+  <div id="loadbar"><i></i></div>
+  <div class="foot">Bewegung mit WASD und Maus &middot; Esc zeigt den Mauszeiger</div>
+</div>
+
+<div id="fader"></div>
+<div id="hint">WASD / Maus &middot; gehen Sie in die Mitte</div>
+<div id="resume"><span>Klicken zum Fortsetzen</span></div>
+
+<script>
+// Geraeteweiche und CDN-Watchdog als klassisches Script: laeuft auch, wenn der
+// three.js-Import (CDN) fehlschlaegt, damit nie ein stummer toter Screen entsteht.
+(function () {
+  var fine = matchMedia('(pointer: fine)').matches;
+  var hover = matchMedia('(hover: hover)').matches;
+  var small = Math.min(screen.width || 10000, screen.height || 10000) < 600;
+  window.__useGate = (!fine && !hover) || small;
+  if (window.__useGate) {
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('gate').style.display = 'flex';
+      document.getElementById('start').style.display = 'none';
+      document.getElementById('fader').style.display = 'none';
+    });
+    return;
+  }
+  setTimeout(function () {
+    if (window.__raumLoaded) return;
+    var btn = document.getElementById('enterBtn');
+    var foot = document.querySelector('#start .foot');
+    if (btn) btn.textContent = 'Keine Verbindung';
+    if (foot) foot.textContent = 'Für den Raum wird einmalig eine Internetverbindung benötigt. Bitte online erneut öffnen.';
+  }, 9000);
+})();
+</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.177.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+
+/* __DATA_START__ (maschinell aus dem Briefing extrahiert — nicht von Hand aendern) */
+const DATA = {
+ "forces": [
+  "TECHNOLOGIE",
+  "MENSCH",
+  "ORGANISATION",
+  "ZUKUNFT"
+ ],
+ "dimensions": [
+  {
+   "num": 1,
+   "name": "ARBEIT, AUFGABEN & ROLLEN",
+   "quotes": [
+    "Automatisierung von Aufgaben",
+    "Daten sind übergreifend abrufbar, keine Silos mehr (Geräteübergreifens, Bereichsübergreifend, einheitliche Plattform)",
+    "Text & Bildgenerierung wird KI-gestützt, auch Laien können coden und simple Inhalte bewerten (Kompetenzen richten sich in digitaler Richtung aus)",
+    "Menschen widmen sich qualifizierten Themen, Fokus nach vorne (kein Fokus auf Selbstverwaltung)",
+    "Datenauswertung, -pflege erfolgt automatisiert",
+    "Weniger Selbstverwaltung",
+    "Effizienzsteigerung",
+    "Grundqualität steigt",
+    "Arbeitsqualität erreicht ein Mittelmaß (kein Unterdurchschnitt, aber auch kein Überdurchschnitt, da auf KI Ergebnissen „ausgeruht wird“",
+    "Menschen ziehen nicht mit, behalten alte Routinen",
+    "KI ist mehr als nur ein Tool",
+    "Mitarbeitende können ihre Arbeitsprozesse in „Jobs to be done“ zerlegen",
+    "Automatisierungspotenzial der einzelnen „Jobs“ kann aufgrund der KI-Kompetenz von jedem Mitarbeitenden eigenständig bewertet werden",
+    "Einfache Lösungen können selbst von Mitarbeitenden entwickelt werden (Power Automate)",
+    "Unternehmenswissen ist über KI-Assistenten verfügbar",
+    "Unternehmensdaten sind über Self-Service-Angebot einsehbar",
+    "Effizienzsteigerung → Zeit + Kosten",
+    "Weniger repetitive Aufgaben, die manuell ausgeführt werden",
+    "Besseres Verständnis für die Organisation und tiefe Einblicke",
+    "Fehlende Digitalisierung (Informationen nicht digital, schlechte Datenqualität)",
+    "Fehlende (maschinenlesbare) Dokumentation von Prozessen",
+    "Einschränkungen bei der M365-Tool-Nutzung",
+    "Kosten für Tools/Lizenzen/Tokens",
+    "Brain Fry",
+    "Wir werden nicht das volle Potenzial der Technologien ausschöpfen können",
+    "Neue Geschäftsfelder",
+    "Stärkere Vernetzung von Produkten",
+    "Zusammenspiel von Kunden und Daten",
+    "Vertrieb und Verkauf verändern sich.",
+    "Offene Frage: Wird auch die Verkaufsentscheidung künftig anders erlebt?",
+    "Gibt es mehr PC-Arbeit oder mehr „Menschenarbeit“?",
+    "KI „räumt auf“ und übernimmt strukturierende oder vorbereitende Tätigkeiten.",
+    "Welche Arbeit wird künftig bezahlt?",
+    "Abstimmungen und Meetings zwischen Menschen bleiben bestehen.",
+    "Gerade das „Menschsein“ und die direkte menschliche Begegnung gewinnen dabei an Bedeutung.",
+    "Grenzen durch Software und Hardware",
+    "Kritisches Denken bleibt eine wesentliche Grenze beziehungsweise Voraussetzung.",
+    "Zeit",
+    "Überstunden beziehungsweise „Ü-Stunden“",
+    "Die Entlohnung erfolgt weiterhin nach Stelle und leider nicht nach Kompetenzen.",
+    "Verdichtung der Arbeit → Wir produzieren viel zu viel Inhalte (Präsentationen, Analysen, Argumentationen). Das schwächste glied in dieser Kette der Verarbeitung der Mensch.",
+    "In der Folge kann das dazu führen, dass viele sehr ausgelaugt sind, von den vielen Inhalten. Mehrwerte müssen dadruch auch nicht immer entstehen",
+    "Motto: Weniger ist das neue Mehr!",
+    "Was ist unser USP → Wenn alle volldigital sind, was ist dann der USP?",
+    "Komplette Integration von Arbeit und Aufgaben entlang der Wertschöpfungskette („Black-Box-Prinzip“)",
+    "Vernetzung durch IoT (Internet of Things) und Industrie 4.0",
+    "Rollenverständnisse entwickeln sich zu Supervisor, Pilot und Copilot",
+    "Zunehmende „Human in the Loop“-Tätigkeiten, bei denen Menschen Prozesse überwachen, steuern und Entscheidungen absichern",
+    "Chancengleichheit und Zugang zu Arbeit neu denken",
+    "Stumpfe und repetitive Aufgaben werden weitgehend automatisiert",
+    "„Brandschutz-Inside“",
+    "Wohin konvergiert das Gesamtsystem?",
+    "Setzen wir als Menschheit auf das richtige Pferd?",
+    "Gefahr von Fehlentwicklungen durch zu starke Abhängigkeit von Technologie und Automatisierung",
+    "Aufgaben, bei denen es ausschließlich um das „Sortieren von Daten“ geht, werden nicht mehr von Menschen übernommen.",
+    "Viele Mitarbeitende haben einen spannenderen Arbeitsalltag. Gleichzeitig gab es jedoch nicht genügend kreative, sinnstiftende oder strategische Tätigkeiten für alle.",
+    "Einige Mitarbeitende haben das Unternehmen deshalb verlassen.",
+    "Andere Aufgaben werden deutlich flexibler erledigt, beispielsweise beim Spazierengehen.",
+    "Es entsteht eine Art „Bildschirmarbeit ohne Bildschirm“ beziehungsweise „Bildschirmarbeit 2.0“.",
+    "Das Gehirn hat man schließlich immer dabei.",
+    "Jede Person verfügt über einen persönlichen „Co-Agenten“, der sie kennt und gezielt bei ihren jeweiligen Tätigkeiten unterstützt.",
+    "Digitale Teams: Die Agents arbeiten auch automatisiert zusammen",
+    "Weiß ich, dass ich gerade mit einem Agent spreche? — Woher weiß ich, ob ich mit einem Menschen spreche…. Risiko „Battle of Agents“",
+    "Datenschutz in der Bot Economy!"
+   ]
+  },
+  {
+   "num": 2,
+   "name": "KOMPETENZEN & LERNEN",
+   "quotes": [
+    "Asynchrones, eigenständiges Lernen",
+    "Lernen on Demand statt Lernen auf Vorrat",
+    "Lernen direkt on the Job",
+    "Schaffung von Lernräumen und Einsatz von Lernregisseuren zur Unterstützung des Lernprozesses",
+    "„Bring Your Own Device“ – Lernen kann überall stattfinden",
+    "KI-gestützte Lernassistenz (Mentor)",
+    "Wer fördert und fordert Weiterbildung? (heute wird das Budget nicht ausgeschöpft)",
+    "Fehlertoleranz, geeignete Lernumgebungen und ausreichende Freiräume schaffen",
+    "Neugierige Menschen gezielt fördern",
+    "Disruptive Ansätze und neue Denkweisen stärker zulassen und fördern.",
+    "Es gibt ein gut etabliertes Schulungsprogramm für Digital Literacy.",
+    "Viele Mitarbeitende können mit KI umgehen und verstehen den Wert von Daten. — Aber immer noch nicht alle.",
+    "Es gibt einen digitalen Skill-Katalog mit definierten Kompetenzleveln.",
+    "Das Angebot an Themen und Kompetenzen, die gelernt werden können, ist deutlich vielfältiger geworden.",
+    "In einer Welt, in der viele Inhalte KI-generiert sind, wurde möglicherweise nicht ausreichend in „alte“ Kompetenzen wie kritisches Denken investiert.",
+    "Lernen wird zwar als wichtig angesehen, kommt aber nicht explizit in Aufgaben- oder Stellenbeschreibungen vor.",
+    "Frage: Wie beurteilen wir künftig die Kompetenzen von Bewerberinnen und Bewerbern? — Geschickt und professionell erstellte Bewerbungsunterlagen haben aufgrund KI-generierter Inhalte weniger Aussagekraft.",
+    "Lernen findet im Moment of Need statt",
+    "KI-Agenten stehen dauerhaft zur Verfügung und leiten durch Themen",
+    "Kompetenzaufbau findet ständig statt",
+    "KI-Agent stellt morgens Übersicht (in Teams) bereit, was ansteht und wo Wissenslücken bestehen und schlägt geeigneten Lernpfad vor",
+    "KI-Agent gibt Updates über neuste Entwicklungen am Markt und steuer den Lernprozess proaktiv an",
+    "Lernen muss aus sich heraus erfolgen (jeder Mensch ist für sich selbst verantwortlich)",
+    "Lernen in Communitys",
+    "Kompetenzaufbau und Arbeitsaufgabe verschmelzen ineinander",
+    "Agent kommt proaktiv auf MA zu",
+    "MA und KI teilen ihre Erfahrungen proaktiv und lassen andere teilhaben",
+    "Tägliches Lernen erfolgt in einem Automatismus",
+    "Lernen wird fester Bestandteil im Arbeitsalltag",
+    "Kein bzw. geringerer Mehraufwand durch Lernen, Lernender muss nicht mehr aus dem Alltag herausgeholt werden und auf Schulung an Ort X",
+    "Akzeptanz von „Maschinen zu lernen“ → aktuelle Studien belegen noch, dass Lernen von Mensch zu Mensch wirkungsvoller ist",
+    "Zwischenmenschliche Beziehungen können verloren gehen",
+    "Basis: Fehlerkultur und Innovationsgeist",
+    "Technologien der Digitalisierung sind verstanden → Was kann ich optimieren? Mit welcher Technologie?",
+    "Echte Zeit fürs Lernen und Ausprobieren innerhalb der Arbeitszeit",
+    "Selbstständigkeit",
+    "Kreativität",
+    "Zufriedenheit",
+    "Innovationsstau",
+    "Abhängigkeit von Fachbereichen",
+    "Teamspirit",
+    "Kritisches Denken wird zur Kernkompetenz.",
+    "Lernen erfolgt stärker über: Planspiele, praktische Erfahrungen, neue Lernformate für unterschiedliche Altersgruppen, Hospitationen.",
+    "Lernen bleibt auch in späteren Lebensphasen relevant: „Nach der Rente ist vor der Rente.“ Lernen im hohen Alter gewinnt an Bedeutung.",
+    "Eigenverantwortung und Neugier werden zu zentralen Voraussetzungen für Lernen und Entwicklung.",
+    "Menschen lernen stärker voneinander und aus der Praxis.",
+    "Iteratives Vorgehen ist stärker etabliert.",
+    "Entscheidungen werden überprüft.",
+    "Auf Basis neuer Erkenntnisse wird bewusst neu entschieden.",
+    "„Bubble-Denken“",
+    "Eine zu starke Fixierung auf vermeintlich eindeutige Aussagen wie: „Die Daten sagen das …“",
+    "Die Möglichkeiten, in der Organisation zu wirken, werden differenzierter und weniger durch feste Zugehörigkeiten begrenzt.",
+    "Schwierige Abwägungen zwischen Mensch und Maschine",
+    "Es gibt einen „Kompetenzpool“, aus dem für Projekte jeweils passende Teams zusammengestellt werden. — Eine Person kann heute in einem Controlling-Projekt und morgen in einem Marketing-Projekt arbeiten.",
+    "Die Weiterentwicklung wertvoller Kompetenzen ist ein zentraler Bestandteil der Vergütung.",
+    "Innerhalb derselben Abteilung kann deshalb Kollegin oder Kollege A mehr verdienen als B oder C, weil die eigenen Kompetenzen stärker weiterentwickelt wurden.",
+    "Lernen findet teilweise wieder analog statt, weil es effektiver sein kann und weil eine unmittelbare Reibung an realen Problemen entsteht.",
+    "Erfahrung wird zum entscheidenden Vorteil. — Wenn grundsätzlich jede Person Inhalte generieren kann, wird die Fähigkeit, zu beurteilen, was tatsächlich funktioniert, besonders wertvoll.",
+    "Organisation als Organismus → Entwickelt sich durch KI weiter",
+    "Lernen als Sport → Wir tracken die Kilometer → Warum nicht die Lernfortschritte?"
+   ]
+  },
+  {
+   "num": 3,
+   "name": "FÜHRUNG & ENTSCHEIDUNGEN",
+   "quotes": [
+    "KI unterstützt in der Kommunikation (zur Vorbereitung)",
+    "KI protokolliert in Jour Fixen, fasst zusammen und gibt Entscheidungsvorlagen",
+    "KI als Sparingspartner → jederzeit verfügbar, schnellere Entscheidungen",
+    "Vor- und Nachbereitungszeiten werden auf ein Minimum reduziert",
+    "Entscheide werden schneller getroffen",
+    "Menschl. Bewusstsein, wo KI überall eingesetzt werrden kann",
+    "KI Vorschläge kritisch zu prüfen, nicht einfach aus Bequemlichkeit übernehmen",
+    "Balance zwischen Zwischenmenschlichem und KI",
+    "Arbeitsalltag ist „messbarer“",
+    "Entscheidungen werden zunehmend datenbasiert getroffen",
+    "Fachkompetenz (Domänenwissen, KI) hat größeren Stellenwert für Führungskräfte",
+    "Übernahme von Verantwortung nicht mehr Hauptaufgabe der Führung",
+    "Weniger Diskussionen/Austausch/Meetings → Mehr Fakten, weniger Meinung",
+    "Geschwindigkeit nimmt zu",
+    "Limitierte Objektivität: Firmenpolitik sticht Fakten",
+    "Flexibilität der Mitarbeitenden",
+    "Kein Vertrauen in Daten wegen mangelnder Qualität",
+    "Vollständige Transformation zu einem datengetriebenen Unternehmen",
+    "Wir lernen, welche Entscheidungen mit KI und welche bewusst ohne KI getroffen werden können oder sollten.",
+    "Eine wichtige Kontrollfrage lautet: „Hast du das überprüft?“",
+    "Wir öffnen gezielt Reflexionsräume für Entscheidungen.",
+    "Das Menschliche in der Führung rückt stärker in den Fokus.",
+    "Beziehungsarbeit wird zu einem wesentlichen Teil von Führung.",
+    "Bei Fragen von Ethik und Moral",
+    "Menschen werden das Menschliche weiterhin spüren wollen – im Gegensatz zu Ergebnissen, die lediglich auf Wahrscheinlichkeiten von aneinandergereihten Wörtern beruhen.",
+    "Ob eine Entscheidung wirklich gut war, erkennen wir häufig erst im Nachhinein.",
+    "Gefahr: Wenn sich Führung zu sehr auf KI verlässt, lässt die Fähigkeit nach, selbst Entscheidungen zu treffen und Informationsunvollständigkeit auszuhalten.",
+    "Weiterführende Frage: Machen irgendwann alle Unternehmen das Gleiche, wenn alle KI-Modelle ähnliche Empfehlungen geben?",
+    "Konsequenz: Entscheidungen teilweise zunächst selbst treffen und erst im Nachhinein durch KI challengen lassen.",
+    "Gefahr: zu sehr auf KI verlassen…Fähigkeit",
+    "Überforderung der Führung: Zentralisierung der Macht → Output wird immer mehr, wie soll die Führung das noch leisten?!",
+    "Führung von wem denn eigentlich? Mensch vs. Mensch und nicht-mensch?!",
+    "Führung von Mensch versus AI/Bots",
+    "Führung von Menschen wird stärker beziehungs- und visionsorientiert, weniger auf Aufgabensteuerung fokussiert",
+    "Auf Entscheidungen folgt zunächst eine Fragestellung, bevor eine Antwort gegeben wird",
+    "„Human in the Loop“ als fester Bestandteil von Führungs- und Entscheidungsprozessen",
+    "Das Peter-Prinzip",
+    "Die klassische Vorstellung von Autorität und Führung",
+    "Die Frage: Wem oder was möchte ich folgen?",
+    "Unterschiedliche Formen von Führung durch Menschen und AI/Bots werden sichtbar",
+    "Gleichzeitig bleibt Führung im Kern unverändert: Führung entsteht durch Beziehung",
+    "Unklare Verantwortlichkeiten zwischen Mensch und AI",
+    "Vertrauensverlust bei fehlender Transparenz von Entscheidungen",
+    "Abhängigkeit von algorithmischen Empfehlungen",
+    "Verlust menschlicher Intuition und Erfahrungswissen in Entscheidungsprozessen",
+    "Führung bedeutet vor allem Inspiration. — Daraus entsteht echte Leadership.",
+    "Das reine Verwalten von Prozessen reicht nicht mehr aus.",
+    "Eine zentrale Führungsaufgabe besteht darin, Mitarbeitenden Orientierung zu vermitteln und Zusammenhänge verständlich zu machen.",
+    "Relevant wird die Unterscheidung zwischen „Working above the API“ und „Working below the API“: Nicht alle arbeiten „above the API“ und gestalten oder steuern Systeme. Einige erhalten „below the API“ konkrete Anweisungen darüber, was sie ausführen sollen. Andere geben selbst Ziele, Aufgaben oder Steuerungsimpulse in die Systeme hinein."
+   ]
+  },
+  {
+   "num": 4,
+   "name": "ORGANISATION, STRUKTUREN & ZUSAMMENARBEIT",
+   "quotes": [
+    "Linienaufgaben, Standards und wiederkehrende Tätigkeiten werden entlang der gesamten Wertschöpfungskette hoch automatisiert",
+    "Bildung von „Special Forces“ bzw. interdisziplinären Teams mit den jeweils benötigten Kompetenzen",
+    "Interdisziplinäre Teams mit temporären Aufträgen werden gebildet",
+    "Agents zur Unterstützung der Zusammenarbeit (KI-Bots / Facilitatoren)",
+    "Prioritäten sowie Ressourcen festlegen und zuordnen",
+    "Machtinteressen und Bereichsdenken",
+    "„Kommissar Zufall“ – ungeplante Entdeckungen und Chancen",
+    "Unerwartete Entwicklungen und Innovationsimpulse außerhalb etablierter Strukturen",
+    "Die Bereiche arbeiten besser zusammen und haben das gemeinsame Ziel stärker im Blick. — Trotzdem sind wir noch keine „One Company“.",
+    "Das menschliche Zusammensein gewinnt insbesondere bei kreativen Aktivitäten noch stärker an Bedeutung.",
+    "Das Organigramm ist grundsätzlich noch sehr ähnlich wie heute. — Gerade im digitalen Bereich gibt es jedoch neue Einheiten, beispielsweise ein AI & Data Team.",
+    "Es gibt weiterhin sehr viele Meetings, allerdings nehmen häufig auch Agents daran teil. — Braucht es eine „Menschenquote“? — Beispiel: Besteht der S-Kreis irgendwann aus drei Agents und einem Menschen?",
+    "Die Kosten von Meetings werden weiterhin nicht systematisch erfasst. — Stichwort: „Meeting-Monster“",
+    "Haben wir dann noch überstunden?",
+    "Abstimmungen sind sauber und klar dokumentiert, nachvollziehbar und zugänglich",
+    "Schriftverkehr von Tickets, Supportanfragen laufen automatisiert, Selbsthilfe der MA durch Nutzung von KI → Frage an KI Bot",
+    "Automatisierung von Meetings (Protokollierung,…)",
+    "First Level Support Chat mit KI",
+    "Meetings brauchen nicht mehr manuell protokolliert werden",
+    "Schriftverkehr wird größtenteils von KI übernommen",
+    "Ressourcenbindung",
+    "Qualität (-einbruch, oder -steigerung)",
+    "Interdisziplinarität: Übergänge zwischen Funktionen fließend PM+Entwickler = Product Engineer → Fachkompetenz/Interesse über das eigene Feld hinaus",
+    "Verschmelzung der Fachbereiche",
+    "Zentralisierung in Personen",
+    "Weniger Abstimmungsbedarf",
+    "Silos/Verantwortlichkeiten",
+    "Organisation als Zusammenspiel aus Kernorganisation und Satelliten",
+    "Arbeit in Kernteams und Netzwerken",
+    "Stärkere Orientierung an der eigenen Profession",
+    "Offene Fragen: Wo gehöre ich organisatorisch beziehungsweise fachlich hin? Was ist mein konkreter Wertbeitrag?",
+    "Mitarbeitende haben weiterhin eine fachliche oder organisatorische „Heimat“, beispielsweise in: HR, Marketing, Entwicklung, IT.",
+    "Gleichzeitig arbeiten sie verstärkt in wechselnden Netzwerkstrukturen.",
+    "Klassische, starre Organisationsgrenzen",
+    "Die Möglichkeiten, innerhalb und durch die Organisation zu wirken, werden vielfältiger und differenzierter.",
+    "Unklarheit darüber, wem eine KI beziehungsweise ein KI-System „gehört“",
+    "Unklarheit darüber, welcher organisatorischen Einheit die KI zugeordnet ist",
+    "Ein Overload an Informationen kann zu Überforderung und letztlich zu Stillstand führen.",
+    "IT und HR entwickeln sich zu einer „Superabteilung“ beziehungsweise zu einem integrierten Bereich. Hintergrund: Ohne IT-Kompetenzen und technisches Verständnis ist in einer digitalen Arbeitswelt kaum noch etwas möglich. Gleichzeitig sind diese Kompetenzen auch für Personalentwicklung, Lernen und Kompetenzmanagement zentral.",
+    "Unternehmen entwickeln sich zunehmend zu einer „Caring Company“. Im Wettbewerb um Fachkräfte gestalten Unternehmen nicht mehr nur den Arbeitsalltag, sondern übernehmen zunehmend auch Verantwortung für weitere Lebensbereiche ihrer Mitarbeitenden. Denkbare Unterstützungsangebote sind beispielsweise: Unterstützung bei der Pflege von Angehörigen, Kinderbetreuung oder eigene Kita-Angebote, finanzielle Unterstützungsmodelle, möglicherweise sogar Kredite für den Hausbau.",
+    "Caring companies"
+   ]
+  }
+ ],
+ "links": [
+  [
+   [
+    0,
+    31
+   ],
+   [
+    0,
+    40
+   ]
+  ],
+  [
+   [
+    1,
+    57
+   ],
+   [
+    0,
+    56
+   ]
+  ],
+  [
+   [
+    0,
+    9
+   ],
+   [
+    1,
+    17
+   ]
+  ],
+  [
+   [
+    2,
+    9
+   ],
+   [
+    2,
+    14
+   ]
+  ],
+  [
+   [
+    0,
+    7
+   ],
+   [
+    0,
+    8
+   ]
+  ],
+  [
+   [
+    3,
+    25
+   ],
+   [
+    3,
+    11
+   ]
+  ],
+  [
+   [
+    1,
+    28
+   ],
+   [
+    1,
+    15
+   ]
+  ],
+  [
+   [
+    1,
+    30
+   ],
+   [
+    1,
+    18
+   ]
+  ]
+ ]
+};
+/* __DATA_END__ */
+
+// ---------------------------------------------------------------- Geräteweiche
+// Die Weiche selbst laeuft im klassischen Script oben; hier nur noch der Start.
+window.__raumLoaded = true;
+if (!window.__useGate) init();
+
+function init() {
+
+// ---------------------------------------------------------------- Grundgerüst
+const PAL = {
+  bg: 0x060d18, fog: 0x0b1626,
+  domeTop: 0x04080f, domeMid: 0x0a1626, horizon: 0x14283f,
+  warm: 0xff9e52, warmSoft: 0xffb066, cyan: 0x7fd8ff, ink: 0xdfeaf5
+};
+// Vier gedeckte Leitfarben fuer die vier Dimensionen (Akt 2), bewusst nah an der
+// Grundpalette gehalten: Ordnung soll sich anfuehlen wie Ruhe, nicht wie ein Umbau.
+const DIM_HUES = [0x7fd8ff, 0xffb066, 0x93d8b4, 0xb4a8ff];
+
+const ROOM = { walkR: 25.6, pylonR: 24, wallR: 34, eye: 1.7 };
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance', stencil: false });
+} catch (e) {
+  const g = document.getElementById('gate');
+  g.style.display = 'flex';
+  g.querySelector('h2').textContent = 'Die 3D-Ansicht konnte nicht gestartet werden';
+  g.querySelector('p').textContent = 'Die 3D-Ansicht konnte in diesem Browser nicht gestartet werden. Bitte einen aktuellen Chrome oder Edge verwenden.';
+  document.getElementById('start').style.display = 'none';
+  document.getElementById('fader').style.display = 'none';
+  return;
+}
+const PR_CAP = 1.6;
+const PR = Math.min(window.devicePixelRatio || 1, PR_CAP);
+let curPR = PR;
+renderer.setPixelRatio(PR);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+// Keine Schattenkarten: der Raum lebt aus Selbstleuchtern und weicher Grundhelligkeit,
+// harte Schatten wuerden die Planetariums-Ruhe nur stoeren und Fuellrate kosten.
+renderer.shadowMap.enabled = false;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(PAL.fog, 34, 150);
+
+const camera = new THREE.PerspectiveCamera(66, window.innerWidth / window.innerHeight, 0.1, 900);
+camera.position.set(0, ROOM.eye, 21.5);
+camera.rotation.order = 'YXZ';
+
+const controls = new PointerLockControls(camera, document.body);
+
+// -------------------------------------------------------------------- Kuppel
+// Die Kuppel ist der Himmel des Raums: tiefes Navy, nach unten minimal aufgehellt,
+// ein einziger ferner warmer Schimmer am Horizont als Erbe der Werkstatt-Daemmerung.
+const glowDir = new THREE.Vector3(-0.52, 0.04, -0.83).normalize();
+const domeMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide,
+  depthWrite: false,
+  fog: false,
+  uniforms: {
+    glowDir: { value: glowDir },
+    cTop: { value: new THREE.Color(PAL.domeTop) },
+    cMid: { value: new THREE.Color(PAL.domeMid) },
+    cHor: { value: new THREE.Color(PAL.horizon) },
+    cWarm: { value: new THREE.Color(PAL.warm) }
+  },
+  vertexShader: `
+    varying vec3 vDir;
+    void main() {
+      vDir = normalize(position);
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: `
+    uniform vec3 glowDir, cTop, cMid, cHor;
+    uniform vec3 cWarm;
+    varying vec3 vDir;
+    float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+    void main() {
+      vec3 d = normalize(vDir);
+      float y = clamp(d.y, -0.08, 1.0);
+      vec3 col = mix(cHor, cMid, smoothstep(0.0, 0.30, y));
+      col = mix(col, cTop, smoothstep(0.24, 0.8, y));
+      vec3 flat3 = normalize(vec3(d.x, 0.0, d.z));
+      vec3 gFlat = normalize(vec3(glowDir.x, 0.0, glowDir.z));
+      float az = max(dot(flat3, gFlat), 0.0);
+      float belt = smoothstep(0.20, -0.05, d.y);
+      col += cWarm * pow(az, 4.0) * belt * 0.05;
+      col += (hash(gl_FragCoord.xy) - 0.5) / 160.0;
+      gl_FragColor = vec4(col, 1.0);
+    }`
+});
+const dome = new THREE.Mesh(new THREE.SphereGeometry(420, 48, 24), domeMat);
+dome.frustumCulled = false;
+scene.add(dome);
+
+// Environment aus der Kuppel, fuer die Metallflaechen der Stelen
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envScene = new THREE.Scene();
+envScene.add(new THREE.Mesh(new THREE.SphereGeometry(420, 32, 16), domeMat));
+scene.environment = pmrem.fromScene(envScene, 0.035, 0.1, 500).texture;
+pmrem.dispose();
+
+// ------------------------------------------------------------------- Lichter
+const hemi = new THREE.HemisphereLight(0x2e4a72, 0x0c1522, 0.85);
+scene.add(hemi);
+const centerLight = new THREE.PointLight(0x86b8ff, 6, 44, 2);
+centerLight.position.set(0, 9, 0);
+scene.add(centerLight);
+const daisLight = new THREE.PointLight(0xffb066, 0, 10, 2);
+daisLight.position.set(0, 2.2, 0);
+scene.add(daisLight);
+
+// ------------------------------------------------------------------ Helfer
+const easeOut = (k) => 1 - Math.pow(1 - k, 3);
+const easeInOut = (k) => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+function stagger(k, i, n, spread = 0.55) {
+  if (n <= 1) return k;
+  const d = (i / (n - 1)) * spread;
+  return THREE.MathUtils.clamp((k - d) / (1 - spread), 0, 1);
+}
+function lerpAngle(a, b, k) {
+  let d = (b - a) % (Math.PI * 2);
+  if (d > Math.PI) d -= Math.PI * 2;
+  if (d < -Math.PI) d += Math.PI * 2;
+  return a + d * k;
+}
+// Deterministischer Zufall, damit der Raum bei jedem Besuch identisch steht
+let seed = 20260718;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+// Flacher Bogen-Streifen in der XZ-Ebene (fuer Podestring, Sektorboegen, Saum).
+// Eigene Geometrie statt gedrehter RingGeometry: keine Verwirrung mit Theta-Konventionen.
+function arcStrip(r0, r1, azFrom, azTo, segs = 48) {
+  const pos = [], idx = [];
+  for (let s = 0; s <= segs; s++) {
+    const az = azFrom + (azTo - azFrom) * (s / segs);
+    const sx = Math.sin(az), cz = Math.cos(az);
+    pos.push(sx * r0, 0, cz * r0, sx * r1, 0, cz * r1);
+    if (s < segs) {
+      const b = s * 2;
+      idx.push(b, b + 1, b + 2, b + 1, b + 3, b + 2);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  return g;
+}
+
+const warmTex = [];
+function canvasTexture(draw, w, h) {
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  draw(cv.getContext('2d'), w, h);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  warmTex.push(tex);
+  return tex;
+}
+
+// -------------------------------------------------------------------- Boden
+const groundFar = new THREE.Mesh(
+  new THREE.PlaneGeometry(1400, 1400),
+  new THREE.MeshStandardMaterial({ color: 0x05090f, roughness: 1, metalness: 0 })
+);
+groundFar.rotation.x = -Math.PI / 2;
+groundFar.position.y = -0.02;
+scene.add(groundFar);
+
+const floorDisc = new THREE.Mesh(
+  new THREE.CircleGeometry(ROOM.wallR, 96),
+  new THREE.MeshStandardMaterial({ color: 0x070d16, roughness: 0.9, metalness: 0.08, envMapIntensity: 0.25 })
+);
+floorDisc.rotation.x = -Math.PI / 2;
+floorDisc.position.y = 0;
+scene.add(floorDisc);
+
+// Kontrollraum-Raster: konzentrische Ringe und Radialen, sehr leise gehalten
+const gridTex = canvasTexture((ctx, w, h) => {
+  const cx = w / 2, cy = h / 2, pxPerM = (w / 2) / ROOM.wallR;
+  ctx.clearRect(0, 0, w, h);
+  ctx.lineWidth = 2;
+  for (let r = 3; r <= 33; r += 3) {
+    const fade = 1 - Math.max(0, (r - 24) / 10);
+    ctx.strokeStyle = `rgba(127,216,255,${(0.10 * fade).toFixed(3)})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * pxPerM, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    const main = i % 6 === 0;
+    ctx.strokeStyle = main ? 'rgba(127,216,255,0.11)' : 'rgba(127,216,255,0.045)';
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.sin(a) * 3.1 * pxPerM, cy + Math.cos(a) * 3.1 * pxPerM);
+    ctx.lineTo(cx + Math.sin(a) * 32.6 * pxPerM, cy + Math.cos(a) * 32.6 * pxPerM);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = 'rgba(127,216,255,0.20)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 2.7 * pxPerM, 0, Math.PI * 2);
+  ctx.stroke();
+}, 2048, 2048);
+const gridMat = new THREE.MeshBasicMaterial({
+  map: gridTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending,
+  depthWrite: false, toneMapped: false, fog: false
+});
+const GRID_MAX = 0.5;
+const gridMesh = new THREE.Mesh(new THREE.CircleGeometry(ROOM.wallR, 96), gridMat);
+gridMesh.rotation.x = -Math.PI / 2;
+gridMesh.position.y = 0.012;
+gridMesh.visible = false;
+scene.add(gridMesh);
+
+// Spiegelscheibe im Zentrum: nur dort, wo der Kernmoment stattfindet.
+// Sichtbar erst in Zentrumsnaehe (disjunkte Zone, wie die Spiegel-Diaet der Werkstatt).
+const reflectorOpts = { clipBias: 0.003, textureWidth: 768, textureHeight: 768, color: 0x5c6e7e, multisample: 0 };
+const centerMirror = new Reflector(new THREE.CircleGeometry(8, 64), reflectorOpts);
+centerMirror.rotation.x = -Math.PI / 2;
+centerMirror.position.y = 0.001;
+scene.add(centerMirror);
+const mirrorOverlay = new THREE.Mesh(
+  new THREE.CircleGeometry(8, 64),
+  new THREE.MeshStandardMaterial({ color: 0x081120, roughness: 0.4, metalness: 0.35, transparent: true, opacity: 0.86, envMapIntensity: 0.4 })
+);
+mirrorOverlay.rotation.x = -Math.PI / 2;
+mirrorOverlay.position.y = 0.03;
+scene.add(mirrorOverlay);
+
+// Podest im Zentrum: das Auge des Sturms
+const dais = new THREE.Mesh(
+  new THREE.CircleGeometry(2.7, 64),
+  new THREE.MeshStandardMaterial({ color: 0x0a1420, roughness: 0.5, metalness: 0.3, envMapIntensity: 0.4 })
+);
+dais.rotation.x = -Math.PI / 2;
+dais.position.y = 0.045;
+scene.add(dais);
+const daisRingMat = new THREE.MeshBasicMaterial({
+  color: 0x000000, blending: THREE.AdditiveBlending, transparent: true,
+  depthWrite: false, toneMapped: false, fog: false
+});
+const daisRing = new THREE.Mesh(arcStrip(2.56, 2.72, 0, Math.PI * 2, 96), daisRingMat);
+daisRing.position.y = 0.06;
+daisRing.visible = false;
+scene.add(daisRing);
+
+// --------------------------------------------------------------- Raumgrenze
+// Niedrige Brüstung, darauf ein haarfeiner Lichtsaum: schliesst den Boden,
+// darueber oeffnet sich die Kuppel.
+const parapet = new THREE.Mesh(
+  new THREE.CylinderGeometry(ROOM.wallR, ROOM.wallR, 2.5, 96, 1, true),
+  new THREE.MeshStandardMaterial({ color: 0x0a1522, roughness: 0.8, metalness: 0.25, side: THREE.BackSide, envMapIntensity: 0.4 })
+);
+parapet.position.y = 1.25;
+scene.add(parapet);
+const seamMat = new THREE.MeshBasicMaterial({
+  color: 0x000000, blending: THREE.AdditiveBlending, transparent: true,
+  depthWrite: false, toneMapped: false, fog: false, side: THREE.BackSide
+});
+seamMat.userData.glow = new THREE.Color(0.30, 0.52, 0.66);
+const seam = new THREE.Mesh(new THREE.CylinderGeometry(ROOM.wallR - 0.04, ROOM.wallR - 0.04, 0.05, 96, 1, true), seamMat);
+seam.position.y = 2.52;
+seam.visible = false;
+scene.add(seam);
+
+// ------------------------------------------------------------ Staub im Licht
+// Projektorstaub, kaum sichtbar: gibt der Luft Tiefe, ohne Nebel zu sein.
+const moteGeo = new THREE.BufferGeometry();
+{
+  const pts = [];
+  for (let i = 0; i < 420; i++) {
+    const a = rnd() * Math.PI * 2, r = 3 + Math.sqrt(rnd()) * 21;
+    pts.push(Math.sin(a) * r, 0.3 + rnd() * 7.2, Math.cos(a) * r);
+  }
+  moteGeo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+}
+const moteMat = new THREE.PointsMaterial({
+  color: 0x9fc8e8, size: 0.035, sizeAttenuation: true, transparent: true,
+  opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false
+});
+const motes = new THREE.Points(moteGeo, moteMat);
+motes.visible = false;
+scene.add(motes);
+const MOTE_MAX = 0.11;
+
+// ---------------------------------------------------------------- Die Stelen
+// Vier Kraefte als vier monolithische Praesenzen auf den Diagonalen.
+// Akt 2 zentriert die Dimensionen auf den Hauptachsen, die Stelen bleiben als Achsenkreuz.
+const FORCE_AZ = { TECHNOLOGIE: 135, MENSCH: 225, ORGANISATION: 315, ZUKUNFT: 45 };
+const pylons = [];
+const pylonBodyMat = () => new THREE.MeshStandardMaterial({ color: 0x101c2c, roughness: 0.5, metalness: 0.55, envMapIntensity: 0.7 });
+
+function makeForceWordTexture(word) {
+  // Stehende Letternsaeule, wie eine beleuchtete Schachtbeschriftung
+  return canvasTexture((ctx, w, h) => {
+    ctx.clearRect(0, 0, w, h);
+    ctx.font = '200 118px "Segoe UI", Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#e8f4ff';
+    const letters = word.split('');
+    const step = (h - 160) / Math.max(letters.length - 1, 1);
+    letters.forEach((ch, i) => ctx.fillText(ch, w / 2, 80 + i * step));
+  }, 192, 2048);
+}
+
+DATA.forces.forEach((word) => {
+  const az = THREE.MathUtils.degToRad(FORCE_AZ[word]);
+  const g = new THREE.Group();
+  g.position.set(Math.sin(az) * ROOM.pylonR, 0, Math.cos(az) * ROOM.pylonR);
+  g.rotation.y = az + Math.PI; // lokale +z-Seite schaut zum Zentrum
+  scene.add(g);
+
+  const body = new THREE.Mesh(new THREE.BoxGeometry(2.0, 11, 0.9), pylonBodyMat());
+  body.position.y = 5.5;
+  g.add(body);
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.5, 1.5), pylonBodyMat());
+  plinth.position.y = 0.25;
+  g.add(plinth);
+
+  const wordMat = new THREE.MeshBasicMaterial({
+    map: makeForceWordTexture(word), transparent: true, color: 0x000000,
+    blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, fog: false
+  });
+  wordMat.userData.glow = new THREE.Color(1.15, 1.32, 1.5);
+  const wordMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.78, 8.3), wordMat);
+  wordMesh.position.set(0, 5.7, 0.47);
+  g.add(wordMesh);
+
+  const stripMat = new THREE.MeshBasicMaterial({
+    color: 0x000000, blending: THREE.AdditiveBlending, transparent: true,
+    depthWrite: false, toneMapped: false, fog: false
+  });
+  stripMat.userData.glow = new THREE.Color(0.35, 0.62, 0.80);
+  [-0.97, 0.97].forEach(x => {
+    const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 11), stripMat);
+    strip.position.set(x, 5.5, 0.462);
+    g.add(strip);
+  });
+  const cap = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 0.06), stripMat);
+  cap.position.set(0, 11.03, 0.462);
+  cap.rotation.x = -0.5;
+  g.add(cap);
+
+  g.visible = false;
+  pylons.push({ g, body, plinth, wordMat, stripMat, az, phase: rnd() * Math.PI * 2 });
+});
+
+// ------------------------------------------------------------------ O-Töne
+// Jeder Satz kommt wortwoertlich aus dem DATA-Block; hier wird nur gezeichnet.
+// Einkanalige Texturen (nur Deckkraft): ein Viertel des Speichers von RGBA,
+// eingefaerbt wird im Shader.
+const measureCtx = document.createElement('canvas').getContext('2d');
+function wrapText(text, font, maxW) {
+  measureCtx.font = font;
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (const wd of words) {
+    const probe = line ? line + ' ' + wd : wd;
+    if (measureCtx.measureText(probe).width > maxW && line) {
+      lines.push(line);
+      line = wd;
+    } else {
+      line = probe;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function makeQuoteTexture(text) {
+  const long = text.length > 300;
+  const w = long ? 512 : 448;
+  const fontPx = text.length <= 40 ? 44 : text.length <= 120 ? 36 : text.length <= 300 ? 31 : 27;
+  const font = `500 ${fontPx}px "Segoe UI", Arial, sans-serif`;
+  const pad = 26;
+  const lines = wrapText(text, font, w - pad * 2);
+  const lineH = Math.round(fontPx * 1.32);
+  let h = Math.ceil((lines.length * lineH + pad * 2) / 32) * 32;
+  h = Math.min(Math.max(h, 96), 640);
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+  ctx.clearRect(0, 0, w, h);
+  ctx.font = font;
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = '#fff';
+  const y0 = (h - lines.length * lineH) / 2 + (lineH - fontPx) / 2;
+  lines.forEach((ln, i) => ctx.fillText(ln, pad, y0 + i * lineH));
+  // Nur der Rotkanal wird gebraucht; Zeilen dabei spiegeln (GL zaehlt von unten)
+  const img = ctx.getImageData(0, 0, w, h).data;
+  const buf = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    const src = y * w, dst = (h - 1 - y) * w;
+    for (let x = 0; x < w; x++) buf[dst + x] = img[(src + x) * 4];
+  }
+  const tex = new THREE.DataTexture(buf, w, h, THREE.RedFormat, THREE.UnsignedByteType);
+  tex.generateMipmaps = true;
+  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.anisotropy = 4;
+  tex.unpackAlignment = 1;
+  tex.needsUpdate = true;
+  return { tex, w, h };
+}
+
+const panelVert = `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }`;
+const panelFrag = `
+  uniform sampler2D map;
+  uniform vec3 tint;
+  uniform float opac, boost;
+  varying vec2 vUv;
+  void main() {
+    float a = texture2D(map, vUv).r;
+    if (a < 0.004) discard;
+    gl_FragColor = vec4(tint * boost, a * opac);
+  }`;
+
+const NEUTRAL = new THREE.Color(0xcfe3f2);
+const panelGeo = new THREE.PlaneGeometry(1, 1);
+const panelRoot = new THREE.Group();   // Weltraum-Elternteil nach dem Umbetten
+scene.add(panelRoot);
+const cloud = new THREE.Group();       // Akt-1-Wirbel, dreht als Ganzes
+scene.add(cloud);
+
+const panels = [];
+const quoteCount = DATA.dimensions.reduce((a, d) => a + d.quotes.length, 0);
+
+function worldWidthFor(len) {
+  return len <= 40 ? 1.6 : len <= 90 ? 2.0 : len <= 160 ? 2.35 : len <= 240 ? 2.7 : 3.1;
+}
+
+// Akt-1-Heimat: Goldener-Winkel-Wirbel um das Zentrum, dicht, hoch und ohne Muster
+function weaveHome(i) {
+  const az = i * 2.399963 + rnd() * 0.5;
+  const r = 6.2 + 14.6 * Math.pow(rnd(), 0.72);
+  let y = 1.0 + 5.8 * rnd();
+  if (rnd() < 0.07) y += 1.3;
+  return { az, r, y };
+}
+
+let panelBuildIx = 0;
+const panelBuildOrder = [];
+DATA.dimensions.forEach((d, di) => d.quotes.forEach((q, qi) => panelBuildOrder.push({ d: di, q: qi, text: q })));
+
+function buildOnePanel() {
+  const item = panelBuildOrder[panelBuildIx];
+  const { tex, w, h } = makeQuoteTexture(item.text);
+  const mat = new THREE.ShaderMaterial({
+    vertexShader: panelVert,
+    fragmentShader: panelFrag,
+    uniforms: {
+      map: { value: tex },
+      tint: { value: NEUTRAL.clone() },
+      opac: { value: 0 },
+      boost: { value: 1 }
+    },
+    transparent: true,
+    depthWrite: false,
+    side: THREE.FrontSide
+  });
+  const mesh = new THREE.Mesh(panelGeo, mat);
+  const home = weaveHome(panelBuildIx);
+  const ww = worldWidthFor(item.text.length);
+  const wh = ww * (h / w);
+  mesh.position.set(Math.sin(home.az) * home.r, home.y, Math.cos(home.az) * home.r);
+  const baseYaw = home.az + Math.PI + (rnd() - 0.5) * 1.15;
+  mesh.rotation.set((rnd() - 0.5) * 0.16, baseYaw, (rnd() - 0.5) * 0.1);
+  mesh.scale.set(ww, wh, 1);
+  mesh.visible = false;
+  cloud.add(mesh);
+
+  const dimColor = NEUTRAL.clone().lerp(new THREE.Color(DIM_HUES[item.d]), 0.24);
+  mesh.userData = {
+    dim: item.d, qi: item.q,
+    homeY: home.y, baseYaw,
+    tiltX: mesh.rotation.x, tiltZ: mesh.rotation.z,
+    phase: rnd() * Math.PI * 2,
+    baseOp: 0.34 + rnd() * 0.3,
+    ww, wh,
+    emph: 0,
+    introOrder: rnd(),
+    dimColor,
+    flyDelay: 0, flyStartPos: null, flyStartYaw: 0, flyStartTilt: 0
+  };
+  panels.push(mesh);
+  panelBuildIx++;
+}
+
+// ------------------------------------------------- Akt-2-Ordnung (Zielplaetze)
+// Vier Waende auf den Hauptachsen: D1 voraus (Sued), dann im Uhrzeigersinn.
+const DIM_AZ_DEG = [180, 90, 0, 270];
+const SORT = { rows: 5, rowH: [1.15, 2.24, 3.33, 4.42, 5.51], radius: 21.0, scale: 0.78, gap: 0.32 };
+
+function computeSlots() {
+  DATA.dimensions.forEach((d, di) => {
+    const centerAz = THREE.MathUtils.degToRad(DIM_AZ_DEG[di]);
+    const dimPanels = panels.filter(p => p.userData.dim === di).sort((a, b) => a.userData.qi - b.userData.qi);
+    // Reihen nach Bogenlaenge fuellen, nicht nach Stueckzahl: gleichmaessige Wand
+    const width = (p) => p.userData.ww * SORT.scale + SORT.gap;
+    const total = dimPanels.reduce((a, p) => a + width(p), 0);
+    const perRowW = total / SORT.rows;
+    const rows = [[]];
+    let acc = 0;
+    dimPanels.forEach(p => {
+      if (acc >= perRowW && rows.length < SORT.rows) { rows.push([]); acc = 0; }
+      rows[rows.length - 1].push(p);
+      acc += width(p);
+    });
+    rows.forEach((rowItems, row) => {
+      const widths = rowItems.map(width);
+      const totalAngle = widths.reduce((a, w2) => a + w2 / SORT.radius, 0);
+      let az = centerAz + totalAngle / 2; // von links (aus Betrachtersicht) nach rechts
+      rowItems.forEach((p, i2) => {
+        const wAng = widths[i2] / SORT.radius;
+        az -= wAng / 2;
+        const r = SORT.radius + (rnd() - 0.5) * 0.3 + row * 0.1;
+        p.userData.slot = {
+          x: Math.sin(az) * r,
+          y: SORT.rowH[row] + (rnd() - 0.5) * 0.1,
+          z: Math.cos(az) * r,
+          yaw: az + Math.PI
+        };
+        az -= wAng / 2;
+      });
+    });
+  });
+  // Flugreihenfolge: Dimension fuer Dimension, innerhalb sanft gestreut
+  panels.forEach(p => {
+    const d = p.userData;
+    const nd = DATA.dimensions[d.dim].quotes.length;
+    d.flyDelay = d.dim * 0.55 + (d.qi / nd) * 1.9 + rnd() * 0.3;
+  });
+}
+
+// ------------------------------------------------------- Dimensions-Schilder
+const headers = [];
+function makeHeaderTexture(num, name) {
+  return canvasTexture((ctx, w, h) => {
+    ctx.clearRect(0, 0, w, h);
+    ctx.textBaseline = 'middle';
+    ctx.font = '100 150px "Segoe UI", Arial, sans-serif';
+    const numW = ctx.measureText(String(num)).width;
+    ctx.font = '300 58px "Segoe UI", Arial, sans-serif';
+    if ('letterSpacing' in ctx) ctx.letterSpacing = '10px';
+    const nameW = ctx.measureText(name).width;
+    const total = numW + 46 + nameW;
+    let x = (w - total) / 2;
+    ctx.font = '100 150px "Segoe UI", Arial, sans-serif';
+    ctx.fillStyle = '#ffb066';
+    ctx.fillText(String(num), x, h / 2 + 6);
+    x += numW + 46;
+    ctx.font = '300 58px "Segoe UI", Arial, sans-serif';
+    if ('letterSpacing' in ctx) ctx.letterSpacing = '10px';
+    ctx.fillStyle = '#dfeaf5';
+    ctx.fillText(name, x, h / 2 + 8);
+  }, 2048, 224);
+}
+DATA.dimensions.forEach((d, di) => {
+  const az = THREE.MathUtils.degToRad(DIM_AZ_DEG[di]);
+  const mat = new THREE.MeshBasicMaterial({
+    map: makeHeaderTexture(d.num, d.name), transparent: true, opacity: 0,
+    depthWrite: false, toneMapped: false, fog: false
+  });
+  const width = 10.4;
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, width * 224 / 2048), mat);
+  const r = 22.0;
+  mesh.position.set(Math.sin(az) * r, 6.85, Math.cos(az) * r);
+  mesh.rotation.y = az + Math.PI;
+  mesh.visible = false;
+  scene.add(mesh);
+  headers.push(mesh);
+});
+
+// Sektorboegen am Boden vor jeder Dimensionswand
+const sectorArcs = [];
+DATA.dimensions.forEach((d, di) => {
+  const az = THREE.MathUtils.degToRad(DIM_AZ_DEG[di]);
+  const span = THREE.MathUtils.degToRad(31);
+  const mat = new THREE.MeshBasicMaterial({
+    color: DIM_HUES[di], transparent: true, opacity: 0, blending: THREE.AdditiveBlending,
+    depthWrite: false, toneMapped: false, fog: false
+  });
+  const mesh = new THREE.Mesh(arcStrip(18.4, 18.52, az - span, az + span, 40), mat);
+  mesh.position.y = 0.02;
+  mesh.visible = false;
+  scene.add(mesh);
+  sectorArcs.push(mesh);
+});
+
+// ------------------------------------------------------- Spannungslinien
+// Nur die im Briefing benannten Paare; Endpunkte folgen den Panels in Echtzeit.
+const linkPairs = DATA.links.map(([a, b]) => {
+  const find = (ref) => panels.find(p => p.userData.dim === ref[0] && p.userData.qi === ref[1]);
+  return { a: null, b: null, refA: a, refB: b, freq: 0.7 + rnd() * 0.9, phase: rnd() * Math.PI * 2 };
+});
+function resolveLinks() {
+  linkPairs.forEach(lp => {
+    lp.a = panels.find(p => p.userData.dim === lp.refA[0] && p.userData.qi === lp.refA[1]);
+    lp.b = panels.find(p => p.userData.dim === lp.refB[0] && p.userData.qi === lp.refB[1]);
+  });
+}
+const linkGeo = new THREE.BufferGeometry();
+linkGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linkPairs.length * 6), 3));
+linkGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(linkPairs.length * 6), 3));
+const linkMat = new THREE.LineBasicMaterial({
+  vertexColors: true, transparent: true, opacity: 1, blending: THREE.AdditiveBlending,
+  depthWrite: false, toneMapped: false, fog: false
+});
+const linkLines = new THREE.LineSegments(linkGeo, linkMat);
+linkLines.frustumCulled = false;
+linkLines.visible = false;
+scene.add(linkLines);
+const LINK_COL = new THREE.Color(0x7fd8ff);
+const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3();
+
+function updateLinks(t, intensityScale) {
+  const pos = linkGeo.attributes.position.array;
+  const col = linkGeo.attributes.color.array;
+  linkPairs.forEach((lp, i) => {
+    if (!lp.a || !lp.b) return;
+    lp.a.getWorldPosition(tmpA);
+    lp.b.getWorldPosition(tmpB);
+    pos[i * 6 + 0] = tmpA.x; pos[i * 6 + 1] = tmpA.y; pos[i * 6 + 2] = tmpA.z;
+    pos[i * 6 + 3] = tmpB.x; pos[i * 6 + 4] = tmpB.y; pos[i * 6 + 5] = tmpB.z;
+    const pulse = Math.pow(Math.max(Math.sin(t * lp.freq + lp.phase), 0), 3);
+    const spark = (Math.sin(t * 17.3 + lp.phase * 9.1) > 0.985) ? 0.4 : 0;
+    const I = (0.05 + 0.30 * pulse + spark) * intensityScale;
+    for (let v = 0; v < 2; v++) {
+      col[i * 6 + v * 3 + 0] = LINK_COL.r * I;
+      col[i * 6 + v * 3 + 1] = LINK_COL.g * I;
+      col[i * 6 + v * 3 + 2] = LINK_COL.b * I;
+    }
+  });
+  linkGeo.attributes.position.needsUpdate = true;
+  linkGeo.attributes.color.needsUpdate = true;
+}
+
+// ------------------------------------------------------- Spiegel-Diaet
+// Im Spiegel erscheinen nur die grossen Leuchtformen, nicht die 214 Panels:
+// der Schimmer bleibt, der zweite Szenen-Render kostet fast nichts.
+function cullFromMirror(mirror, hiddenFn) {
+  const orig = mirror.onBeforeRender;
+  mirror.onBeforeRender = function (r, s, c, geo, mat, grp) {
+    const hidden = hiddenFn();
+    const state = hidden.map(o => o.visible);
+    hidden.forEach(o => { o.visible = false; });
+    orig.call(this, r, s, c, geo, mat, grp);
+    hidden.forEach((o, i) => { o.visible = state[i]; });
+  };
+}
+cullFromMirror(centerMirror, () => [dome, groundFar, gridMesh, mirrorOverlay, motes, ...panels]);
+
+// ------------------------------------------------------------- Vorbereitung
+// Der Ladebalken laeuft an der echten Arbeit entlang (Texte zeichnen, GPU-Uploads),
+// aber durch eine bewusst getragene Huellkurve: Spannung statt Blitzstart.
+const startBtn = document.getElementById('enterBtn');
+const loadbar = document.querySelector('#loadbar i');
+const gpuQueue = [];
+setInterval(() => {
+  if (gpuQueue.length && document.hidden) gpuQueue.shift()();
+}, 120);
+
+let texturesReady = false;
+let prepPushed = false;
+let veilT0 = performance.now();
+
+function realProgress() {
+  const gen = panelBuildIx / quoteCount;
+  if (!prepPushed) return gen * 0.7;
+  return 0.7 + 0.3 * (1 - gpuQueue.length / Math.max(gpuQueueTotal, 1));
+}
+let gpuQueueTotal = 1;
+function envelope(tSec) {
+  // 0 bis ~7.4s: langsam anrollen, kurz vor dem Ende verharren, dann vollenden
+  if (tSec < 0.6) return 0;
+  if (tSec < 5.4) return easeInOut((tSec - 0.6) / 4.8) * 0.88;
+  if (tSec < 6.4) return 0.88 + (tSec - 5.4) * 0.02;
+  return Math.min(0.9 + easeInOut((tSec - 6.4) / 1.0) * 0.1, 1);
+}
+
+function prepTick() {
+  // Panels gestueckelt erzeugen, damit der Veil fluessig atmet
+  for (let i = 0; i < 4 && panelBuildIx < quoteCount; i++) buildOnePanel();
+  if (panelBuildIx >= quoteCount && !prepPushed) {
+    prepPushed = true;
+    resolveLinks();
+    computeSlots();
+    panels.forEach(p => gpuQueue.push(() => renderer.initTexture(p.material.uniforms.map.value)));
+    warmTex.forEach(tx => gpuQueue.push(() => renderer.initTexture(tx)));
+    if (renderer.initRenderTarget) gpuQueue.push(() => renderer.initRenderTarget(centerMirror.getRenderTarget()));
+    gpuQueue.push(() => renderer.compile(scene, camera));
+    gpuQueue.push(() => composer.render());
+    gpuQueueTotal = gpuQueue.length;
+    gpuQueue.push(() => { texturesReady = true; });
+  }
+}
+
+// ------------------------------------------------------------ Postprocessing
+const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 2 });
+const composer = new EffectComposer(renderer, rt);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.42, 0.5, 0.82);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+function syncSizes() {
+  renderer.setPixelRatio(curPR);
+  composer.setPixelRatio(curPR);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+  bloom.setSize(Math.ceil(window.innerWidth * curPR / 2), Math.ceil(window.innerHeight * curPR / 2));
+}
+syncSizes();
+
+// ----------------------------------------------------------------- Kollision
+const pylonXZ = pylons.map(p => ({ x: p.g.position.x, z: p.g.position.z }));
+function constrain() {
+  const p = camera.position;
+  const r = Math.hypot(p.x, p.z);
+  if (r > ROOM.walkR) {
+    const s = ROOM.walkR / r;
+    p.x *= s; p.z *= s;
+  }
+  for (const py of pylonXZ) {
+    const dx = p.x - py.x, dz = p.z - py.z;
+    const d = Math.hypot(dx, dz);
+    if (d < 1.9 && d > 1e-4) {
+      const s = 1.9 / d;
+      p.x = py.x + dx * s;
+      p.z = py.z + dz * s;
+    }
+  }
+}
+
+// ------------------------------------------------------------------ Auftakt
+// Aufblende, dann bauen sich die vier Kraefte auf, dann verdichtet sich das
+// Geflecht Welle um Welle, zuletzt beginnen die Spannungslinien zu flackern.
+const T = {
+  still: 0.4,
+  pylonsUp: [0.5, 2.2],
+  grid: [1.2, 1.6],
+  motes: [1.8, 2.2],
+  weave: [2.2, 4.4],
+  dais: [5.6, 1.2],
+  links: [6.2, 1.6],
+  unlock: 7.1
+};
+let started = false, unlocked = false, introT = 0, paused = false;
+let noLockMode = false;
+
+// Zustand der Dramaturgie: weave -> ordering -> sorted
+let mode = 'weave';
+let transT = 0;
+let cloudSpin = 0.0045;
+let bobAmp = 1;
+let panelsRebased = false;
+
+function stageK(name) {
+  const [t0, dur] = T[name];
+  return THREE.MathUtils.clamp((introT - t0) / dur, 0, 1);
+}
+function signCurve(k) {
+  if (k <= 0) return 0;
+  if (k >= 0.6) return 1;
+  const p = k / 0.6;
+  return (Math.sin(p * 24) > -0.2 ? 0.85 : 0.06) * p;
+}
+
+function applyIntro() {
+  const kPyl = stageK('pylonsUp');
+  const kGrid = easeInOut(stageK('grid'));
+  const kMotes = easeInOut(stageK('motes'));
+  const kWeave = stageK('weave');
+  const kDais = easeInOut(stageK('dais'));
+  const kLinks = easeInOut(stageK('links'));
+
+  pylons.forEach((py, i) => {
+    const k = easeOut(stagger(kPyl, i, pylons.length, 0.5));
+    py.g.visible = k > 0;
+    if (k <= 0) return;
+    py.g.position.y = (1 - k) * -2.2;
+    const ign = signCurve(k);
+    py.wordMat.color.copy(py.wordMat.userData.glow).multiplyScalar(ign);
+    py.stripMat.color.copy(py.stripMat.userData.glow).multiplyScalar(k);
+  });
+
+  gridMesh.visible = kGrid > 0;
+  gridMat.opacity = GRID_MAX * kGrid;
+  seam.visible = kGrid > 0;
+  seamMat.color.copy(seamMat.userData.glow).multiplyScalar(kGrid);
+
+  motes.visible = kMotes > 0;
+  moteMat.opacity = MOTE_MAX * kMotes;
+
+  panels.forEach(p => {
+    const k = easeOut(stagger(kWeave, p.userData.introOrder, 1, 0.85));
+    p.visible = k > 0;
+    if (k <= 0) return;
+    p.userData.introK = k;
+  });
+
+  daisRing.visible = kDais > 0;
+  daisRing.userData.introK = kDais;
+
+  linkLines.visible = kLinks > 0;
+  linkLines.userData.introK = kLinks;
+}
+
+function finishIntro() {
+  if (unlocked) return;
+  unlocked = true;
+  const hint = document.getElementById('hint');
+  hint.style.opacity = 1;
+}
+
+// ------------------------------------------------------------------ Eingaben
+const keys = {};
+addEventListener('keydown', e => { keys[e.code] = true; });
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+const resume = document.getElementById('resume');
+let everLocked = false;
+controls.addEventListener('lock', () => { everLocked = true; paused = false; resume.style.display = 'none'; });
+controls.addEventListener('unlock', () => {
+  for (const k in keys) keys[k] = false;
+  if (!started) return;
+  if (!noLockMode) { paused = true; resume.style.display = 'flex'; }
+});
+document.addEventListener('pointerlockerror', () => {
+  if (everLocked) {
+    paused = true;
+    resume.style.display = 'flex';
+    return;
+  }
+  noLockMode = true;
+  paused = false;
+  resume.style.display = 'none';
+  console.warn('[raum] Pointer-Lock nicht verfügbar, Maus-Ziehen aktiv.');
+});
+resume.addEventListener('click', () => { controls.lock(); });
+
+// Fallback: Blick per Maus-Ziehen, falls Pointer-Lock scheitert
+let dragging = false, lastX = 0, lastY = 0;
+let yaw = 0, pitch = 0;
+renderer.domElement.addEventListener('pointerdown', e => {
+  if (!started || controls.isLocked) return;
+  dragging = true; lastX = e.clientX; lastY = e.clientY;
+  const eu = new THREE.Euler().setFromQuaternion(camera.quaternion, 'YXZ');
+  yaw = eu.y; pitch = eu.x;
+});
+addEventListener('pointerup', () => { dragging = false; });
+addEventListener('pointermove', e => {
+  if (!dragging || controls.isLocked) return;
+  yaw -= (e.clientX - lastX) * 0.0031;
+  pitch -= (e.clientY - lastY) * 0.0031;
+  pitch = THREE.MathUtils.clamp(pitch, -1.45, 1.45);
+  lastX = e.clientX; lastY = e.clientY;
+  camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, 'YXZ'));
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) clock.getDelta();
+  if (document.hidden) for (const k in keys) keys[k] = false;
+});
+addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+
+startBtn.addEventListener('click', () => {
+  if (!texturesReady || started) return;
+  started = true;
+  document.getElementById('start').style.opacity = 0;
+  document.getElementById('start').style.transition = 'opacity 1.1s ease';
+  setTimeout(() => { document.getElementById('start').style.display = 'none'; }, 1150);
+  document.getElementById('fader').style.opacity = 0;
+  try { controls.lock(); } catch (e) { noLockMode = true; }
+});
+
+// -------------------------------------------------------------- Der Übergang
+// Ausgeloest allein durch den Ort: Wer die Mitte erreicht, bringt die Ordnung.
+function beginOrdering() {
+  if (mode !== 'weave') return;
+  mode = 'ordering';
+  transT = 0;
+  document.getElementById('hint').style.opacity = 0;
+}
+
+function rebasePanels() {
+  // Wirbel-Drehung in die Welt einbacken, damit die Fluege in Weltkoordinaten laufen
+  panels.forEach(p => {
+    panelRoot.attach(p);
+    const eu = new THREE.Euler().setFromQuaternion(p.quaternion, 'YXZ');
+    p.userData.flyStartPos = p.position.clone();
+    p.userData.flyStartYaw = eu.y;
+    p.userData.flyStartTilt = { x: eu.x, z: eu.z };
+    p.userData.flyLift = 0.7 + rnd() * 1.0;
+    p.userData.flyOpStart = p.material.uniforms.opac.value;
+  });
+  panelsRebased = true;
+}
+
+const FLY_T0 = 1.7;     // Stille, bevor sich etwas ordnet
+const FLY_DUR = 2.9;
+
+function applyOrdering(dt, t) {
+  transT += dt;
+  // Phase 1: das Chaos haelt inne
+  const calm = THREE.MathUtils.clamp(transT / 1.0, 0, 1);
+  cloudSpin = 0.0045 * (1 - calm);
+  bobAmp = 1 - calm;
+  if (transT >= 1.0 && !panelsRebased) rebasePanels();
+
+  // Phase 2: jedes Panel fliegt zu seinem Platz
+  let allDone = panelsRebased;
+  if (panelsRebased) {
+    panels.forEach(p => {
+      const d = p.userData;
+      const k = THREE.MathUtils.clamp((transT - FLY_T0 - d.flyDelay) / FLY_DUR, 0, 1);
+      d.flyK = k;
+      if (k < 1) allDone = false;
+      if (k <= 0) return;
+      const e = easeInOut(k);
+      const s = d.flyStartPos, sl = d.slot;
+      p.position.set(
+        THREE.MathUtils.lerp(s.x, sl.x, e),
+        THREE.MathUtils.lerp(s.y, sl.y, e) + Math.sin(e * Math.PI) * d.flyLift,
+        THREE.MathUtils.lerp(s.z, sl.z, e)
+      );
+      p.rotation.set(
+        d.flyStartTilt.x * (1 - e),
+        lerpAngle(d.flyStartYaw, sl.yaw, e),
+        d.flyStartTilt.z * (1 - e)
+      );
+      const sc = THREE.MathUtils.lerp(1, SORT.scale, e);
+      p.scale.set(d.ww * sc, d.wh * sc, 1);
+      p.material.uniforms.tint.value.copy(NEUTRAL).lerp(d.dimColor, e);
+      d.baseOp = THREE.MathUtils.lerp(d.flyOpStart, 0.72, e);
+    });
+  }
+
+  // Begleitende Beruhigung des Raums
+  const kCalm = easeInOut(THREE.MathUtils.clamp((transT - 1.2) / 3.4, 0, 1));
+  pylons.forEach(py => {
+    py.wordMat.color.copy(py.wordMat.userData.glow).multiplyScalar(1 - 0.62 * kCalm);
+    py.stripMat.color.copy(py.stripMat.userData.glow).multiplyScalar(1 - 0.6 * kCalm);
+  });
+  const kZone = easeInOut(THREE.MathUtils.clamp((transT - 3.0) / 2.2, 0, 1));
+  headers.forEach((hm, i) => {
+    const kk = easeInOut(stagger(kZone, i, headers.length, 0.4));
+    hm.visible = kk > 0;
+    hm.material.opacity = 0.92 * kk;
+    hm.position.y = 6.85 - 0.35 * kk;
+  });
+  sectorArcs.forEach((a, i) => {
+    const kk = stagger(kZone, i, sectorArcs.length, 0.4);
+    a.visible = kk > 0;
+    a.material.opacity = 0.10 * kk;
+  });
+  daisLight.intensity = 5 * kCalm;
+
+  if (allDone && kZone >= 1) {
+    mode = 'sorted';
+    panels.forEach(p => { p.userData.flyK = 1; });
+  }
+}
+
+// --------------------------------------------------------------- Hauptschleife
+const clock = new THREE.Clock();
+const vel = new THREE.Vector3();
+const fpsBuf = [];
+let adaptStep = 0, fpsProbe = 0, frameNo = 0;
+renderer.info.autoReset = false;
+const camXZ = new THREE.Vector3();
+
+function tick() {
+  requestAnimationFrame(tick);
+  frameNo++;
+  if (!texturesReady) prepTick();
+  if (gpuQueue.length) gpuQueue.shift()();
+
+  // Veil-Ladebalken: echte Arbeit durch die getragene Huellkurve gefuehrt
+  if (!started) {
+    const tSec = (performance.now() - veilT0) / 1000;
+    const shown = Math.min(realProgress(), envelope(tSec));
+    loadbar.style.width = (shown * 100).toFixed(1) + '%';
+    if (texturesReady && envelope(tSec) >= 1 && startBtn.disabled) {
+      loadbar.style.width = '100%';
+      startBtn.disabled = false;
+      startBtn.textContent = 'Betreten';
+    }
+    const every = !texturesReady ? 4 : 8;
+    if (frameNo % every !== 0) return;
+  } else if (paused && frameNo % 6 !== 0) {
+    return;
+  }
+
+  renderer.info.reset();
+  let dt = Math.min(clock.getDelta(), 0.05);
+  if (paused) dt = 0;
+  if (dt > 0) {
+    fpsBuf.push(dt);
+    if (fpsBuf.length > 90) fpsBuf.shift();
+  }
+  const t = clock.elapsedTime;
+
+  if (started && introT < 9) {
+    introT += dt;
+    applyIntro();
+    if (!unlocked && introT >= T.unlock) finishIntro();
+  }
+
+  // Bewegung
+  if (unlocked && dt > 0) {
+    const speed = 3.1;
+    const ix = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
+    const iz = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
+    vel.x = THREE.MathUtils.damp(vel.x, ix * speed, 9, dt);
+    vel.z = THREE.MathUtils.damp(vel.z, iz * speed, 9, dt);
+    controls.moveRight(vel.x * dt);
+    controls.moveForward(vel.z * dt);
+    constrain();
+    camera.position.y = ROOM.eye;
+
+    if (mode === 'weave' && Math.hypot(camera.position.x, camera.position.z) < 2.35) {
+      beginOrdering();
+    }
+  }
+
+  if (mode === 'ordering') applyOrdering(dt, t);
+
+  // Wirbel und Panel-Leben
+  if (dt > 0) {
+    if (mode === 'weave') cloud.rotation.y += cloudSpin * dt * (started ? 1 : 0.4);
+    else if (!panelsRebased) cloud.rotation.y += cloudSpin * dt;
+
+    camXZ.copy(camera.position);
+    const introRunning = started && introT < 9;
+    panels.forEach(p => {
+      const d = p.userData;
+      if (!p.visible) return;
+      // Naehe macht lesbar: Distanz zur Kamera steuert Klarheit, Groesse, Zuwendung.
+      // Horizontal gewichtet, damit auch hoch schwebende Saetze beim Herantreten aufklaren.
+      p.getWorldPosition(tmpA);
+      const dEff = Math.hypot(tmpA.x - camXZ.x, tmpA.z - camXZ.z) + 0.55 * Math.abs(tmpA.y - camXZ.y);
+      const target = THREE.MathUtils.clamp((6.1 - dEff) / 3.6, 0, 1);
+      d.emph = THREE.MathUtils.damp(d.emph, target, 6, dt);
+      const introK = introRunning ? (d.introK ?? 1) : 1;
+      const flying = mode === 'ordering' && panelsRebased && (d.flyK ?? 0) > 0 && (d.flyK ?? 0) < 1;
+
+      if (mode === 'weave' && !flying) {
+        p.position.y = d.homeY + Math.sin(t * 0.35 + d.phase) * 0.22 * bobAmp;
+        const sway = Math.sin(t * 0.18 + d.phase) * 0.05 * bobAmp;
+        let yawNow = d.baseYaw + sway;
+        if (d.emph > 0.02) {
+          const faceYaw = Math.atan2(camera.position.x - tmpA.x, camera.position.z - tmpA.z);
+          const localFace = faceYaw - cloud.rotation.y;
+          yawNow = lerpAngle(yawNow, localFace, d.emph * 0.6);
+          p.rotation.x = d.tiltX * (1 - d.emph);
+          p.rotation.z = d.tiltZ * (1 - d.emph);
+        }
+        p.rotation.y = yawNow;
+        const sc = 1 + 0.17 * d.emph;
+        p.scale.set(d.ww * sc, d.wh * sc, 1);
+      } else if (mode === 'sorted') {
+        const faceYaw = Math.atan2(camera.position.x - tmpA.x, camera.position.z - tmpA.z);
+        p.rotation.y = lerpAngle(d.slot.yaw, faceYaw, d.emph * 0.3);
+        const sc = SORT.scale * (1 + 0.14 * d.emph);
+        p.scale.set(d.ww * sc, d.wh * sc, 1);
+      }
+
+      const u = p.material.uniforms;
+      u.opac.value = THREE.MathUtils.lerp(d.baseOp, 1, d.emph) * introK;
+      u.boost.value = 1 + 0.4 * d.emph;
+    });
+
+    // Spannungslinien
+    if (linkLines.visible) {
+      const introK = (started && introT < 9) ? (linkLines.userData.introK ?? 1) : 1;
+      const modeScale = mode === 'weave' ? 1 : mode === 'ordering' ? Math.max(1 - transT / 2.5, 0.28) : 0.28;
+      updateLinks(t, introK * modeScale);
+    }
+
+    // Podestring: ruft in Akt 1, ruht in Akt 2
+    if (daisRing.visible) {
+      const introK = (started && introT < 9) ? (daisRing.userData.introK ?? 1) : 1;
+      if (mode === 'weave') {
+        const pulse = 0.32 + 0.30 * Math.pow(Math.max(Math.sin(t * 1.15), 0), 2);
+        daisRingMat.color.setRGB(0.5 * pulse, 0.85 * pulse, 1.05 * pulse).multiplyScalar(introK);
+      } else {
+        const kW = mode === 'ordering' ? THREE.MathUtils.clamp(transT / 2, 0, 1) : 1;
+        const steady = 0.42;
+        daisRingMat.color.setRGB(
+          THREE.MathUtils.lerp(0.20, 1.05 * steady, kW),
+          THREE.MathUtils.lerp(0.34, 0.72 * steady, kW),
+          THREE.MathUtils.lerp(0.42, 0.42 * steady, kW)
+        ).multiplyScalar(introK);
+      }
+    }
+
+    // Stelen atmen leise in Akt 1
+    if (mode === 'weave' && unlocked) {
+      pylons.forEach(py => {
+        const breathe = 1 + 0.05 * Math.sin(t * 0.9 + py.phase);
+        py.wordMat.color.copy(py.wordMat.userData.glow).multiplyScalar(breathe);
+      });
+    }
+
+    if (motes.visible && dt > 0) motes.rotation.y += dt * 0.006;
+  }
+
+  // Spiegel nur in Zentrumsnaehe rechnen
+  centerMirror.visible = started && Math.hypot(camera.position.x, camera.position.z) < 11;
+
+  // Qualitaetsanpassung in bis zu zwei Stufen, nie anheben
+  if (adaptStep < 2 && texturesReady && started) {
+    fpsProbe += dt;
+    if (fpsProbe > 3 && fpsBuf.length >= 90) {
+      const fps = fpsBuf.length / fpsBuf.reduce((a, b) => a + b, 0);
+      if (fps < 56) {
+        adaptStep++;
+        curPR = Math.max(0.8, curPR * 0.75);
+        syncSizes();
+        const mSize = adaptStep === 1 ? 640 : 512;
+        centerMirror.getRenderTarget().setSize(mSize, mSize);
+        console.info('[raum] Qualität angepasst, Stufe', adaptStep, ', Pixel-Ratio', curPR.toFixed(2));
+        fpsProbe = 0;
+        fpsBuf.length = 0;
+      } else {
+        adaptStep = 2;
+      }
+    }
+  }
+
+  composer.render();
+}
+tick();
+
+// -------------------------------------------------------------------- Diverses
+addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  curPR = Math.min(window.devicePixelRatio || 1, PR_CAP, curPR);
+  syncSizes();
+});
+
+window.__raum = {
+  get state() { return !started ? (texturesReady ? 'ready' : 'loading') : (unlocked ? mode : 'intro'); },
+  enter() { startBtn.disabled = false; startBtn.click(); },
+  hideChrome() {
+    ['fader', 'start', 'hint', 'resume'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+  },
+  skipIntro() {
+    // Automationspfad (Tests, Vorfuehrung): nie in die Klick-Pause laufen
+    if (!started) this.enter();
+    this.hideChrome();
+    noLockMode = true;
+    paused = false;
+    if (document.pointerLockElement) document.exitPointerLock();
+    introT = 9;
+    applyIntro();
+    finishIntro();
+  },
+  triggerMitte() { beginOrdering(); },
+  stepOrdnung(step = 0.1, n = 1) {
+    // Fuer Tests auf langsamen Renderern: Ordnungs-Simulation zeitgerafft treiben
+    for (let i = 0; i < n && mode === 'ordering'; i++) applyOrdering(step, 0);
+  },
+  gotoOrdnung() {
+    // Fuer Tests: Ordnung ohne Flugphase einnehmen
+    this.skipIntro();
+    if (!panelsRebased) { cloud.updateMatrixWorld(); rebasePanels(); }
+    mode = 'sorted';
+    panels.forEach(p => {
+      const d = p.userData;
+      p.position.set(d.slot.x, d.slot.y, d.slot.z);
+      p.rotation.set(0, d.slot.yaw, 0);
+      p.scale.set(d.ww * SORT.scale, d.wh * SORT.scale, 1);
+      p.material.uniforms.tint.value.copy(d.dimColor);
+      d.baseOp = 0.72;
+      d.flyK = 1;
+    });
+    headers.forEach(hm => { hm.visible = true; hm.material.opacity = 0.92; hm.position.y = 6.5; });
+    sectorArcs.forEach(a => { a.visible = true; a.material.opacity = 0.10; });
+    pylons.forEach(py => {
+      py.wordMat.color.copy(py.wordMat.userData.glow).multiplyScalar(0.38);
+      py.stripMat.color.copy(py.stripMat.userData.glow).multiplyScalar(0.4);
+    });
+    daisLight.intensity = 5;
+    document.getElementById('hint').style.opacity = 0;
+  },
+  debugState() {
+    return { paused, noLockMode, mode, transT, introT, started, unlocked,
+      rebased: panelsRebased, frameNo, spin: cloudSpin,
+      doneK: panels.filter(p => (p.userData.flyK ?? 0) >= 1).length };
+  },
+  setPose(x, z, yawDeg = 0, pitchDeg = 0) {
+    camera.position.set(x, ROOM.eye, z);
+    camera.quaternion.setFromEuler(new THREE.Euler(
+      THREE.MathUtils.degToRad(pitchDeg), THREE.MathUtils.degToRad(yawDeg), 0, 'YXZ'));
+  },
+  capture(scale = 0.7, quality = 0.85) {
+    renderer.info.reset();
+    composer.render();
+    const src = renderer.domElement;
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(src.width * scale);
+    cv.height = Math.round(src.height * scale);
+    cv.getContext('2d').drawImage(src, 0, 0, cv.width, cv.height);
+    return cv.toDataURL('image/jpeg', quality);
+  },
+  getFPS() { return fpsBuf.length / Math.max(fpsBuf.reduce((a, b) => a + b, 0), 1e-6); },
+  info() {
+    return {
+      calls: renderer.info.render.calls,
+      triangles: renderer.info.render.triangles,
+      fps: Math.round(this.getFPS()),
+      pos: camera.position.toArray().map(v => +v.toFixed(2)),
+      state: this.state,
+      panels: panels.length
+    };
+  },
+  _: { scene, panels, pylons, headers, camera }
+};
+
+// Diagnose-Overlay: Shift+G schaltet es an und aus, alternativ #debug in der Adresse
+let dbgEl = null, dbgTimer = null;
+function toggleDebug(force) {
+  const on = force !== undefined ? force : !dbgEl;
+  if (on && !dbgEl) {
+    dbgEl = document.createElement('div');
+    dbgEl.style.cssText = 'position:fixed;left:10px;top:10px;z-index:60;color:#7fd8ff;font:12px Consolas,monospace;background:rgba(4,9,17,.65);padding:6px 10px;border-radius:3px;pointer-events:none';
+    document.body.appendChild(dbgEl);
+    dbgTimer = setInterval(() => {
+      dbgEl.textContent = Math.round(window.__raum.getFPS()) + ' fps · PR ' + curPR.toFixed(2) +
+        ' · Stufe ' + adaptStep + ' · ' + renderer.info.render.calls + ' calls · ' + window.__raum.state;
+    }, 500);
+  } else if (!on && dbgEl) {
+    clearInterval(dbgTimer);
+    dbgEl.remove();
+    dbgEl = null;
+  }
+}
+if (location.hash.indexOf('debug') !== -1) toggleDebug(true);
+addEventListener('hashchange', () => toggleDebug(location.hash.indexOf('debug') !== -1));
+addEventListener('keydown', e => { if (e.code === 'KeyG' && e.shiftKey && !e.repeat) toggleDebug(); });
+
+console.info('[raum] Königsdisziplin, bereit.');
+}
+</script>
+</body>
+</html>
