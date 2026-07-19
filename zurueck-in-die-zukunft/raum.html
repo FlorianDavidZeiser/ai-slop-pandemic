@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zurück in die Zukunft — Das Zimmer (1986 → 2026)</title>
-<meta name="description" content="Ein Zimmer, vierzig Jahre. Es wird leerer, während alles in das eine Gerät wandert. Scroll von 1986 nach 2026.">
-<meta property="og:title" content="Zurück in die Zukunft — Das Zimmer">
-<meta property="og:description" content="Die Zukunft kam nicht durch Explosion. Sie kam durch Gewöhnung. Ein 3D-Zimmer im Zeitraffer.">
+<title>Zurück in die Zukunft — 1986 → 2026</title>
+<meta name="description" content="Geboren 1986. Drei Wohnungen, vierzig Jahre, ein Scroll. Die Zukunft kam nicht durch Explosion — sie kam durch Gewöhnung.">
+<meta property="og:title" content="Zurück in die Zukunft — 1986 → 2026">
+<meta property="og:description" content="Dein ganzes Leben in einem Scroll: drei Wohnungen, vierzig Jahre, und am Ende spult alles zurück.">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Text:ital,wght@0,400;1,400&family=IBM+Plex+Mono:wght@400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -24,10 +24,14 @@ body{
 }
 button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
 
-/* ===== 3D-Bühne (fix im Hintergrund) ===== */
+/* ===== 3D-Bühne ===== */
 #stage{position:fixed;inset:0;z-index:0}
 #stage canvas{display:block;width:100%;height:100%}
 body.no3d #stage{display:none}
+#veil{position:fixed;inset:0;background:#050505;opacity:0;pointer-events:none;z-index:2}
+#flash{position:fixed;inset:0;background:#f5efe3;opacity:0;pointer-events:none;z-index:70;transition:opacity .45s ease}
+#flash.on{opacity:.9;transition:none}
+@media (prefers-reduced-motion:reduce){#flash{display:none}}
 
 /* ===== Jahres-Ticker ===== */
 .ticker{
@@ -39,19 +43,23 @@ body.no3d #stage{display:none}
   pointer-events:none;
 }
 .ticker.show{opacity:1;visibility:visible}
+.alter{
+  position:fixed;top:16px;right:18px;z-index:60;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--paper);text-shadow:0 1px 6px rgba(0,0,0,.6);opacity:0;visibility:hidden;
+  transition:opacity .6s ease,visibility .6s;pointer-events:none;
+}
+.alter.show{opacity:.75;visibility:visible}
 
-/* ===== Scroll-Inhalt über der Bühne ===== */
-.flow{position:relative;z-index:1}
-.wrap{max-width:640px;margin:0 auto;padding:0 22px}
+/* ===== Scroll-Inhalt ===== */
+.flow{position:relative;z-index:3}
+.wrap{max-width:620px;margin:0 auto;padding:0 22px}
 
-.marker{min-height:92vh;display:flex;align-items:center}
-.era1 .marker{min-height:105vh}
-.era2 .marker{min-height:88vh}
-.era3 .marker{min-height:74vh}
-.era4 .marker{min-height:52vh}
+.marker{min-height:96vh;display:flex;align-items:center}
+.era4x .marker{min-height:62vh}
 
 .card{
-  background:rgba(12,11,10,.58);
+  background:rgba(12,11,10,.6);
   -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
   border:1px solid rgba(245,239,227,.14);
   border-radius:10px;padding:22px 24px;
@@ -67,7 +75,7 @@ body.no3d #stage{display:none}
   font-size:15px;letter-spacing:.18em;margin-left:10px;opacity:.65;vertical-align:2px;
 }
 .marker p{font-size:clamp(20px,2.7vw,25px);line-height:1.55}
-.era4 .marker p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(19px,2.5vw,23px)}
+.era4x .marker p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(19px,2.5vw,23px)}
 
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
 .reveal.on{opacity:1;transform:none}
@@ -82,36 +90,32 @@ body.no3d #stage{display:none}
 @keyframes cue{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
 @media (prefers-reduced-motion:reduce){.scrollcue{animation:none}}
 
-/* ===== Ären-Köpfe & Zargen-Zwischenspiele ===== */
-.era-head{min-height:56vh;display:flex;align-items:center}
+/* ===== Ären-Köpfe, Zargen, Umzüge ===== */
+.era-head{min-height:60vh;display:flex;align-items:center}
 .era-head .span{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(38px,6vw,62px);line-height:1;letter-spacing:.03em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
 .era-head .name{font-style:italic;font-size:clamp(19px,2.4vw,23px);opacity:.85;margin-top:8px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
-.zarge{min-height:64vh;display:flex;align-items:center;justify-content:center;text-align:center}
+.zarge{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center}
 .zarge .z-text{font-style:italic;font-size:clamp(18px,2.3vw,22px);max-width:26em;text-shadow:0 1px 10px rgba(0,0,0,.7);padding:0 22px}
+.umzug{min-height:160vh;display:flex;align-items:center;justify-content:center;text-align:center}
+.umzug .u-text{font-style:italic;font-size:clamp(19px,2.5vw,24px);max-width:24em;text-shadow:0 1px 12px rgba(0,0,0,.8);padding:0 22px}
 
-/* ===== Kipp ===== */
-.kipp{min-height:110vh;display:flex;align-items:center;justify-content:center;text-align:center}
-.kipp-stage{display:flex;flex-direction:column;align-items:center;gap:22px;padding:40px 22px}
+/* ===== Kipp: sticky Scrub ===== */
+.kipp-scroll{height:340vh;position:relative}
+.kipp-sticky{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+.kipp-stage{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px 22px}
 .kipp-year{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(80px,18vw,190px);line-height:1;letter-spacing:.04em;text-shadow:0 3px 26px rgba(0,0,0,.7)}
 .kipp-word{font-family:'IBM Plex Mono',monospace;font-size:clamp(14px,2vw,19px);letter-spacing:.12em;text-transform:uppercase;min-height:1.6em;opacity:.85;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.kipp-hint{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.55;text-shadow:0 1px 6px rgba(0,0,0,.7)}
 .kipp-note{font-style:italic;font-size:clamp(17px,2.2vw,21px);opacity:0;transition:opacity .8s ease;text-shadow:0 1px 10px rgba(0,0,0,.7)}
 .kipp-note.on{opacity:.9}
-.replay{
-  margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;
-  text-transform:uppercase;border:1px solid rgba(245,239,227,.4);border-radius:999px;
-  padding:8px 18px;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s;
-  background:rgba(12,11,10,.5);
-}
-.replay.on{opacity:.85;visibility:visible}
-.replay:hover{opacity:1}
-#flash{position:fixed;inset:0;background:#f5efe3;opacity:0;pointer-events:none;z-index:70;transition:opacity .45s ease}
-#flash.on{opacity:.9;transition:none}
-@media (prefers-reduced-motion:reduce){#flash{display:none}}
 
 /* ===== Kernsätze & Finale ===== */
-.kern .marker{min-height:80vh}
+.kern .marker{min-height:85vh}
 .kern p{font-size:clamp(22px,3.1vw,29px);font-style:italic;line-height:1.5;text-shadow:0 2px 14px rgba(0,0,0,.7)}
-.finale{padding:10vh 0 16vh;text-align:center}
+.finale{padding:12vh 0 16vh;text-align:center}
 .finale .devices{
   font-family:'IBM Plex Mono',monospace;font-size:clamp(14px,2vw,17px);
   letter-spacing:.08em;line-height:2.1;opacity:.85;max-width:36em;margin:0 auto 8vh;text-shadow:0 1px 8px rgba(0,0,0,.7);
@@ -120,260 +124,302 @@ body.no3d #stage{display:none}
 .finale .last{font-size:clamp(23px,3.4vw,32px);font-style:italic;line-height:1.5;max-width:22em;margin:0 auto;text-shadow:0 2px 16px rgba(0,0,0,.7)}
 .finale .coda{margin-top:9vh;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.5}
 
-/* ===== Fallback ohne WebGL: Karten tragen die Farbe selbst ===== */
+/* ===== Fallback ohne WebGL ===== */
 body.no3d{background:#17181c}
 body.no3d .card{background:rgba(28,26,24,.92)}
+body.no3d #veil{display:none}
 </style>
 </head>
 <body>
 
 <div id="stage" aria-hidden="true"></div>
+<div id="veil" aria-hidden="true"></div>
 <div id="flash" aria-hidden="true"></div>
 <div class="ticker" id="ticker" aria-hidden="true">1986</div>
+<div class="alter" id="alter" aria-hidden="true"></div>
 
 <div class="flow">
 
-<section class="hero" data-year="1986">
+<section class="hero st" data-st="hero" data-year="1986">
   <div class="wrap">
-    <div class="kicker reveal">1986 → 2026 · Ein Zimmer, vierzig Jahre</div>
+    <div class="kicker reveal">1986 → 2026 · Dein ganzes Leben in einem Scroll</div>
     <h1 class="reveal">Zurück in die Zukunft</h1>
-    <p class="sub reveal">Du bist sechs Jahre alt. An der Türzarge ist ein Bleistiftstrich, dein Name daneben. Alles, was jetzt kommt, ist einfach nur: dein Leben.</p>
+    <p class="sub reveal">1986: Du kommst zur Welt. An der Türzarge im Flur steht bald dein Name, und jedes Jahr kommt ein Strich dazu. Alles, was jetzt kommt, ist einfach nur: dein Leben.</p>
     <div class="scrollcue reveal">▼ Scroll</div>
   </div>
 </section>
 
-<section class="era1">
-  <div class="era-head">
-    <div class="wrap">
-      <div class="span reveal">1986–1990</div>
-      <div class="name reveal">Die analoge Kindheit</div>
-    </div>
-  </div>
-  <div class="marker" data-year="1986" data-focus="phone">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kommunikation</span>
-      <p class="reveal">Das Telefon hängt im Flur an der Wand, mit Schnur. Du drehst die Scheibe, wartest, bis sie zurücksurrt — und die halbe Familie hört mit.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1987" data-focus="tv">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Medien</span>
-      <p class="reveal">Um Viertel nach acht sitzt ihr alle vor demselben Bild. Drei Programme, ein Röhrenkasten schwer wie ein Möbelstück — und wenn dein Vater umschalten will, schickt er dich zum Fernseher.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1988" data-focus="shelf">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Musik</span>
-      <p class="reveal">Du hältst den Finger über die Aufnahmetaste und betest, dass der Moderator nicht in dein Lieblingslied reinquatscht.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1989" data-focus="tv">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">1989</span>
-      <p class="reveal">Der Fernseher läuft mitten in der Nacht. Deine Mutter weint, auf dem Bildschirm tanzen Leute auf einer Mauer — und niemand schickt dich ins Bett.</p>
-    </div></div>
+<section class="era-head st" data-st="head1" data-year="1988">
+  <div class="wrap">
+    <div class="span reveal">1986–1995</div>
+    <div class="name reveal">Die analoge Kindheit</div>
   </div>
 </section>
 
-<section class="zarge" data-year="1990" data-focus="door">
-  <p class="z-text reveal">An der Zarge kommt ein neuer Strich dazu. Zehn Zentimeter über dem letzten.</p>
+<div class="marker st" data-st="m1989" data-year="1989">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">1989</span>
+    <p class="reveal">Du bist drei. Vom wichtigsten Abend des Jahrzehnts hast du kein einziges Bild im Kopf — nur das Foto im Flur: deine Eltern vor dem Fernseher, sie weinen und lachen gleichzeitig. Deine eigene Geschichte, aus zweiter Hand.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m1991" data-year="1991">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kommunikation</span>
+    <p class="reveal">Das Telefon steht im Flur, die Schnur reicht bis zur Treppe. Du darfst rangehen, wenn deine Mutter nickt — und die halbe Familie hört mit.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m1992" data-year="1992">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Medien</span>
+    <p class="reveal">Um Viertel nach acht sitzt ihr alle vor demselben Bild. Der Film ist erst um zehn zu Ende — und du wirst ihn nie zu Ende sehen dürfen.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m1994" data-year="1994">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Musik</span>
+    <p class="reveal">Du hältst den Finger über die Aufnahmetaste und betest, dass der Moderator nicht in dein Lieblingslied reinquatscht.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m1995" data-year="1995">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kommunikation</span>
+    <p class="reveal">Dein Onkel zieht die Antenne mit den Zähnen aus und legt das Handy gut sichtbar neben den Bierdeckel. Telefoniert hat er damit noch nie — zu teuer.</p>
+  </div></div>
+</div>
+
+<section class="zarge st" data-st="zargeA" data-year="1996">
+  <p class="z-text reveal">An der Zarge im Flur: zehn Striche übereinander. Der neue ist schon über der Klinke.</p>
 </section>
 
-<section class="era2">
-  <div class="era-head">
-    <div class="wrap">
-      <div class="span reveal">1991–1999</div>
-      <div class="name reveal">Die Welt wird digital, leise</div>
-    </div>
-  </div>
-  <div class="marker" data-year="1993" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kommunikation</span>
-      <p class="reveal">Dein Onkel zieht die Antenne mit den Zähnen aus und legt das Handy gut sichtbar neben den Bierdeckel. Telefoniert hat er damit noch nie — zu teuer.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1996" data-focus="pc">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Computer/Netz</span>
-      <p class="reveal">Der erste Familien-PC steht im Wohnzimmer. Du klickst auf »Verbinden«, das Modem kreischt und rauscht — und später schimpft deine Mutter, Oma habe den ganzen Abend nur das Besetztzeichen gehört.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1997" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Spiel</span>
-      <p class="reveal">Unterm Tisch fütterst du ein Plastik-Küken am Schlüsselband, damit es die Mathestunde überlebt. Als es piept, dreht sich die halbe Klasse um — und der Lehrer weiß genau, wonach er sucht.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1998" data-focus="shelf">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Musik</span>
-      <p class="reveal">Du brennst deiner besten Freundin eine CD: 74 Minuten, keine Sekunde mehr passt auf den Rohling. Mit Stift und Zettel rechnest du die Lieder zusammen, wie früher die Kassettenseiten.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="1999" data-focus="pc">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kommunikation</span>
-      <p class="reveal">Abends macht es »uh-oh«: ICQ blinkt. Du tippst mit einem Finger. Die Leitung ist wieder belegt — Mama hat es aufgegeben.</p>
-    </div></div>
-  </div>
-</section>
-
-<section class="zarge" data-year="1999" data-focus="door">
-  <p class="z-text reveal">Der neue Strich ist fast auf Augenhöhe deines Vaters. Es wird der letzte sein.</p>
-</section>
-
-<section class="era3">
-  <div class="era-head">
-    <div class="wrap">
-      <div class="span reveal">2000–2009</div>
-      <div class="name reveal">Alles kommt zusammen</div>
-    </div>
-  </div>
-  <div class="marker" data-year="2001" data-focus="pc">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Computer/Netz</span>
-      <p class="reveal">Das Kreischen ist weg, das Internet ist einfach immer da. Beim Abendessen streitet ihr, wer 1990 im Finale stand — zum ersten Mal holt keiner den Brockhaus. Einer tippt. Zehn Sekunden, Streit vorbei.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2002" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">2002</span>
-      <p class="reveal">Über Nacht liegen fremde Münzen im Portemonnaie. An der Kasse rechnest du heimlich mal zwei zurück — und alle sagen denselben Satz: »In Mark war das doch billiger.«</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2003" data-focus="pc">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Navigation</span>
-      <p class="reveal">Vor der Fahrt druckst du dir die Route bei Map24 aus, drei Seiten, und hoffst, dass du keine Abfahrt verpasst.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2004" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Foto</span>
-      <p class="reveal">Die Digitalkamera hängt dir um den Hals. 24 Bilder sind nicht mehr das Limit — du knipst, guckst aufs Display, löschst, knipst neu.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2006" data-focus="pc">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Medien</span>
-      <p class="reveal">Du meldest dich bei StudiVZ an, weil plötzlich alle da sind. Um Mitternacht klickst du dich durch Urlaubsfotos von Leuten, mit denen du seit dem Abi kein Wort gewechselt hast — und bestätigst sie als »Freunde«.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2007" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kommunikation</span><span class="year-stamp reveal">2007</span>
-      <p class="reveal">Ein Kollege legt ein Telefon ohne Tasten auf den Tisch — nur Glas. Du wischst über ein Foto, und es gleitet unter deinem Finger zur Seite. Du gibst es zurück und denkst: schickes Spielzeug.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2009" data-focus="phone">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Alltag</span>
-      <p class="reveal">Irgendwann fällt dir auf, dass die gelbe Telefonzelle an der Ecke weg ist. Du weißt nicht, seit wann. Keiner bemerkt den Moment.</p>
-    </div></div>
+<section class="era-head st" data-st="head2" data-year="1996">
+  <div class="wrap">
+    <div class="span reveal">1996–2005</div>
+    <div class="name reveal">Die Welt wird digital, leise</div>
   </div>
 </section>
 
-<section class="zarge" data-year="2010" data-focus="door">
+<div class="marker st" data-st="m1996" data-year="1996">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Computer/Netz</span>
+    <p class="reveal">Der erste Familien-PC steht im Wohnzimmer. Du klickst auf »Verbinden«, das Modem kreischt und rauscht — und später schimpft deine Mutter, Oma habe den ganzen Abend nur das Besetztzeichen gehört.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m1997" data-year="1997">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Spiel</span>
+    <p class="reveal">Unterm Tisch fütterst du ein Plastik-Küken am Schlüsselband, damit es die Mathestunde überlebt. Als es piept, dreht sich die halbe Klasse um — und der Lehrer weiß genau, wonach er sucht.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m1999" data-year="1999">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kommunikation</span>
+    <p class="reveal">Abends macht es »uh-oh«: ICQ blinkt. Du tippst mit einem Finger. Die Leitung ist wieder belegt — Mama hat es aufgegeben.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2000" data-year="2000">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Musik</span>
+    <p class="reveal">Du brennst deiner besten Freundin eine CD: 74 Minuten, keine Sekunde mehr passt auf den Rohling. Mit Stift und Zettel rechnest du die Lieder zusammen, wie früher die Kassettenseiten.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2001" data-year="2001">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kommunikation</span>
+    <p class="reveal">Nachts unter der Decke: dreimal die 5 für ein L. 160 Zeichen — und du brauchst jedes einzelne.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2002" data-year="2002">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Geld</span><span class="year-stamp reveal">2002</span>
+    <p class="reveal">Über Nacht ist dein Taschengeld in Euro. An der Kasse rechnest du heimlich mal zwei — und deine Mutter sagt bei jedem Einkauf: »In Mark war das doch billiger.«</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2004" data-year="2004">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Navigation</span>
+    <p class="reveal">Führerschein frisch in der Tasche: Vor der ersten großen Fahrt druckst du die Route bei Map24 aus, drei Seiten — und hoffst, dass du keine Abfahrt verpasst.</p>
+  </div></div>
+</div>
+
+<section class="zarge st" data-st="zargeB" data-year="2005">
+  <p class="z-text reveal">Der neue Strich ist auf Augenhöhe deines Vaters. Es wird der letzte sein.</p>
+</section>
+
+<section class="umzug st" data-st="umzugA" data-year="2005.9">
+  <p class="u-text reveal">Mit zwanzig trägst du dein Zimmer in Kartons die Treppe hinunter. Den Strich an der Zarge kannst du nicht mitnehmen.</p>
+</section>
+
+<section class="era-head st" data-st="head3" data-year="2006.2">
+  <div class="wrap">
+    <div class="span reveal">2006–2013</div>
+    <div class="name reveal">Das eigene Leben</div>
+  </div>
+</section>
+
+<div class="marker st" data-st="m2006a" data-year="2006.4">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">2006</span>
+    <p class="reveal">Juli 2006: Auf der Fanmeile liegst du wildfremden Menschen in den Armen. Deutschland wird nur Dritter — und es fühlt sich an wie gewonnen.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2006b" data-year="2006.7">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Medien</span>
+    <p class="reveal">Du meldest dich bei StudiVZ an, weil plötzlich alle da sind. Um Mitternacht klickst du dich durch Urlaubsfotos von Leuten, mit denen du seit dem Abi kein Wort gewechselt hast — und bestätigst sie als »Freunde«.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2007" data-year="2007">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kommunikation</span><span class="year-stamp reveal">2007</span>
+    <p class="reveal">Einer aus dem Seminar legt ein Telefon ohne Tasten auf den Tisch — nur Glas. Du wischst über ein Foto, und es gleitet unter deinem Finger zur Seite. Du gibst es zurück und denkst: schickes Spielzeug.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2008" data-year="2008">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Foto</span>
+    <p class="reveal">Die Digitalkamera hängt dir um den Hals. 24 Bilder sind nicht mehr das Limit — du knipst, guckst aufs Display, löschst, knipst neu.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2009" data-year="2009">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Alltag</span>
+    <p class="reveal">Irgendwann fällt dir auf, dass die gelbe Telefonzelle vor dem Fenster weg ist. Du weißt nicht, seit wann. Keiner bemerkt den Moment.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2012" data-year="2012">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Musik</span>
+    <p class="reveal">Deine gebrannten CDs stehen im Keller. Jedes Lied der Welt steckt jetzt in deiner Hosentasche.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2013" data-year="2013">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Alltag</span>
+    <p class="reveal">Du verlässt die Wohnung: Schlüssel, Telefon. Mehr nicht.</p>
+  </div></div>
+</div>
+
+<section class="umzug st" data-st="umzugB" data-year="2013.9">
+  <p class="u-text reveal">Diesmal packt ihr zu zweit. Einer der Kartons ist voller Spielzeug.</p>
+</section>
+
+<section class="zarge st" data-st="zargeC" data-year="2014.2">
   <p class="z-text reveal">Neue Striche an einer neuen Türzarge. Diesmal misst du.</p>
 </section>
 
-<section class="era4">
-  <div class="era-head">
-    <div class="wrap">
-      <div class="span reveal">2010–2026</div>
-      <div class="name reveal">Die unsichtbare Gegenwart</div>
-    </div>
-  </div>
-  <div class="marker" data-year="2012" data-focus="shelf">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Musik</span>
-      <p class="reveal">Deine gebrannten CDs stehen im Keller. Jedes Lied der Welt steckt jetzt in deiner Hosentasche.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2013" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Alltag</span>
-      <p class="reveal">Du verlässt die Wohnung: Schlüssel, Telefon. Mehr nicht.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2014" data-focus="tv">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Medien</span>
-      <p class="reveal">Viertel nach acht gibt es nicht mehr. Alles fängt an, wann du willst — und keiner sitzt daneben.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2015" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Mobilität</span><span class="year-stamp reveal">2015</span>
-      <p class="reveal">Ein Junge rollt auf dem E-Board vorbei — elektrisch, ohne einen Schritt. Nicht schwebend wie im Film. Aber du drehst dich um.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2016" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Wearable</span>
-      <p class="reveal">Abends legst du ab: Stöpsel aus den Ohren, Uhr vom Handgelenk. Getragen seit dem Aufstehen.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2018" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Geld</span>
-      <p class="reveal">Karte ans Terminal. Piep. Du hast nichts angefasst.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2019" data-focus="table">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Alltag</span>
-      <p class="reveal">Es klingelt: das Essen. Bestellt mit drei Tippern. Das »Danke« an der Tür ist dein einziges Wort.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2020" data-focus="tv">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">2020</span>
-      <p class="reveal">Über Nacht bleibt das ganze Land zu Hause. Als die Türen wieder aufgehen, ist die Speisekarte ein QR-Code. Das Virus geht, die Codes bleiben.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2021" data-focus="pc">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">Arbeit</span>
-      <p class="reveal">Der Kollege ist eine Kachel auf dem Bildschirm, du sitzt im Wohnzimmer — und das ist einfach Mittwoch.</p>
-    </div></div>
-  </div>
-  <div class="marker" data-year="2026" data-focus="speaker">
-    <div class="wrap"><div class="card">
-      <span class="chip reveal">KI</span><span class="year-stamp reveal">2026</span>
-      <p class="reveal">Du sitzt im Fitnessstudio zwischen zwei Sätzen und redest mit einer Maschine wie mit einem Menschen. Es fällt dir nicht mal auf.</p>
-    </div></div>
+<section class="era-head st" data-st="head4" data-year="2014.4">
+  <div class="wrap">
+    <div class="span reveal">2014–2026</div>
+    <div class="name reveal">Die unsichtbare Gegenwart</div>
   </div>
 </section>
 
-<section class="kipp" id="kipp" data-focus="room">
-  <div class="kipp-stage">
-    <div class="kipp-year" id="kippYear">2026</div>
-    <div class="kipp-word" id="kippWord">&nbsp;</div>
-    <p class="kipp-note" id="kippNote">Und dann friert das Bild wieder ein: heute.</p>
-    <button class="replay" id="replayBtn" type="button">↺ Noch mal zurückspulen</button>
+<div class="era4x">
+
+<div class="marker st" data-st="m2014" data-year="2014.6">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Medien</span>
+    <p class="reveal">Viertel nach acht gibt es nicht mehr. Alles fängt an, wann du willst — und keiner sitzt daneben.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2015" data-year="2015">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Mobilität</span><span class="year-stamp reveal">2015</span>
+    <p class="reveal">Ein Junge rollt auf dem E-Board vorbei — elektrisch, ohne einen Schritt. Nicht schwebend wie im Film. Aber du drehst dich um.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2016" data-year="2016">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Wearable</span>
+    <p class="reveal">Abends legst du ab: Stöpsel aus den Ohren, Uhr vom Handgelenk. Getragen seit dem Aufstehen.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2018" data-year="2018">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Geld</span>
+    <p class="reveal">Karte ans Terminal. Piep. Du hast nichts angefasst.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2019" data-year="2019">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Alltag</span>
+    <p class="reveal">Es klingelt: das Essen. Bestellt mit drei Tippern. Das »Danke« an der Tür ist dein einziges Wort.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2020" data-year="2020">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">2020</span>
+    <p class="reveal">Über Nacht bleibt das ganze Land zu Hause. Als die Türen wieder aufgehen, ist die Speisekarte ein QR-Code. Das Virus geht, die Codes bleiben.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2021" data-year="2021">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">Arbeit</span>
+    <p class="reveal">Der Kollege ist eine Kachel auf dem Bildschirm, du sitzt im Wohnzimmer — und das ist einfach Mittwoch.</p>
+  </div></div>
+</div>
+
+<div class="marker st" data-st="m2026" data-year="2026">
+  <div class="wrap"><div class="card">
+    <span class="chip reveal">KI</span><span class="year-stamp reveal">2026</span>
+    <p class="reveal">Du sitzt im Fitnessstudio zwischen zwei Sätzen und redest mit einer Maschine wie mit einem Menschen. Es fällt dir nicht mal auf.</p>
+  </div></div>
+</div>
+
+</div><!-- /era4x -->
+
+<section class="kipp-scroll st" id="kippScroll" data-st="kipp" data-year="2026">
+  <div class="kipp-sticky">
+    <div class="kipp-stage">
+      <div class="kipp-year" id="kippYear">2026</div>
+      <div class="kipp-word" id="kippWord">&nbsp;</div>
+      <div class="kipp-hint" id="kippHint">▼ Weiterscrollen spult zurück</div>
+      <p class="kipp-note" id="kippNote">Vierzig Jahre in drei Sekunden. Und dann friert das Bild wieder ein: heute.</p>
+    </div>
   </div>
 </section>
 
 <section class="kern">
-  <div class="marker" data-focus="room">
+  <div class="marker st" data-st="kern1" data-year="2026">
     <div class="wrap"><p class="reveal">Menschen leben nicht in Epochen, sondern in Tagen. Erst im Rückblick werden Tage zu Epochen.</p></div>
   </div>
-  <div class="marker" data-focus="room">
+  <div class="marker st" data-st="kern2" data-year="2026">
     <div class="wrap"><p class="reveal">Die Zukunft kam nicht durch Explosion. Sie kam durch Gewöhnung.</p></div>
   </div>
-  <div class="marker" data-focus="room">
-    <div class="wrap"><p class="reveal">Vierzig Jahre. Ein völlig anderes Leben. Und du hast keinen einzigen dieser Umbrüche kommen sehen.</p></div>
+  <div class="marker st" data-st="kern3" data-year="2026">
+    <div class="wrap"><p class="reveal">Vierzig Jahre. Dein ganzes Leben. Und du hast keinen einzigen dieser Umbrüche kommen sehen.</p></div>
   </div>
 </section>
 
-<section class="finale" data-focus="table">
+<section class="finale st" data-st="finale" data-year="2026">
   <div class="wrap">
     <p class="devices reveal">
       <span class="gone">Wecker</span> · <span class="gone">Kamera</span> · <span class="gone">Bankfiliale</span> · <span class="gone">Zeitung</span> · <span class="gone">Fernbedienung</span> · <span class="gone">Landkarte</span> · <span class="gone">Fotoalbum</span><br>
       — alles in dem einen Ding in deiner Hand.
     </p>
-    <p class="last reveal">Das Gerät, auf dem du das gerade liest, war 1986 undenkbar.</p>
+    <p class="last reveal">Das Gerät, auf dem du das gerade liest, war in deinem Geburtsjahr undenkbar.</p>
     <div class="coda reveal">1986 → 2026 · Ende</div>
   </div>
 </section>
@@ -394,68 +440,136 @@ body.no3d .card{background:rgba(28,26,24,.92)}
   },{threshold:0.2});
   document.querySelectorAll('.reveal').forEach(function(el){ revealIO.observe(el); });
 
-  /* ===== Jahres- und Fokus-Anker ===== */
-  var anchors = [], focusAnchors = [];
-  function collectAnchors(){
-    anchors = []; focusAnchors = [];
-    document.querySelectorAll('[data-year]').forEach(function(el){
-      var y = parseInt(el.getAttribute('data-year'),10);
-      if(!isNaN(y)){
-        var r = el.getBoundingClientRect();
-        anchors.push({ year: y, mid: r.top + window.scrollY + r.height/2 });
-      }
-    });
-    anchors.sort(function(a,b){ return a.mid - b.mid; });
-    document.querySelectorAll('[data-focus]').forEach(function(el){
-      var r = el.getBoundingClientRect();
-      focusAnchors.push({ name: el.getAttribute('data-focus'), mid: r.top + window.scrollY + r.height/2 });
-    });
-    focusAnchors.sort(function(a,b){ return a.mid - b.mid; });
-  }
-  function yearAt(pos){
-    if(!anchors.length) return 1986;
-    if(pos <= anchors[0].mid) return anchors[0].year;
-    for(var i=0;i<anchors.length-1;i++){
-      var a = anchors[i], b = anchors[i+1];
-      if(pos >= a.mid && pos < b.mid){
-        var t = (pos - a.mid) / (b.mid - a.mid);
-        return a.year + t*(b.year - a.year);
-      }
-    }
-    return anchors[anchors.length-1].year;
-  }
-  function focusAt(pos){
-    if(!focusAnchors.length) return 'room';
-    var best = 'room', bd = Infinity;
-    focusAnchors.forEach(function(f){
-      var d = Math.abs(f.mid - pos);
-      if(d < bd){ bd = d; best = f.name; }
-    });
-    return best;
-  }
-
   /* ===== Hilfen ===== */
   function clamp01(v){ return v < 0 ? 0 : (v > 1 ? 1 : v); }
   function smooth(v){ v = clamp01(v); return v*v*(3-2*v); }
   function lerp(a,b,t){ return a + (b-a)*t; }
+  function frand(i){ var s = Math.sin(i*127.13)*43758.5453; return s - Math.floor(s); }
 
-  /* ===== Three.js-Bühne ===== */
-  var stage = document.getElementById('stage');
-  var renderer = null, scene, camera;
-  var objects = [], marks = [];
-  var ambLight, sunLight, lampLight;
-  var sofaMat, crtScreenMat, flatScreenMat, phoneTopMat, speakerLedMat, windowMat;
-  var focusTargets = {
-    room:    [0, 1.05, -0.4],
-    tv:      [-1.4, 1.0, -2.2],
-    phone:   [-2.5, 1.2, 0.5],
-    shelf:   [-2.4, 1.1, -1.5],
-    pc:      [2.0, 1.0, -1.5],
-    table:   [0.55, 0.6, 0.35],
-    door:    [1.85, 1.15, -2.9],
-    speaker: [-0.9, 0.7, -2.3]
+  /* ===== Stationen aus dem DOM ===== */
+  var stations = [];               // {id, year, mid, isMarker}
+  function collectStations(){
+    stations = [];
+    document.querySelectorAll('.st').forEach(function(el){
+      var r = el.getBoundingClientRect();
+      stations.push({
+        id: el.getAttribute('data-st'),
+        year: parseFloat(el.getAttribute('data-year')),
+        mid: r.top + window.scrollY + r.height/2,
+        isMarker: el.classList.contains('marker')
+      });
+    });
+    stations.sort(function(a,b){ return a.mid - b.mid; });
+    var k = document.getElementById('kippScroll');
+    var kr = k.getBoundingClientRect();
+    kippTop = kr.top + window.scrollY;
+    kippH = kr.height;
+  }
+  function segmentAt(pos){
+    if(!stations.length) return null;
+    if(pos <= stations[0].mid) return { a: stations[0], b: stations[0], t: 0 };
+    for(var i = 0; i < stations.length-1; i++){
+      if(pos >= stations[i].mid && pos < stations[i+1].mid){
+        var t = (pos - stations[i].mid) / (stations[i+1].mid - stations[i].mid);
+        return { a: stations[i], b: stations[i+1], t: t };
+      }
+    }
+    var last = stations[stations.length-1];
+    return { a: last, b: last, t: 0 };
+  }
+
+  /* ===== Kamera-Stationen (id → cam/look, spot = Marker-Spotlight) ===== */
+  var CAMS = {
+    hero:   { cam:[4.3,1.6,4.7],   look:[0.6,1.0,-1.4] },
+    head1:  { cam:[3.6,1.35,3.9],  look:[-0.6,1.0,-1.6] },
+    m1989:  { cam:[0.6,0.95,-0.9], look:[-0.5,1.62,-3.16], spot:1 },
+    m1991:  { cam:[2.7,1.05,-0.4], look:[1.85,1.3,-4.55],  spot:1 },
+    m1992:  { cam:[1.7,1.1,1.2],   look:[-1.35,0.95,-2.5], spot:1 },
+    m1994:  { cam:[-1.5,1.22,-0.1],look:[-2.92,0.75,-1.6], spot:1 },
+    m1995:  { cam:[-0.2,1.28,1.8], look:[0.55,0.55,0.35],  spot:1 },
+    zargeA: { cam:[2.75,1.35,-1.2],look:[1.44,1.1,-3.05] },
+    head2:  { cam:[3.4,1.5,3.6],   look:[0.2,1.0,-1.2] },
+    m1996:  { cam:[0.7,1.42,-0.2], look:[2.15,1.0,-1.72],  spot:1 },
+    m1997:  { cam:[2.1,1.45,-1.7], look:[2.62,1.12,-3.15], spot:1 },
+    m1999:  { cam:[1.1,1.55,-0.5], look:[2.05,1.0,-1.7],   spot:1 },
+    m2000:  { cam:[1.4,1.6,-0.8],  look:[2.4,0.9,-1.9],    spot:1 },
+    m2001:  { cam:[0.4,1.62,2.1],  look:[1.15,0.62,1.55],  spot:1 },
+    m2002:  { cam:[-0.1,1.65,1.0], look:[0.55,0.5,0.35],   spot:1 },
+    m2004:  { cam:[1.25,1.7,-0.7], look:[2.52,0.92,-1.9],  spot:1 },
+    zargeB: { cam:[2.75,1.72,-1.4],look:[1.44,1.6,-3.05] },
+    umzugA: { cam:[1.85,1.72,-2.0],look:[1.85,1.5,-4.4] },
+    head3:  { cam:[1.9,1.72,2.0],  look:[-0.7,0.9,-0.5] },
+    m2006a: { cam:[-0.2,1.7,2.2],  look:[-2.25,1.55,1.2],  spot:1 },
+    m2006b: { cam:[0.4,1.68,-0.1], look:[-1.5,1.05,-1.75], spot:1 },
+    m2007:  { cam:[-1.4,1.5,1.9],  look:[-0.6,0.58,1.0],   spot:1 },
+    m2008:  { cam:[0.0,1.6,-0.6],  look:[1.55,1.1,-2.15],  spot:1 },
+    m2009:  { cam:[-0.8,1.68,2.1], look:[-2.3,1.25,1.2],   spot:1 },
+    m2012:  { cam:[0.3,1.68,0.7],  look:[0.75,0.4,-2.0],   spot:1 },
+    m2013:  { cam:[0.0,1.7,0.3],   look:[1.62,1.2,-2.2],   spot:1 },
+    umzugB: { cam:[1.2,1.7,-1.5],  look:[1.2,1.5,-2.9] },
+    zargeC: { cam:[2.5,1.72,-1.7], look:[2.24,0.8,-3.42] },
+    head4:  { cam:[3.7,1.95,3.9],  look:[-0.6,1.0,-1.0] },
+    m2014:  { cam:[2.3,1.72,2.7],  look:[-1.6,1.7,-3.4],   spot:1 },
+    m2015:  { cam:[0.9,1.7,-0.9],  look:[2.6,0.5,-3.3],    spot:1 },
+    m2016:  { cam:[-0.4,1.68,-1.2],look:[-1.6,0.95,-3.3],  spot:1 },
+    m2018:  { cam:[1.5,1.7,-1.5],  look:[2.98,1.05,-3.35], spot:1 },
+    m2019:  { cam:[1.2,1.55,-1.1], look:[2.25,0.3,-3.35],  spot:1 },
+    m2020:  { cam:[-2.7,1.7,2.4],  look:[-1.5,0.95,0.8],   spot:1 },
+    m2021:  { cam:[-2.2,1.72,1.7], look:[-1.5,0.95,0.8],   spot:1 },
+    m2026:  { cam:[3.0,1.7,3.4],   look:[0.3,0.7,0.5],     spot:1 },
+    kipp:   { cam:[2.8,1.7,3.2],   look:[0.2,0.7,0.4] },
+    kern1:  { cam:[3.4,2.0,3.8],   look:[0.0,1.0,-0.6] },
+    kern2:  { cam:[3.0,1.9,3.5],   look:[0.2,0.9,-0.2] },
+    kern3:  { cam:[2.6,1.8,3.2],   look:[0.4,0.8,0.2] },
+    finale: { cam:[1.4,1.5,2.2],   look:[0.6,0.62,0.6] }
   };
-  var lookCur = null, camBase = null;
+
+  /* ===== Kipp-Rückflug: Kamera- und Jahres-Pfad über den Scrub-Fortschritt ===== */
+  var KIPP_PATH = [
+    { p:0.00, cam:[2.8,1.7,3.2],   look:[0.2,0.7,0.4] },
+    { p:0.16, cam:[2.25,1.7,-1.8], look:[2.25,1.5,-3.4] },
+    { p:0.24, cam:[2.25,1.7,-3.3], look:[2.25,1.5,-4.5] },
+    { p:0.30, cam:[1.2,1.72,-1.6], look:[-0.6,1.0,0.6] },
+    { p:0.44, cam:[0.2,1.7,1.6],   look:[-1.3,0.9,-1.4] },
+    { p:0.52, cam:[1.2,1.7,-1.9],  look:[1.2,1.5,-3.0] },
+    { p:0.58, cam:[2.4,1.6,-1.2],  look:[0.5,1.0,0.8] },
+    { p:0.74, cam:[1.2,1.35,1.6],  look:[-1.3,0.9,-2.4] },
+    { p:0.90, cam:[2.5,1.05,-0.9], look:[1.85,1.3,-4.5] },
+    { p:1.00, cam:[2.15,1.0,-1.6], look:[1.85,1.3,-4.55] }
+  ];
+  var KIPP_YEARS = [
+    { p:0.00, y:2026 }, { p:0.20, y:2014.2 }, { p:0.27, y:2013.6 },
+    { p:0.48, y:2007 }, { p:0.55, y:2005.95 }, { p:0.62, y:2004 },
+    { p:0.80, y:1994 }, { p:1.00, y:1986 }
+  ];
+  function pathAt(defs, p, out){
+    var a = defs[0], b = defs[defs.length-1];
+    for(var i = 0; i < defs.length-1; i++){
+      if(p >= defs[i].p && p <= defs[i+1].p){ a = defs[i]; b = defs[i+1]; break; }
+    }
+    var t = a === b ? 0 : smooth((p - a.p) / (b.p - a.p));
+    for(var j = 0; j < 3; j++){
+      out.cam[j] = lerp(a.cam[j], b.cam[j], t);
+      out.look[j] = lerp(a.look[j], b.look[j], t);
+    }
+  }
+  function kippYearAt(p){
+    var a = KIPP_YEARS[0], b = KIPP_YEARS[KIPP_YEARS.length-1];
+    for(var i = 0; i < KIPP_YEARS.length-1; i++){
+      if(p >= KIPP_YEARS[i].p && p <= KIPP_YEARS[i+1].p){ a = KIPP_YEARS[i]; b = KIPP_YEARS[i+1]; break; }
+    }
+    var t = a === b ? 0 : (p - a.p) / (b.p - a.p);
+    return lerp(a.y, b.y, t);
+  }
+
+  /* ===== Three.js ===== */
+  var stage = document.getElementById('stage');
+  var veil = document.getElementById('veil');
+  var renderer = null, scene, camera;
+  var roomW1, roomW2, roomW3;
+  var objects = [], marksW1 = [], marksW3 = [];
+  var ambLight, sunLight, lampLight, hallLight, spot;
+  var crtScreenMat, flatScreenMat, phoneTopMat, speakerLedMat, windowMat, w2WindowMat, w3WindowMat, tvW3Mat, jugendHandyMat;
 
   function mat(hex){ return new THREE.MeshLambertMaterial({ color: hex }); }
   function box(g,w,h,d,m,x,y,z,ry){
@@ -473,215 +587,421 @@ body.no3d .card{background:rgba(28,26,24,.92)}
     g.add(mesh);
     return mesh;
   }
-  function obj(from,to,build){
+  function obj(room, from, to, build){
     var g = new THREE.Group();
     build(g);
-    scene.add(g);
+    room.add(g);
     objects.push({ group: g, from: from, to: to });
     return g;
   }
 
-  function buildScene(){
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xd8c9ab);
-    scene.fog = new THREE.Fog(0xd8c9ab, 10, 24);
+  /* ---- Wohnung 1: Elternwohnung (bis 2006) ---- */
+  function buildW1(){
+    var R = roomW1 = new THREE.Group(); scene.add(R);
+    box(R, 6.5, .12, 6.5, 0x8a6f4d, 0, -.06, 0);
+    box(R, 6.5, 3.3, .12, 0xcbbc9f, 0, 1.65, -3.25);
+    box(R, .12, 3.3, 6.5, 0xc2b294, -3.25, 1.65, 0);
+    box(R, 6.5, .1, .18, 0x7d654a, 0, .05, -3.14);
+    box(R, .18, .1, 6.5, 0x7d654a, -3.14, .05, 0);
 
-    camera = new THREE.PerspectiveCamera(46, 1, 0.1, 60);
-    camBase = new THREE.Vector3(4.4, 2.15, 4.9);
-    camera.position.copy(camBase);
-    lookCur = new THREE.Vector3(0, 1.05, -0.4);
-
-    ambLight = new THREE.AmbientLight(0xffe8c8, 0.55); scene.add(ambLight);
-    sunLight = new THREE.DirectionalLight(0xffd9a0, 0.9);
-    sunLight.position.set(-6, 6, 3);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.set(1024,1024);
-    var sc = sunLight.shadow.camera;
-    sc.left = -6; sc.right = 6; sc.top = 6; sc.bottom = -6;
-    scene.add(sunLight);
-    lampLight = new THREE.PointLight(0xffb45e, 1.0, 9);
-    lampLight.position.set(2.3, 1.45, 2.2); scene.add(lampLight);
-
-    /* Raum */
-    var room = new THREE.Group(); scene.add(room);
-    box(room, 6.5, .12, 6.5, 0x8a6f4d, 0, -.06, 0);              // Boden
-    box(room, 6.5, 3.3, .12, 0xcbbc9f, 0, 1.65, -3.25);          // Rückwand
-    box(room, .12, 3.3, 6.5, 0xc2b294, -3.25, 1.65, 0);          // linke Wand
-    box(room, 6.5, .1, .18, 0x7d654a, 0, .05, -3.16);            // Fußleiste hinten
-    box(room, .18, .1, 6.5, 0x7d654a, -3.16, .05, 0);            // Fußleiste links
-
-    /* Fenster links (Lichtfläche) */
+    // Fenster links
     windowMat = new THREE.MeshBasicMaterial({ color: 0xfff2d0 });
     var win = new THREE.Mesh(new THREE.BoxGeometry(.06, 1.35, 1.15), windowMat);
-    win.position.set(-3.18, 1.75, 1.9); scene.add(win);
-    box(room, .1, 1.55, .1, 0x9b8a6d, -3.16, 1.75, 1.28);
-    box(room, .1, 1.55, .1, 0x9b8a6d, -3.16, 1.75, 2.52);
-    box(room, .1, .1, 1.35, 0x9b8a6d, -3.16, 2.5, 1.9);
-    box(room, .1, .1, 1.35, 0x9b8a6d, -3.16, 1.0, 1.9);
+    win.position.set(-3.18, 1.75, 1.9); R.add(win);
+    box(R, .1, 1.55, .1, 0x9b8a6d, -3.16, 1.75, 1.28);
+    box(R, .1, 1.55, .1, 0x9b8a6d, -3.16, 1.75, 2.52);
+    box(R, .1, .1, 1.35, 0x9b8a6d, -3.16, 2.5, 1.9);
+    box(R, .1, .1, 1.35, 0x9b8a6d, -3.16, 1.0, 1.9);
 
-    /* Türzarge rechts in der Rückwand */
-    box(room, .14, 2.3, .14, 0x6f5a40, 1.4, 1.15, -3.12);
-    box(room, .14, 2.3, .14, 0x6f5a40, 2.3, 1.15, -3.12);
-    box(room, 1.04, .14, .14, 0x6f5a40, 1.85, 2.33, -3.12);
-    var doorDark = new THREE.Mesh(new THREE.BoxGeometry(.86, 2.22, .05), new THREE.MeshBasicMaterial({ color: 0x1a150f }));
-    doorDark.position.set(1.85, 1.11, -3.2); scene.add(doorDark);
+    // Tür zum Flur (Zarge) + Flur dahinter
+    box(R, .14, 2.3, .14, 0x6f5a40, 1.4, 1.15, -3.12);
+    box(R, .14, 2.3, .14, 0x6f5a40, 2.3, 1.15, -3.12);
+    box(R, 1.04, .14, .14, 0x6f5a40, 1.85, 2.33, -3.12);
+    // Flur: Boden, Wände, warmes Licht
+    box(R, 1.8, .1, 1.6, 0x94795a, 1.85, -.05, -4.05);
+    box(R, 1.8, 3.0, .1, 0xbfae8e, 1.85, 1.5, -4.85);
+    box(R, .1, 3.0, 1.7, 0xb5a486, 1.0, 1.5, -4.05);
+    box(R, .1, 3.0, 1.7, 0xb5a486, 2.7, 1.5, -4.05);
+    // Telefon im Flur (an der Rückwand) + Schnur + Tischchen
+    box(R, .3, .42, .1, 0x556052, 1.85, 1.32, -4.78);
+    box(R, .1, .34, .08, 0x47523f, 1.7, 1.5, -4.74);
+    cyl(R, .012, .012, .3, 0x3a4438, 1.78, 1.05, -4.74);
+    cyl(R, .012, .012, .28, 0x3a4438, 1.9, .95, -4.72);
+    box(R, .5, .5, .32, 0x6f5a40, 2.35, .25, -4.6);
+    box(R, .28, .04, .2, 0xe8e0cc, 2.35, .52, -4.6);
 
-    /* Zargenstriche: erst das Kind (links), ab 2012 die nächste Generation (rechts) */
-    var markData = [
-      { year: 1986, h: 0.72, side: 'l' },
-      { year: 1988, h: 0.90, side: 'l' },
-      { year: 1990, h: 1.06, side: 'l' },
-      { year: 1994, h: 1.38, side: 'l' },
-      { year: 1999, h: 1.64, side: 'l' },
-      { year: 2012, h: 0.55, side: 'r' },
-      { year: 2016, h: 0.82, side: 'r' },
-      { year: 2020, h: 1.08, side: 'r' },
-      { year: 2024, h: 1.28, side: 'r' }
-    ];
-    markData.forEach(function(md){
-      var m = new THREE.Mesh(new THREE.BoxGeometry(.16, .022, .03), mat(md.side === 'l' ? 0x3a3128 : 0xb08030));
-      m.position.set(md.side === 'l' ? 1.4 : 2.3, md.h, -3.03);
-      scene.add(m);
-      marks.push({ mesh: m, year: md.year });
-    });
+    // Mauerfall-Foto an der Rückwand
+    box(R, .52, .44, .04, 0x8f7a52, -0.5, 1.62, -3.18);
+    box(R, .42, .34, .045, 0xd9d2c2, -0.5, 1.62, -3.175);
+    box(R, .09, .17, .05, 0x3c342c, -0.58, 1.58, -3.17);
+    box(R, .09, .15, .05, 0x46392e, -0.44, 1.57, -3.17);
+    var fotoTv = new THREE.Mesh(new THREE.BoxGeometry(.1, .08, .05), new THREE.MeshBasicMaterial({ color: 0x9fc2e0 }));
+    fotoTv.position.set(-0.5, 1.7, -3.17); R.add(fotoTv);
 
-    /* Konstanten: Sofa, Couchtisch, Stehlampe, Pflanze, Bild */
-    sofaMat = mat(0x9a5f3c);
-    var sofa = new THREE.Group(); scene.add(sofa);
-    box(sofa, 1.9, .42, .85, sofaMat, 1.1, .34, 1.5);
-    box(sofa, 1.9, .62, .26, sofaMat, 1.1, .82, 1.93);
-    box(sofa, .26, .3, .85, sofaMat, .12, .68, 1.5);
-    box(sofa, .26, .3, .85, sofaMat, 2.08, .68, 1.5);
-    var table = new THREE.Group(); scene.add(table);
-    box(table, .95, .06, .6, 0x6f5a40, .55, .44, .35);
-    box(table, .12, .42, .12, 0x5c4a34, .55, .21, .35);
-    var lamp = new THREE.Group(); scene.add(lamp);
-    cyl(lamp, .025, .025, 1.25, 0x4a4a4a, 2.3, .63, 2.2);
-    cyl(lamp, .16, .24, .3, 0xe8d9a8, 2.3, 1.4, 2.2);
-    var plant = new THREE.Group(); scene.add(plant);
-    cyl(plant, .16, .12, .3, 0xa5563a, -2.55, .15, 2.5);
-    cyl(plant, .01, .28, .75, 0x4a7a45, -2.55, .75, 2.5);
-    box(scene instanceof THREE.Scene ? (function(){ var g = new THREE.Group(); scene.add(g); return g; })() : null,
-        .7, .5, .04, 0x8f7a52, -.6, 1.9, -3.17);
+    // Möbel-Konstanten
+    var sofaM = mat(0x9a5f3c);
+    box(R, 1.9, .42, .85, sofaM, 1.1, .34, 1.5);
+    box(R, 1.9, .62, .26, sofaM, 1.1, .82, 1.93);
+    box(R, .26, .3, .85, sofaM, .12, .68, 1.5);
+    box(R, .26, .3, .85, sofaM, 2.08, .68, 1.5);
+    box(R, .95, .06, .6, 0x6f5a40, .55, .44, .35);
+    box(R, .12, .42, .12, 0x5c4a34, .55, .21, .35);
+    box(R, 2.7, .02, 1.9, 0xa5623e, .7, .012, .7);
+    box(R, 2.3, .022, 1.5, 0xc9a05a, .7, .013, .7);
+    cyl(R, .025, .025, 1.25, 0x4a4a4a, 2.3, .63, 2.2);
+    cyl(R, .16, .24, .3, 0xe8d9a8, 2.3, 1.4, 2.2);
+    cyl(R, .16, .12, .3, 0xa5563a, -2.55, .15, 2.5);
+    cyl(R, .01, .28, .75, 0x4a7a45, -2.55, .75, 2.5);
 
-    /* 1986–2008: Röhren-TV auf Schrank */
+    // Röhren-TV (bleibt bis zum Auszug)
     crtScreenMat = new THREE.MeshBasicMaterial({ color: 0x394a42 });
-    obj(1900, 2008, function(g){
-      box(g, 1.6, .5, .6, 0x6f5a40, -1.4, .25, -2.6);
-      box(g, .88, .72, .62, 0x4a4038, -1.4, .89, -2.55);
-      var s = new THREE.Mesh(new THREE.BoxGeometry(.62, .48, .03), crtScreenMat);
-      s.position.set(-1.4, .9, -2.23); g.add(s);
-      cyl(g, .008, .008, .5, 0x333333, -1.15, 1.5, -2.55);
-    });
+    box(R, 1.6, .5, .6, 0x6f5a40, -1.35, .25, -2.6);
+    box(R, .88, .72, .62, 0x4a4038, -1.35, .89, -2.55);
+    var crt = new THREE.Mesh(new THREE.BoxGeometry(.62, .48, .03), crtScreenMat);
+    crt.position.set(-1.35, .9, -2.23); R.add(crt);
+    cyl(R, .008, .008, .5, 0x333333, -1.1, 1.5, -2.55);
 
-    /* 2008–2026: Flat-TV an der Wand + Sideboard */
-    flatScreenMat = new THREE.MeshBasicMaterial({ color: 0x10131c });
-    obj(2008, 2100, function(g){
-      box(g, 1.75, .98, .07, 0x14161c, -1.4, 1.55, -3.1);
-      var s = new THREE.Mesh(new THREE.BoxGeometry(1.6, .85, .02), flatScreenMat);
-      s.position.set(-1.4, 1.55, -3.05); g.add(s);
-      box(g, 1.8, .34, .42, 0xd8d3c8, -1.4, .17, -2.85);
+    // Regal links + Radiorekorder + Kassetten (Kindheit), CDs (ab 97)
+    box(R, .3, 1.55, 1.3, 0x6f5a40, -3.0, .78, -1.6);
+    box(R, .32, .04, 1.34, 0x8a7355, -3.0, .5, -1.6);
+    box(R, .32, .04, 1.34, 0x8a7355, -3.0, 1.0, -1.6);
+    obj(R, 1900, 1998, function(g){
+      box(g, .26, .2, .5, 0x3a3a3a, -2.95, .62, -1.35);
+      box(g, .05, .05, .05, 0xc23b3b, -2.86, .68, -1.13);
+      cyl(g, .06, .06, .02, 0x222222, -2.95, .62, -1.18).rotation.x = Math.PI/2;
+      cyl(g, .06, .06, .02, 0x222222, -2.95, .62, -1.56).rotation.x = Math.PI/2;
     });
-
-    /* 1986–2003: Wandtelefon + Telefontischchen */
-    obj(1900, 2003, function(g){
-      box(g, .07, .3, .2, 0x556052, -3.15, 1.25, .5);
-      box(g, .05, .26, .07, 0x47523f, -3.09, 1.44, .5);
-      box(g, .5, .5, .34, 0x6f5a40, -2.92, .25, .5);
-      box(g, .3, .05, .22, 0xe8e0cc, -2.92, .53, .5);
-    });
-
-    /* 1986–2012: Regal an der linken Wand */
-    obj(1900, 2012, function(g){
-      box(g, .3, 1.55, 1.3, 0x6f5a40, -3.0, .78, -1.6);
-      box(g, .32, .04, 1.34, 0x8a7355, -3.0, .5, -1.6);
-      box(g, .32, .04, 1.34, 0x8a7355, -3.0, 1.0, -1.6);
-    });
-    /* 1986–1997: Kassetten im Regal */
-    obj(1900, 1997, function(g){
+    obj(R, 1900, 1999.5, function(g){
       var cols = [0xc23b3b, 0x3b70c2, 0xd9a53a, 0x4a9a5a, 0xb0b0b0];
       for(var i = 0; i < 5; i++){
-        box(g, .12, .18, .11, cols[i], -2.93, .62, -2.05 + i*.22);
+        box(g, .12, .18, .11, cols[i], -2.93, 1.12, -2.15 + i*.2);
       }
     });
-    /* 1993–2012: CDs im Regal */
-    obj(1993, 2012, function(g){
-      for(var i = 0; i < 7; i++){
-        box(g, .13, .25, .025, i % 2 ? 0xd8e4ee : 0xb8cade, -2.92, 1.15, -2.1 + i*.16);
+    obj(R, 1997, 2100, function(g){
+      for(var i = 0; i < 6; i++){
+        box(g, .13, .25, .025, i % 2 ? 0xd8e4ee : 0xb8cade, -2.92, .66, -2.1 + i*.15);
       }
-    });
-    /* 1986–1996: Radiorekorder auf dem Regal */
-    obj(1900, 1996, function(g){
-      box(g, .26, .2, .5, 0x3a3a3a, -2.95, 1.66, -1.6);
-      cyl(g, .07, .07, .02, 0x222222, -2.95, 1.66, -1.42).rotation.x = Math.PI/2;
-      cyl(g, .07, .07, .02, 0x222222, -2.95, 1.66, -1.78).rotation.x = Math.PI/2;
     });
 
-    /* 1995–2008: PC-Ecke rechts */
-    obj(1995, 2008, function(g){
-      box(g, 1.1, .05, .62, 0xd9cdb4, 2.15, .73, -1.7, -.5);
-      box(g, .05, .73, .58, 0xc4b89e, 1.72, .37, -1.5, -.5);
-      box(g, .05, .73, .58, 0xc4b89e, 2.6, .37, -1.92, -.5);
-      box(g, .44, .42, .44, 0xdcd6c4, 2.1, .98, -1.72, -.5);
+    // PC-Ecke rechts (ab 1996) + Drucker (ab 2002) + CD-Spindel (ab 1999) + Poster
+    obj(R, 1996, 2100, function(g){
+      box(g, 1.3, .05, .62, 0xd9cdb4, 2.2, .73, -1.75, -.45);
+      box(g, .05, .73, .58, 0xc4b89e, 1.75, .37, -1.5, -.45);
+      box(g, .05, .73, .58, 0xc4b89e, 2.68, .37, -2.0, -.45);
+      box(g, .44, .42, .44, 0xdcd6c4, 2.05, .98, -1.68, -.45);
       var s = new THREE.Mesh(new THREE.BoxGeometry(.3, .26, .03), new THREE.MeshBasicMaterial({ color: 0x2a4a3a }));
-      s.position.set(1.97, .99, -1.55); s.rotation.y = -.5; g.add(s);
-      box(g, .22, .5, .5, 0xd0cabb, 2.62, .25, -1.1, -.5);
+      s.position.set(1.92, .99, -1.52); s.rotation.y = -.45; g.add(s);
+      box(g, .22, .5, .5, 0xd0cabb, 2.7, .25, -1.15, -.45);
+    });
+    obj(R, 2002, 2100, function(g){
+      box(g, .4, .18, .34, 0xd6d0c0, 2.52, .84, -1.95, -.45);
+      box(g, .3, .015, .3, 0xf2eee2, 2.45, .95, -1.85, -.55);
+      box(g, .29, .013, .29, 0xf2eee2, 2.42, .965, -1.83, -.35);
+    });
+    obj(R, 1999, 2100, function(g){
+      cyl(g, .07, .07, .16, 0xc8d4de, 1.7, .82, -1.35);
+      cyl(g, .01, .01, .3, 0x888888, 1.7, .95, -1.35);
+    });
+    obj(R, 1999, 2100, function(g){
+      box(g, .6, .85, .03, 0x35404e, 2.95, 1.75, -1.35, -.45);
+      box(g, .5, .2, .035, 0xd94848, 2.95, 1.95, -1.34, -.45);
     });
 
-    /* 1993–1999: Handy-Klotz auf dem Couchtisch */
-    obj(1993, 1999, function(g){
+    // Onkel-Handy (1995) und Jugend-Handy unter der Decke (2001)
+    obj(R, 1994.4, 1996.4, function(g){
       box(g, .09, .2, .05, 0x2e2e2e, .3, .57, .3);
       cyl(g, .008, .008, .14, 0x222222, .3, .73, .28);
+      cyl(g, .06, .06, .012, 0xd9c9a8, .68, .48, .42).rotation.x = Math.PI/2;
+    });
+    jugendHandyMat = new THREE.MeshBasicMaterial({ color: 0x8fd8a0 });
+    obj(R, 2000.4, 2003, function(g){
+      box(g, .8, .16, .6, 0xb5744a, 1.35, .62, 1.45, .3);
+      box(g, .07, .025, .13, 0x30343a, 1.3, .72, 1.5, .4);
+      var sc = new THREE.Mesh(new THREE.BoxGeometry(.05, .01, .05), jugendHandyMat);
+      sc.position.set(1.3, .735, 1.47); g.add(sc);
     });
 
-    /* 1986–2011: Zeitungsstapel */
-    obj(1900, 2011, function(g){
-      box(g, .34, .06, .26, 0xd8d2c2, .82, .5, .42, .3);
-      box(g, .32, .05, .25, 0xc8c2b0, .8, .55, .4, .1);
+    // Euro-Münzen auf dem Tisch (2002)
+    obj(R, 2001.6, 2003.2, function(g){
+      cyl(g, .035, .035, .012, 0xd9c25a, .45, .48, .3);
+      cyl(g, .03, .03, .012, 0xc9c9c9, .58, .48, .42);
+      cyl(g, .028, .028, .012, 0xd9c25a, .66, .48, .28);
+      box(g, .16, .03, .1, 0x6b4a35, .35, .49, .48);
     });
 
-    /* 2007–2026: Smartphone auf dem Tisch — am Ende das einzige Objekt */
-    phoneTopMat = new THREE.MeshBasicMaterial({ color: 0x0c0e14 });
-    obj(2007, 2100, function(g){
-      box(g, .1, .015, .2, 0x0a0a0c, .5, .48, .3);
-      var s = new THREE.Mesh(new THREE.BoxGeometry(.09, .004, .19), phoneTopMat);
-      s.position.set(.5, .49, .3); g.add(s);
+    // Schlüsselbrett + Tamagotchi (ab 96)
+    box(R, .3, .2, .04, 0x8a7355, 2.62, 1.15, -3.18);
+    obj(R, 1996.6, 1999, function(g){
+      cyl(g, .008, .008, .1, 0x555555, 2.56, 1.06, -3.15);
+      var egg = new THREE.Mesh(new THREE.SphereGeometry(.045, 8, 6), mat(0xe8e4da));
+      egg.position.set(2.56, .98, -3.14); egg.scale.y = 1.25; g.add(egg);
+      box(g, .03, .022, .01, 0x4a90c2, 2.56, .99, -3.11);
     });
 
-    /* 2009–2016 und 2020–2026: Laptop auf dem Tisch */
-    function laptop(g){
-      box(g, .5, .025, .35, 0xb9bec8, .62, .47, .28, .35);
-      var lid = box(g, .5, .34, .02, 0xaab0bc, .45, .62, .17, .35);
-      lid.rotation.x = -.35;
-    }
-    obj(2009, 2016, laptop);
-    obj(2020, 2100, laptop);
-
-    /* 2018–2026: Smart Speaker auf dem Sideboard */
-    speakerLedMat = new THREE.MeshBasicMaterial({ color: 0x2a6a8a });
-    obj(2018, 2100, function(g){
-      cyl(g, .09, .09, .2, 0x35383e, -.9, .44, -2.85);
-      var led = new THREE.Mesh(new THREE.CylinderGeometry(.092, .092, .012, 12), speakerLedMat);
-      led.position.set(-.9, .545, -2.85); g.add(led);
+    // Umzugskartons (kurz vor dem Auszug)
+    obj(R, 2004.9, 2006.4, function(g){
+      box(g, .55, .4, .45, 0xc8a36a, .5, .2, -2.4);
+      box(g, .5, .38, .4, 0xbd9a63, .55, .58, -2.35, .2);
+      box(g, .5, .4, .42, 0xc8a36a, 1.15, .2, -2.5, -.15);
+      box(g, .52, .05, .42, 0xd9b87a, .5, .42, -2.4);
     });
 
-    /* Teppich 1986–2006 */
-    obj(1900, 2006, function(g){
-      box(g, 2.7, .02, 1.9, 0xa5623e, .7, .012, .7);
-      box(g, 2.3, .022, 1.5, 0xc9a05a, .7, .013, .7);
+    // Zargenstriche (das Kind wächst)
+    [[1988,.55],[1990,.72],[1992,.9],[1994,1.1],[1996,1.32],[1999,1.55],[2004,1.72]].forEach(function(md){
+      var m = new THREE.Mesh(new THREE.BoxGeometry(.16, .022, .03), mat(0x3a3128));
+      m.position.set(1.42, md[1], -3.03);
+      R.add(m);
+      marksW1.push({ mesh: m, year: md[0] });
     });
   }
 
-  /* ===== Licht-Keyframes (Jahr → Stimmung) ===== */
+  /* ---- Wohnung 2: Die erste eigene Bude (2006–2013) ---- */
+  function buildW2(){
+    var R = roomW2 = new THREE.Group(); scene.add(R);
+    box(R, 4.7, .12, 4.7, 0x9a8a70, 0, -.06, 0);
+    box(R, 4.7, 3.0, .12, 0xd8d2c4, 0, 1.5, -2.35);
+    box(R, .12, 3.0, 4.7, 0xd2ccbc, -2.35, 1.5, 0);
+    box(R, 4.7, .1, .16, 0x8a7a60, 0, .05, -2.26);
+    box(R, .16, .1, 4.7, 0x8a7a60, -2.26, .05, 0);
+
+    // Tür hinten rechts (ohne Striche — fremde Zarge)
+    box(R, .12, 2.2, .12, 0x9a8a70, .8, 1.1, -2.24);
+    box(R, .12, 2.2, .12, 0x9a8a70, 1.6, 1.1, -2.24);
+    box(R, .92, .12, .12, 0x9a8a70, 1.2, 2.22, -2.24);
+    var dd = new THREE.Mesh(new THREE.BoxGeometry(.76, 2.12, .05), new THREE.MeshBasicMaterial({ color: 0x181410 }));
+    dd.position.set(1.2, 1.06, -2.3); R.add(dd);
+
+    // Fenster links + Draußen (Straße mit Telefonzelle bis 2009)
+    w2WindowMat = new THREE.MeshBasicMaterial({ color: 0xdfe8f0 });
+    var win = new THREE.Mesh(new THREE.BoxGeometry(.06, 1.3, 1.2), w2WindowMat);
+    win.position.set(-2.28, 1.7, 1.2); R.add(win);
+    box(R, .1, 1.5, .1, 0xb5ae9c, -2.27, 1.7, .58);
+    box(R, .1, 1.5, .1, 0xb5ae9c, -2.27, 1.7, 1.82);
+    box(R, .1, .1, 1.4, 0xb5ae9c, -2.27, 2.42, 1.2);
+    box(R, .1, .1, 1.4, 0xb5ae9c, -2.27, .98, 1.2);
+    box(R, .1, 4.5, 5.5, 0x3c4148, -5.4, 2.2, .5);
+    box(R, 2.6, .08, 5.5, 0x555a60, -3.9, .02, .5);
+    obj(R, 1900, 2008.8, function(g){
+      box(g, .5, 1.5, .5, 0xd9b93a, -3.9, .75, 1.15);
+      box(g, .6, .12, .6, 0xb59a2e, -3.9, 1.56, 1.15);
+      box(g, .3, .9, .05, 0x2a2e33, -3.9, .8, .92);
+    });
+    cyl(R, .03, .03, 2.6, 0x4a4e54, -3.3, 1.3, -0.9);
+    var lampGlow = new THREE.Mesh(new THREE.SphereGeometry(.09, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffe9b0 }));
+    lampGlow.position.set(-3.3, 2.62, -0.9); R.add(lampGlow);
+
+    // Matratze + Decke + Kissen
+    box(R, 1.35, .22, 1.95, 0xcfc6b4, 1.35, .12, 1.15);
+    box(R, 1.2, .1, 1.1, 0x7a8a9a, 1.35, .27, 1.45, .08);
+    box(R, .5, .12, .32, 0xe8e2d2, 1.35, .3, .4);
+
+    // Klapptisch + Campingstuhl + Bierkasten
+    box(R, .8, .05, .55, 0xb5a88c, -0.6, .55, 1.0);
+    box(R, .05, .55, .05, 0x8a7d62, -0.9, .27, .8);
+    box(R, .05, .55, .05, 0x8a7d62, -0.3, .27, 1.2);
+    box(R, .05, .55, .05, 0x8a7d62, -0.9, .27, 1.2);
+    box(R, .05, .55, .05, 0x8a7d62, -0.3, .27, .8);
+    box(R, .45, .45, .45, 0x4a7a5a, -1.3, .22, 1.7, .4);
+    obj(R, 1900, 2100, function(g){
+      box(g, .42, .32, .3, 0xb03a2e, 1.85, .16, -1.7);
+      for(var i = 0; i < 3; i++) cyl(g, .04, .04, .1, 0x8a5a2a, 1.72 + i*.13, .36, -1.7);
+    });
+
+    // Schreibtisch + Monitor (Röhre → Flach 2009) + Drehstuhl
+    box(R, 1.25, .05, .6, 0xc9bda0, -1.45, .72, -1.7);
+    box(R, .05, .72, .55, 0xb0a488, -2.0, .36, -1.7);
+    box(R, .05, .72, .55, 0xb0a488, -0.9, .36, -1.7);
+    crtW2();
+    function crtW2(){
+      var scr = new THREE.MeshBasicMaterial({ color: 0x22303c });
+      obj(R, 1900, 2009.5, function(g){
+        box(g, .42, .4, .42, 0xd8d2c2, -1.5, .97, -1.78);
+        var s = new THREE.Mesh(new THREE.BoxGeometry(.3, .25, .03), scr);
+        s.position.set(-1.5, .98, -1.56); g.add(s);
+      });
+      obj(R, 2009.5, 2100, function(g){
+        box(g, .55, .36, .04, 0x22262c, -1.5, 1.05, -1.75);
+        cyl(g, .04, .12, .16, 0x35393f, -1.5, .8, -1.75);
+      });
+      flatScreenMat = scr;
+    }
+    cyl(R, .3, .3, .08, 0x3a3e44, -1.45, .42, -1.0);
+    cyl(R, .05, .05, .35, 0x55595f, -1.45, .6, -1.0);
+    box(R, .5, .1, .45, 0x4a4e54, -1.45, .78, -1.0);
+
+    // Poster + Kartons + Digicam + Schlüsselbrett + Fahne + Laptop + iPhone + CD-Karton
+    box(R, .65, .9, .03, 0x2e4a3a, -0.4, 1.8, -2.28);
+    box(R, .55, .22, .035, 0xd9d2ba, -0.4, 2.02, -2.27);
+    obj(R, 1900, 2010, function(g){
+      box(g, .55, .42, .45, 0xc8a36a, -2.0, .21, -.5);
+      box(g, .5, .4, .4, 0xbd9a63, -1.95, .6, -.45, .25);
+    });
+    obj(R, 2011.4, 2100, function(g){
+      box(g, .55, .45, .45, 0xc8a36a, .55, .22, -2.05);
+      box(g, .28, .12, .01, 0xf2eee2, .55, .3, -1.82);
+    });
+    obj(R, 1900, 2011, function(g){
+      cyl(g, .01, .01, .12, 0x555555, 1.78, 1.32, -2.2);
+      box(g, .16, .1, .08, 0x3a3e44, 1.78, 1.2, -2.18);
+      cyl(g, .045, .045, .04, 0x2e3238, 1.78, 1.21, -2.13).rotation.x = Math.PI/2;
+      box(g, .02, .3, .02, 0x8a4a3a, 1.72, 1.05, -2.16);
+    });
+    box(R, .28, .18, .04, 0x9a8a70, 2.0, 1.2, -2.28);
+    cyl(R, .008, .008, .08, 0x555555, 1.95, 1.1, -2.25);
+    box(R, .05, .09, .015, 0xb5b9bf, 1.95, 1.05, -2.24);
+    obj(R, 2006.25, 2006.6, function(g){
+      box(g, .05, .3, 1.0, 0x1c1c1c, -2.24, 2.32, 1.2);
+      box(g, .05, .3, 1.0, 0xc23b2e, -2.24, 2.02, 1.2);
+      box(g, .05, .3, 1.0, 0xd9b93a, -2.24, 1.72, 1.2);
+    });
+    obj(R, 2009.8, 2100, function(g){
+      box(g, .48, .025, .34, 0xb9bec8, -0.55, .58, .95, .3);
+      var lid = box(g, .48, .32, .02, 0xaab0bc, -0.72, .72, .84, .3);
+      lid.rotation.x = -.4;
+    });
+    phoneTopMat = new THREE.MeshBasicMaterial({ color: 0x0c0e14 });
+    obj(R, 2007, 2100, function(g){
+      box(g, .1, .015, .2, 0x0a0a0c, -0.45, .57, 1.15);
+      var s = new THREE.Mesh(new THREE.BoxGeometry(.09, .004, .19), phoneTopMat);
+      s.position.set(-0.45, .58, 1.15); g.add(s);
+    });
+  }
+
+  /* ---- Wohnung 3: Familienwohnung (ab 2014) ---- */
+  function buildW3(){
+    var R = roomW3 = new THREE.Group(); scene.add(R);
+    box(R, 7.2, .12, 7.2, 0xb5a68c, 0, -.06, 0);
+    box(R, 7.2, 3.4, .12, 0xe8e4da, 0, 1.7, -3.6);
+    box(R, .12, 3.4, 7.2, 0xe2ded2, -3.6, 1.7, 0);
+    box(R, 7.2, .1, .16, 0xcfc9b9, 0, .05, -3.5);
+    box(R, .16, .1, 7.2, 0xcfc9b9, -3.5, .05, 0);
+
+    // Neue Tür + weiße Zarge (Kinder-Striche wachsen ab 2016)
+    box(R, .13, 2.35, .13, 0xf2efe6, 1.8, 1.17, -3.48);
+    box(R, .13, 2.35, .13, 0xf2efe6, 2.7, 1.17, -3.48);
+    box(R, 1.02, .13, .13, 0xf2efe6, 2.25, 2.4, -3.48);
+    var dd = new THREE.Mesh(new THREE.BoxGeometry(.82, 2.28, .05), new THREE.MeshBasicMaterial({ color: 0x1a1712 }));
+    dd.position.set(2.25, 1.14, -3.54); R.add(dd);
+    [[2016,.5],[2018,.66],[2020,.84],[2022,1.0],[2024,1.12]].forEach(function(md){
+      var m = new THREE.Mesh(new THREE.BoxGeometry(.15, .02, .03), mat(0xb08030));
+      m.position.set(1.82, md[1], -3.4);
+      R.add(m);
+      marksW3.push({ mesh: m, year: md[0] });
+    });
+
+    // Großes Fenster links
+    w3WindowMat = new THREE.MeshBasicMaterial({ color: 0xeaf2fa });
+    var win = new THREE.Mesh(new THREE.BoxGeometry(.06, 1.7, 2.4), w3WindowMat);
+    win.position.set(-3.53, 1.8, .8); R.add(win);
+    box(R, .1, 1.9, .1, 0xd8d4c8, -3.52, 1.8, -0.45);
+    box(R, .1, 1.9, .1, 0xd8d4c8, -3.52, 1.8, 2.05);
+    box(R, .1, .1, 2.6, 0xd8d4c8, -3.52, 2.75, .8);
+    box(R, .1, .1, 2.6, 0xd8d4c8, -3.52, .85, .8);
+
+    // Sofa (grau), Couchtisch + Telefon, Teppich, große Pflanze
+    var sofaM = mat(0x6e7076);
+    box(R, 2.2, .4, .95, sofaM, 1.3, .32, 1.9);
+    box(R, 2.2, .55, .28, sofaM, 1.3, .78, 2.4);
+    box(R, .28, .28, .95, sofaM, .18, .66, 1.9);
+    box(R, .28, .28, .95, sofaM, 2.42, .66, 1.9);
+    box(R, 1.0, .06, .6, 0xd8d2c2, .6, .42, .6);
+    cyl(R, .1, .1, .4, 0xc4beb0, .6, .2, .6);
+    box(R, 3.0, .02, 2.0, 0xd2cabb, .8, .012, 1.1);
+    cyl(R, .2, .16, .35, 0x8a8a8a, -3.0, .17, 2.8);
+    cyl(R, .01, .38, 1.1, 0x4a7a45, -3.0, .95, 2.8);
+    var pm = new THREE.MeshBasicMaterial({ color: 0x4a6a9a });
+    obj(R, 1900, 2100, function(g){
+      box(g, .1, .015, .2, 0x0a0a0c, .55, .46, .55);
+      var s = new THREE.Mesh(new THREE.BoxGeometry(.09, .004, .19), pm);
+      s.position.set(.55, .47, .55); g.add(s);
+    });
+    tvW3Mat = pm;
+
+    // Wand-TV + Sideboard
+    box(R, 1.9, 1.05, .07, 0x14161c, -1.6, 1.75, -3.44);
+    var s = new THREE.Mesh(new THREE.BoxGeometry(1.75, .92, .02), new THREE.MeshBasicMaterial({ color: 0x1a2438 }));
+    s.position.set(-1.6, 1.75, -3.39); R.add(s);
+    box(R, 2.0, .38, .45, 0xd8d3c8, -1.6, .19, -3.2);
+
+    // Esstisch + Stühle
+    box(R, 1.5, .06, .9, 0xc9b795, -1.5, .74, .8);
+    box(R, .08, .74, .08, 0xa8966f, -2.1, .37, .5);
+    box(R, .08, .74, .08, 0xa8966f, -0.9, .37, 1.1);
+    box(R, .08, .74, .08, 0xa8966f, -2.1, .37, 1.1);
+    box(R, .08, .74, .08, 0xa8966f, -0.9, .37, .5);
+    box(R, .45, .5, .45, 0xb5a486, -1.9, .25, 1.55);
+    box(R, .45, .5, .45, 0xb5a486, -1.1, .25, .1);
+
+    // Spielzeugkiste (Kind klein) + Hochstuhl
+    obj(R, 1900, 2023, function(g){
+      box(g, .7, .35, .5, 0xd96a4a, 2.7, .17, .1);
+      box(g, .12, .12, .12, 0x4a90c2, 2.5, .41, .05);
+      box(g, .1, .1, .1, 0xd9b93a, 2.85, .4, .2);
+      cyl(g, .06, .06, .14, 0x4a9a5a, 2.68, .42, .25);
+    });
+    obj(R, 1900, 2019.5, function(g){
+      box(g, .4, .05, .35, 0xd8d2c2, -1.5, .85, 1.75);
+      box(g, .35, .35, .04, 0xd8d2c2, -1.5, 1.05, 1.9);
+      box(g, .05, .85, .05, 0xb5ae9c, -1.68, .42, 1.6);
+      box(g, .05, .85, .05, 0xb5ae9c, -1.32, .42, 1.6);
+      box(g, .05, .85, .05, 0xb5ae9c, -1.68, .42, 1.9);
+      box(g, .05, .85, .05, 0xb5ae9c, -1.32, .42, 1.9);
+    });
+
+    // Regal (räumt sich weg), E-Board, Schale (Stöpsel+Uhr), Schlüsselbrett, Tüte, Homeoffice, Speaker
+    obj(R, 1900, 2021.5, function(g){
+      box(g, .3, 1.5, 1.2, 0xd8d3c8, 3.05, .75, -1.6);
+      box(g, .26, .22, .18, 0xc2795a, 3.02, .95, -1.9);
+      box(g, .26, .2, .16, 0x6a8ab0, 3.02, .93, -1.55);
+      box(g, .26, .24, .2, 0x9aa86a, 3.02, .45, -1.7);
+    });
+    obj(R, 2015, 2018, function(g){
+      var b = box(g, .6, .04, .2, 0x2e3238, 2.95, .35, -3.25);
+      b.rotation.z = .9;
+      cyl(g, .07, .07, .05, 0x4ac6e0, 2.78, .12, -3.22).rotation.x = Math.PI/2;
+      cyl(g, .07, .07, .05, 0x4ac6e0, 3.14, .58, -3.22).rotation.x = Math.PI/2;
+    });
+    obj(R, 2016, 2100, function(g){
+      cyl(g, .12, .09, .06, 0xc9c2b2, -1.6, .42, -3.05);
+      box(g, .07, .04, .05, 0xf2efe6, -1.65, .47, -3.05);
+      cyl(g, .05, .05, .015, 0x2e3238, -1.52, .45, -3.03).rotation.x = Math.PI/2;
+    });
+    box(R, .3, .2, .04, 0xd8d4c8, 3.0, 1.05, -3.46);
+    cyl(R, .09, .07, .05, 0xc9c2b2, 3.0, .88, -3.4);
+    obj(R, 2018.6, 2019.6, function(g){
+      box(g, .3, .4, .25, 0xc9a86a, 2.25, .2, -3.25);
+      box(g, .26, .1, .2, 0xb5945a, 2.25, .45, -3.25);
+    });
+    obj(R, 2019.8, 2021.7, function(g){
+      box(g, .48, .025, .34, 0xb9bec8, -1.4, .78, .75, .3);
+      var lid = box(g, .48, .32, .02, 0xaab0bc, -1.56, .92, .64, .3);
+      lid.rotation.x = -.4;
+      cyl(g, .16, .16, .02, 0xf2e8d0, -1.0, 1.25, .55).rotation.x = Math.PI/2;
+      cyl(g, .02, .02, .55, 0x8a8a8a, -1.0, .95, .55);
+    });
+    speakerLedMat = new THREE.MeshBasicMaterial({ color: 0x2a6a8a });
+    obj(R, 2018, 2100, function(g){
+      cyl(g, .09, .09, .2, 0x35383e, -2.3, .48, -3.15);
+      var led = new THREE.Mesh(new THREE.CylinderGeometry(.092, .092, .012, 12), speakerLedMat);
+      led.position.set(-2.3, .585, -3.15); g.add(led);
+    });
+  }
+
+  /* ===== Licht-Keyframes ===== */
   var LIGHTS = [
-    { y: 1986, bg: 0xd8c9ab, amb: [0xffe8c8, .55], sun: [0xffd9a0, .9],  lamp: [0xffb45e, 1.0],  win: 0xfff2d0 },
-    { y: 1992, bg: 0xc4b49a, amb: [0xf5ddc0, .5],  sun: [0xf0c890, .7],  lamp: [0xffb45e, .9],   win: 0xffedc4 },
-    { y: 1997, bg: 0x222d28, amb: [0x51695f, .45], sun: [0x3a4d55, .22], lamp: [0x9fe6c0, .85],  win: 0x1d2b3a },
-    { y: 2001, bg: 0xdfe7ef, amb: [0xffffff, .62], sun: [0xffffff, .95], lamp: [0xfff2dc, .3],   win: 0xf2f8ff },
-    { y: 2008, bg: 0xccd5e0, amb: [0xf2f5fa, .55], sun: [0xf5f8ff, .8],  lamp: [0xffffff, .3],   win: 0xe8f0fa },
-    { y: 2014, bg: 0x2b2e36, amb: [0x9aa7bb, .42], sun: [0x8296b4, .3],  lamp: [0xcfd8ff, .55],  win: 0x2c3a52 },
-    { y: 2020, bg: 0x191b21, amb: [0x8d97ab, .38], sun: [0x6e7d99, .25], lamp: [0xbcc9ff, .55],  win: 0x1c2334 },
-    { y: 2026, bg: 0x0e0f14, amb: [0x8590a6, .35], sun: [0x5c6b86, .2],  lamp: [0x9fb4ff, .6],   win: 0x141a2b }
+    { y:1986,   bg:0xdcc9a8, amb:[0xffe8c8,.55], sun:[0xffd9a0,.9],  lamp:[0xffb45e,1.0] },
+    { y:1992,   bg:0xc9b697, amb:[0xf5ddc0,.5],  sun:[0xf0c890,.72], lamp:[0xffb45e,.9] },
+    { y:1997.5, bg:0x232e29, amb:[0x51695f,.45], sun:[0x3a4d55,.22], lamp:[0x9fe6c0,.85] },
+    { y:2001,   bg:0xd8d8ca, amb:[0xf5f2e5,.58], sun:[0xfff5dc,.85], lamp:[0xffe9c0,.4] },
+    { y:2004.5, bg:0xdfe7ef, amb:[0xffffff,.62], sun:[0xffffff,.95], lamp:[0xffffff,.3] },
+    { y:2006.6, bg:0xd9b98a, amb:[0xffe2b8,.55], sun:[0xffc878,.8],  lamp:[0xffd9a0,.5] },
+    { y:2009,   bg:0xc3ccd6, amb:[0xe8eef5,.55], sun:[0xdfe8f2,.8],  lamp:[0xffffff,.3] },
+    { y:2012,   bg:0x1c2230, amb:[0x6a7a9a,.4],  sun:[0x4a5c7a,.25], lamp:[0x9fb8e0,.6] },
+    { y:2014.6, bg:0xe8ecef, amb:[0xffffff,.65], sun:[0xf8fbff,.95], lamp:[0xffffff,.25] },
+    { y:2018,   bg:0xccd2da, amb:[0xe8ecf2,.55], sun:[0xd8e2ee,.7],  lamp:[0xf2f5fa,.35] },
+    { y:2020.5, bg:0x3a3d44, amb:[0x9aa2ae,.42], sun:[0x7a8494,.3],  lamp:[0xd8e0f0,.55] },
+    { y:2023,   bg:0x23252c, amb:[0x8a92a2,.38], sun:[0x64708a,.25], lamp:[0xbcc9ff,.55] },
+    { y:2026,   bg:0x111218, amb:[0x8590a6,.35], sun:[0x5c6b86,.2],  lamp:[0x9fb4ff,.6] }
   ];
   var _c1 = new THREE.Color(), _c2 = new THREE.Color();
   function lerpColor(target, hexA, hexB, t){
@@ -699,143 +1019,209 @@ body.no3d .card{background:rgba(28,26,24,.92)}
     lerpColor(ambLight.color, a.amb[0], b.amb[0], t);   ambLight.intensity = lerp(a.amb[1], b.amb[1], t);
     lerpColor(sunLight.color, a.sun[0], b.sun[0], t);   sunLight.intensity = lerp(a.sun[1], b.sun[1], t);
     lerpColor(lampLight.color, a.lamp[0], b.lamp[0], t); lampLight.intensity = lerp(a.lamp[1], b.lamp[1], t);
-    lerpColor(windowMat.color, a.win, b.win, t);
+    hallLight.color.copy(lampLight.color);
+    hallLight.intensity = lampLight.intensity * .8;
   }
 
   /* ===== Welt auf ein Jahr stellen ===== */
+  var SWAP1 = 2005.9, SWAP2 = 2013.9;
   function updateWorld(year){
     applyLights(year);
+    roomW1.visible = year < SWAP1;
+    roomW2.visible = year >= SWAP1 && year < SWAP2;
+    roomW3.visible = year >= SWAP2;
     objects.forEach(function(o){
-      var s = smooth((year - o.from) / 1.4) * (1 - smooth((year - o.to) / 1.4));
+      var s = smooth((year - o.from) / .5) * (1 - smooth((year - o.to) / .5));
       o.group.visible = s > .003;
       if(o.group.visible){
         var sc = .0001 + s;
         o.group.scale.set(sc, sc, sc);
       }
     });
-    marks.forEach(function(m){
-      var s = smooth((year - m.year) / .8);
+    marksW1.forEach(function(m){
+      var s = smooth((year - m.year) / .7);
       m.mesh.visible = s > .01;
       if(m.mesh.visible) m.mesh.scale.set(s, 1, 1);
     });
-    // Sofa altert mit: warmes Rostrot → Grau
-    var st = clamp01((year - 1990) / 30);
-    lerpColor(sofaMat.color, 0x9a5f3c, 0x6e7076, st);
-    // Bildschirme leuchten in dunklen Phasen
-    var night = (year > 1994 && year < 2000) || year > 2012;
-    crtScreenMat.color.setHex(year > 1994 && year < 2000 ? 0x9fe6c0 : (year >= 1988.5 && year <= 1990 ? 0xcfe0f0 : 0x394a42));
-    flatScreenMat.color.setHex(year > 2012 ? 0x2a3d66 : 0x10131c);
-    phoneTopMat.color.setHex(year > 2010 ? 0x4a6a9a : 0x0c0e14);
-    speakerLedMat.color.setHex(year > 2024 ? 0x4ac6e0 : 0x2a6a8a);
+    marksW3.forEach(function(m){
+      var s = smooth((year - m.year) / .7);
+      m.mesh.visible = s > .01;
+      if(m.mesh.visible) m.mesh.scale.set(s, 1, 1);
+    });
+    // Bildschirm-Stimmungen
+    if(crtScreenMat) crtScreenMat.color.setHex((year >= 1988.5 && year <= 1990) ? 0xcfe0f0 : (year > 1996 && year < 2006 ? 0x9fe6c0 : 0x394a42));
+    if(flatScreenMat) flatScreenMat.color.setHex(year > 2005.9 && year < 2013.9 ? 0x8fb8d8 : 0x22303c);
+    if(phoneTopMat) phoneTopMat.color.setHex(year > 2010 ? 0x4a6a9a : 0x0c0e14);
+    if(tvW3Mat) tvW3Mat.color.setHex(year > 2024 ? 0x6a8ac2 : 0x4a6a9a);
+    if(speakerLedMat) speakerLedMat.color.setHex(year > 2024 ? 0x4ac6e0 : 0x2a6a8a);
+    if(jugendHandyMat) jugendHandyMat.color.setHex(0x8fd8a0);
+    // Umzugs-Dunkel (auch im Rückflug korrekt, weil rein jahresgetrieben)
+    var dark = Math.max(
+      smooth(1 - Math.abs(year - SWAP1) / .42),
+      smooth(1 - Math.abs(year - SWAP2) / .42)
+    );
+    veil.style.opacity = (dark * .94).toFixed(3);
   }
 
-  /* ===== Ticker + Scroll ===== */
+  /* ===== Ticker / Alter ===== */
   var ticker = document.getElementById('ticker');
-  var kippSec = document.getElementById('kipp');
-  var currentYear = 1986, displayYear = 1986, kippTriggered = false, rewind = null;
-  function onScroll(){
-    var pos = window.scrollY + window.innerHeight*0.55;
-    currentYear = yearAt(pos);
-    var yInt = Math.round(currentYear);
-    if(yInt !== displayYear){ displayYear = yInt; ticker.textContent = yInt; }
-
-    var heroGone = window.scrollY > window.innerHeight*0.6;
-    var kippTop = kippSec.getBoundingClientRect().top + window.scrollY;
-    var beforeKipp = (window.scrollY + window.innerHeight*0.5) < kippTop;
-    ticker.classList.toggle('show', heroGone && beforeKipp);
-
-    if(!kippTriggered && (window.scrollY + window.innerHeight*0.6) >= kippTop){
-      kippTriggered = true;
-      runRewind();
+  var alterEl = document.getElementById('alter');
+  var displayYear = -1;
+  function setYearDisplays(year, inKipp){
+    var yInt = Math.round(year);
+    if(yInt !== displayYear){
+      displayYear = yInt;
+      ticker.textContent = yInt;
+      var age = Math.max(0, yInt - 1986);
+      alterEl.textContent = yInt <= 1986 ? 'geboren' : age + ' Jahre alt';
     }
-    lookGoalName = focusAt(pos);
+    var heroGone = window.scrollY > window.innerHeight * .6;
+    var show = heroGone && !inKipp;
+    ticker.classList.toggle('show', show);
+    alterEl.classList.toggle('show', show);
   }
-  var lookGoalName = 'room';
-  var ticking = false;
-  window.addEventListener('scroll', function(){
-    if(!ticking){
-      ticking = true;
-      requestAnimationFrame(function(){ onScroll(); ticking = false; });
-    }
-  }, {passive:true});
 
-  /* ===== Kipp: Rücklauf mit fliegenden Begriffen ===== */
-  var kippYear = document.getElementById('kippYear');
-  var kippWord = document.getElementById('kippWord');
+  /* ===== Kipp-Scrub ===== */
+  var kippTop = 0, kippH = 0;
+  var kippYearEl = document.getElementById('kippYear');
+  var kippWordEl = document.getElementById('kippWord');
+  var kippHint = document.getElementById('kippHint');
   var kippNote = document.getElementById('kippNote');
-  var replayBtn = document.getElementById('replayBtn');
   var flash = document.getElementById('flash');
+  var frozen = false;
   var rewindWords = [
     'KI','Homeoffice','QR-Code','Lieferung','kontaktlos','Stöpsel','E-Board',
-    'Streaming','Smartphone','StudiVZ','Digitalkamera','Map24','Euro','Flatrate',
-    'ICQ','CD-Rohling','Tamagotchi','Modem','Handy-Klotz','Mauerfall','Kassette','Wählscheibe'
+    'Streaming','Smartphone','StudiVZ','Sommermärchen','Map24','Euro','SMS',
+    'ICQ','CD-Rohling','Tamagotchi','Modem','Handy-Klotz','Kassette','Mauerfall','Telefonschnur'
   ];
-  var sprites = [];
-  function makeWordSprite(text){
-    var cv = document.createElement('canvas');
-    var ctx = cv.getContext('2d');
-    cv.width = 512; cv.height = 128;
-    ctx.font = '600 72px "Bebas Neue", Impact, sans-serif';
-    ctx.fillStyle = '#f5efe3';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 12;
-    ctx.fillText(text.toUpperCase(), 256, 64);
-    var tex = new THREE.CanvasTexture(cv);
-    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
-    sp.scale.set(2.2, .55, 1);
-    return sp;
-  }
-  function spawnWord(text){
-    var sp = makeWordSprite(text);
-    var dir = new THREE.Vector3();
-    camera.getWorldDirection(dir);
-    var side = new THREE.Vector3().crossVectors(dir, camera.up).normalize();
-    sp.position.copy(camera.position)
-      .addScaledVector(dir, 7 + Math.random()*3)
-      .addScaledVector(side, (Math.random()-.5)*4)
-      .addScaledVector(camera.up, (Math.random()-.5)*2.4);
-    sp.userData.vel = dir.clone().multiplyScalar(-(5.5 + Math.random()*3));
-    scene.add(sp);
-    sprites.push(sp);
-  }
-  function clearSprites(){
-    sprites.forEach(function(s){
-      scene.remove(s);
-      s.material.map.dispose(); s.material.dispose();
-    });
+  var sprites = null;
+  function buildSprites(){
     sprites = [];
+    rewindWords.forEach(function(word, i){
+      var cv = document.createElement('canvas');
+      var ctx = cv.getContext('2d');
+      cv.width = 512; cv.height = 128;
+      ctx.font = '600 70px "Bebas Neue", Impact, sans-serif';
+      ctx.fillStyle = '#f5efe3';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 12;
+      ctx.fillText(word.toUpperCase(), 256, 64);
+      var tex = new THREE.CanvasTexture(cv);
+      var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, opacity: 0 }));
+      sp.scale.set(2.0, .5, 1);
+      sp.visible = false;
+      sp.userData.slot = .06 + i * (.82 / rewindWords.length);
+      sp.userData.ox = (frand(i) - .5) * 3.2;
+      sp.userData.oy = (frand(i + 40) - .5) * 1.8;
+      scene.add(sp);
+      sprites.push(sp);
+    });
   }
-  function runRewind(){
-    if(rewind) return;
-    kippNote.classList.remove('on');
-    replayBtn.classList.remove('on');
-    if(reduced){
-      kippYear.textContent = '1986';
-      kippWord.textContent = 'Wählscheibe';
-      if(renderer) updateWorld(1986);
-      finishRewind(600);
-      return;
-    }
-    rewind = { t0: performance.now(), dur: 3400, lastSpawn: 0, wi: 0 };
+  var _fwd = new THREE.Vector3(), _side = new THREE.Vector3(), _tmp = new THREE.Vector3();
+  function updateSprites(p){
+    if(!sprites) buildSprites();
+    camera.getWorldDirection(_fwd);
+    _side.crossVectors(_fwd, camera.up).normalize();
+    var word = '';
+    sprites.forEach(function(sp){
+      var t = (p - sp.userData.slot) / .14;
+      if(t > 0 && t < 1){
+        sp.visible = true;
+        var dist = 8.5 - t * 8.0;
+        sp.position.copy(camera.position)
+          .addScaledVector(_fwd, dist)
+          .addScaledVector(_side, sp.userData.ox * (0.4 + t))
+          .addScaledVector(camera.up, sp.userData.oy * (0.4 + t));
+        sp.material.opacity = Math.sin(Math.PI * t) * .95;
+        if(t > .25 && t < .8) word = sp.material.map.image ? '' : word;
+      } else {
+        sp.visible = false;
+      }
+    });
   }
-  function finishRewind(delay){
-    setTimeout(function(){
+  function hideSprites(){
+    if(sprites) sprites.forEach(function(sp){ sp.visible = false; });
+  }
+  function kippWordAt(p){
+    var best = '', bd = 1;
+    rewindWords.forEach(function(w, i){
+      var c = .06 + i * (.82 / rewindWords.length) + .07;
+      var d = Math.abs(p - c);
+      if(d < .05 && d < bd){ bd = d; best = w; }
+    });
+    return best;
+  }
+
+  /* ===== Haupt-Update (scrollgetrieben) ===== */
+  var camPos = { cam:[4.3,1.6,4.7], look:[0.6,1.0,-1.4] };
+  var curCam = new THREE.Vector3(4.3,1.6,4.7);
+  var curLook = new THREE.Vector3(0.6,1.0,-1.4);
+  var spotGoal = 0, worldYear = 1986;
+
+  function computeState(){
+    var pos = window.scrollY + window.innerHeight * .5;
+    var kippProgress = kippH > window.innerHeight ? (window.scrollY - kippTop) / (kippH - window.innerHeight) : -1;
+    var inKipp = kippProgress >= 0 && kippProgress <= 1;
+
+    // Einfrieren robust triggern — auch wenn ein schneller Scroll über das
+    // Ende des Scrub-Bereichs hinwegspringt
+    if(kippProgress >= .97 && !frozen){
+      frozen = true;
       if(!reduced){
         flash.classList.add('on');
         setTimeout(function(){ flash.classList.remove('on'); }, 80);
       }
-      kippYear.textContent = '2026';
-      kippWord.innerHTML = '&nbsp;';
-      if(renderer) updateWorld(2026);
-      clearSprites();
       kippNote.classList.add('on');
-      replayBtn.classList.add('on');
-      rewind = null;
-    }, delay);
-  }
-  replayBtn.addEventListener('click', runRewind);
+      kippHint.style.opacity = '0';
+    }
+    if(kippProgress < .9 && frozen){
+      frozen = false;
+      kippNote.classList.remove('on');
+      kippHint.style.opacity = '';
+    }
 
-  /* ===== Renderer-Setup + Animationsschleife ===== */
+    if(inKipp){
+      var p = clamp01(kippProgress);
+      worldYear = kippYearAt(p);
+      pathAt(KIPP_PATH, p, camPos);
+      spotGoal = 0;
+      kippYearEl.textContent = Math.round(worldYear);
+      kippWordEl.textContent = kippWordAt(p) || ' ';
+      if(renderer) updateSprites(p);
+      setYearDisplays(worldYear, true);
+      return;
+    }
+
+    hideSprites();
+    var seg = segmentAt(pos);
+    if(!seg) return;
+    var t = smooth(seg.t);
+    worldYear = lerp(seg.a.year, seg.b.year, t);
+    var A = CAMS[seg.a.id] || CAMS.hero;
+    var B = CAMS[seg.b.id] || A;
+    for(var j = 0; j < 3; j++){
+      camPos.cam[j] = lerp(A.cam[j], B.cam[j], t);
+      camPos.look[j] = lerp(A.look[j], B.look[j], t);
+    }
+    // Spotlight nur, wenn ein Marker im Zentrum ist
+    var focusStrength = 0;
+    if(A.spot && seg.t < .5) focusStrength = 1 - seg.t * 2;
+    if(B.spot && seg.t >= .5) focusStrength = (seg.t - .5) * 2;
+    spotGoal = smooth(focusStrength) * 1.5;
+    setYearDisplays(worldYear, false);
+    // nach dem Kipp: eingefroren in 2026
+    if(window.scrollY > kippTop + kippH - window.innerHeight) worldYear = 2026;
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      ticking = true;
+      requestAnimationFrame(function(){ computeState(); ticking = false; });
+    }
+  }, {passive:true});
+
+  /* ===== Renderer + Loop ===== */
   function initRenderer(){
     try{
       if(!window.THREE) throw new Error('three fehlt');
@@ -844,7 +1230,29 @@ body.no3d .card{background:rgba(28,26,24,.92)}
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       stage.appendChild(renderer.domElement);
-      buildScene();
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xdcc9a8);
+      scene.fog = new THREE.Fog(0xdcc9a8, 11, 26);
+      camera = new THREE.PerspectiveCamera(46, 1, 0.1, 60);
+      camera.position.copy(curCam);
+
+      ambLight = new THREE.AmbientLight(0xffe8c8, .55); scene.add(ambLight);
+      sunLight = new THREE.DirectionalLight(0xffd9a0, .9);
+      sunLight.position.set(-6, 6, 3);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.set(1024, 1024);
+      var sc = sunLight.shadow.camera;
+      sc.left = -7; sc.right = 7; sc.top = 7; sc.bottom = -7;
+      scene.add(sunLight);
+      lampLight = new THREE.PointLight(0xffb45e, 1.0, 10);
+      lampLight.position.set(2.3, 1.6, 2.2); scene.add(lampLight);
+      hallLight = new THREE.PointLight(0xffcf8e, .8, 5);
+      hallLight.position.set(1.85, 2.1, -4.1); scene.add(hallLight);
+      spot = new THREE.SpotLight(0xfff1d0, 0, 9, .5, .65, 1.2);
+      scene.add(spot); scene.add(spot.target);
+
+      buildW1(); buildW2(); buildW3();
       resize();
       updateWorld(1986);
     }catch(e){
@@ -854,75 +1262,37 @@ body.no3d .card{background:rgba(28,26,24,.92)}
   }
   function resize(){
     if(!renderer) return;
-    var w = window.innerWidth, h = window.innerHeight;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
   }
 
-  var _look = new THREE.Vector3();
   function animate(now){
     requestAnimationFrame(animate);
     if(!renderer || document.hidden) return;
 
-    var worldYear = currentYear;
-
-    if(rewind && !reduced){
-      var t = clamp01((now - rewind.t0) / rewind.dur);
-      var eased = 1 - Math.pow(1 - t, 2.2);
-      worldYear = 2026 - eased * 40;
-      var yInt = Math.round(worldYear);
-      kippYear.textContent = yInt;
-      var wi = Math.min(rewindWords.length - 1, Math.floor(eased * rewindWords.length));
-      kippWord.textContent = rewindWords[wi];
-      if(now - rewind.lastSpawn > 150 && t < .96){
-        rewind.lastSpawn = now;
-        spawnWord(rewindWords[Math.min(rewindWords.length - 1, rewind.wi++ % rewindWords.length)]);
-      }
-      if(t >= 1){
-        kippYear.textContent = '1986';
-        kippWord.textContent = 'Wählscheibe';
-        var r = rewind; rewind = { done: true, t0: r.t0, dur: r.dur, lastSpawn: r.lastSpawn, wi: r.wi };
-        if(!rewind.finishing){ rewind.finishing = true; finishRewind(1100); }
-        worldYear = 1986;
-      }
-    } else if(rewind && rewind.done){
-      worldYear = 1986;
-    }
-
-    // fliegende Begriffe bewegen
-    for(var i = sprites.length - 1; i >= 0; i--){
-      var sp = sprites[i];
-      sp.position.addScaledVector(sp.userData.vel, 1/60);
-      var toCam = sp.position.distanceTo(camera.position);
-      sp.material.opacity = clamp01(toCam / 2 - .2);
-      if(toCam < .4){
-        scene.remove(sp);
-        sp.material.map.dispose(); sp.material.dispose();
-        sprites.splice(i, 1);
-      }
-    }
-
     updateWorld(worldYear);
 
-    // Kamera: leichte Fahrt übers Leben + Fokus-Blick
-    var t01 = clamp01((worldYear - 1986) / 40);
-    var sway = reduced ? 0 : Math.sin(now * .00035) * .06;
-    camera.position.set(
-      lerp(4.4, 3.55, t01) + sway,
-      lerp(2.15, 1.8, t01),
-      lerp(4.9, 4.05, t01) + sway * .6
-    );
-    var goal = focusTargets[rewind ? 'room' : lookGoalName] || focusTargets.room;
-    _look.set(goal[0], goal[1], goal[2]);
-    lookCur.lerp(_look, .045);
-    camera.lookAt(lookCur);
+    var sway = reduced ? 0 : Math.sin(now * .00032) * .05;
+    curCam.x += (camPos.cam[0] + sway - curCam.x) * .08;
+    curCam.y += (camPos.cam[1] - curCam.y) * .08;
+    curCam.z += (camPos.cam[2] + sway * .5 - curCam.z) * .08;
+    curLook.x += (camPos.look[0] - curLook.x) * .07;
+    curLook.y += (camPos.look[1] - curLook.y) * .07;
+    curLook.z += (camPos.look[2] - curLook.z) * .07;
+    camera.position.copy(curCam);
+    camera.lookAt(curLook);
+
+    // Spotlight folgt dem Blickziel
+    spot.intensity += (spotGoal - spot.intensity) * .08;
+    spot.position.set(curCam.x, curCam.y + 1.6, curCam.z);
+    spot.target.position.copy(curLook);
 
     renderer.render(scene, camera);
   }
 
   /* ===== Setup ===== */
-  function refresh(){ collectAnchors(); onScroll(); }
+  function refresh(){ collectStations(); computeState(); }
   window.addEventListener('resize', function(){ resize(); refresh(); });
   window.addEventListener('load', refresh);
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(refresh); }
