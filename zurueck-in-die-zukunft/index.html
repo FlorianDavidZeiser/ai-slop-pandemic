@@ -51,9 +51,9 @@ body.on-dark .ticker{color:var(--flatink)}
 .rail{
   position:fixed;right:16px;top:50%;transform:translateY(-50%);
   height:min(74vh,620px);width:14px;z-index:60;
-  opacity:0;transition:opacity .6s ease;
+  opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s;
 }
-.rail.show{opacity:1}
+.rail.show{opacity:1;visibility:visible}
 .rail-line{position:absolute;left:50%;top:0;bottom:0;width:1.5px;transform:translateX(-50%);background:currentColor;opacity:.25}
 .rail-fill{position:absolute;left:50%;top:0;width:1.5px;transform:translateX(-50%);background:var(--accent);height:0%}
 .rail-dot{
@@ -80,7 +80,7 @@ section{position:relative}
 .chip{
   display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
   letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border:1px solid currentColor;
-  border-radius:999px;opacity:.55;margin-bottom:16px;
+  border-radius:999px;opacity:.75;margin-bottom:16px;
 }
 .year-stamp{
   display:inline-block;font-family:'Bebas Neue',Impact,sans-serif;
@@ -127,7 +127,7 @@ section{position:relative}
 .era4 .marker{min-height:52vh}
 .era4 .marker p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(19px,2.5vw,24px);line-height:1.5}
 .era4 .marker-inner{border-left:2px solid rgba(231,229,224,.16);padding-left:22px}
-.era4 .chip{opacity:.5}
+.era4 .chip{opacity:.7}
 
 /* Vignette für die warme Frühzeit */
 .era1::after,.hero::after{
@@ -177,9 +177,9 @@ section{position:relative}
 .replay{
   margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;
   text-transform:uppercase;border:1px solid rgba(245,239,227,.35);border-radius:999px;
-  padding:8px 18px;opacity:0;transition:opacity .6s ease;color:#f5efe3;
+  padding:8px 18px;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s;color:#f5efe3;
 }
-.replay.on{opacity:.7}
+.replay.on{opacity:.7;visibility:visible}
 .replay:hover{opacity:1}
 
 /* ===== Kernsätze & Finale ===== */
@@ -611,6 +611,13 @@ section{position:relative}
     var heroGone = window.scrollY > window.innerHeight*0.6;
     var kippTop = kippSec.getBoundingClientRect().top + window.scrollY;
     var beforeKipp = (window.scrollY + window.innerHeight*0.5) < kippTop;
+
+    // Kipp pixelbasiert auslösen — ein fester IO-Threshold ist auf flachen
+    // Viewports unerreichbar, wenn die Sektion höher als der Viewport wird
+    if(!kippTriggered && (window.scrollY + window.innerHeight*0.6) >= kippTop){
+      kippTriggered = true;
+      runRewind();
+    }
     ticker.classList.toggle('show', heroGone && beforeKipp);
     rail.classList.toggle('show', heroGone && beforeKipp);
 
@@ -686,18 +693,15 @@ section{position:relative}
       rewindRunning = false;
     }, reduced ? 0 : 1100);
   }
-  var kippIO = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ runRewind(); kippIO.unobserve(kippSec); }
-    });
-  },{threshold:0.55});
-  kippIO.observe(kippSec);
+  var kippTriggered = false;
   replayBtn.addEventListener('click', runRewind);
 
   /* ===== Setup ===== */
   function refresh(){ collectAnchors(); onScroll(); }
   window.addEventListener('resize', refresh);
   window.addEventListener('load', refresh);
+  // Webfonts können nach dem load-Event eintreffen und Umbrüche verschieben
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(refresh); }
   buildRail();
   refresh();
 })();
