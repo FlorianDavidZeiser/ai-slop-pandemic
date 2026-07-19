@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zurück in die Zukunft — 1986 → 2026</title>
+<meta name="description" content="Vierzig Jahre Alltag, 26 Momente, eine Türzarge. Ein Scroll von 1986 nach 2026.">
+<meta property="og:title" content="Zurück in die Zukunft — 1986 → 2026">
+<meta property="og:description" content="Die Zukunft kam nicht durch Explosion. Sie kam durch Gewöhnung. Ein scrollbares Leben in 26 Momenten.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1917;
+  --paper:#f5efe3;
+  --paper2:#efe6d3;
+  --warm:#b0713a;
+  --pencil:#57504a;
+  --crt:#0e1410;
+  --crtink:#c8e6c9;
+  --glossy:#f2f5f9;
+  --glossyink:#1d2733;
+  --blue:#2f6fbf;
+  --flat:#101114;
+  --flatink:#e7e5e0;
+  --accent:#e0a52e;
+  --dim:#8a8377;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:'Crimson Text',Georgia,serif;font-size:18px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,svg{display:block}
+button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+
+/* ===== Jahres-Ticker (fix, läuft beim Scrollen mit) ===== */
+.ticker{
+  position:fixed;top:14px;left:18px;z-index:60;
+  font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(30px,4.5vw,46px);
+  letter-spacing:.06em;line-height:1;color:var(--ink);
+  opacity:0;transition:opacity .6s ease,color .6s ease;
+  pointer-events:none;
+}
+.ticker.show{opacity:1}
+body.on-dark .ticker{color:var(--flatink)}
+
+/* ===== Zeitstrahl-Leiste (Punkte drängen sich nach unten zusammen) ===== */
+.rail{
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);
+  height:min(74vh,620px);width:14px;z-index:60;
+  opacity:0;transition:opacity .6s ease;
+}
+.rail.show{opacity:1}
+.rail-line{position:absolute;left:50%;top:0;bottom:0;width:1.5px;transform:translateX(-50%);background:currentColor;opacity:.25}
+.rail-fill{position:absolute;left:50%;top:0;width:1.5px;transform:translateX(-50%);background:var(--accent);height:0%}
+.rail-dot{
+  position:absolute;left:50%;width:7px;height:7px;border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:currentColor;opacity:.3;cursor:pointer;
+  transition:opacity .3s ease,background .3s ease,transform .2s ease;
+}
+.rail-dot:hover{transform:translate(-50%,-50%) scale(1.7)}
+.rail-dot.passed{background:var(--accent);opacity:1}
+.rail{color:var(--ink)}
+body.on-dark .rail{color:var(--flatink)}
+@media (max-width:720px){.rail{display:none}}
+
+/* ===== Grundlayout ===== */
+.wrap{max-width:660px;margin:0 auto;padding:0 22px}
+section{position:relative}
+
+/* Marker-Szenen */
+.marker{
+  min-height:92vh;display:flex;align-items:center;
+}
+.marker-inner{width:100%}
+.chip{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+  letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border:1px solid currentColor;
+  border-radius:999px;opacity:.55;margin-bottom:16px;
+}
+.year-stamp{
+  display:inline-block;font-family:'Bebas Neue',Impact,sans-serif;
+  font-size:15px;letter-spacing:.18em;margin-left:10px;opacity:.6;vertical-align:2px;
+}
+.marker p{font-size:clamp(21px,2.8vw,27px);line-height:1.55}
+
+/* Reveal-Animation */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.reveal.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+}
+
+/* ===== Hero ===== */
+.hero{min-height:100vh;display:flex;align-items:center;background:var(--paper)}
+.hero .kicker{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.22em;text-transform:uppercase;opacity:.6;margin-bottom:22px}
+.hero h1{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(52px,9vw,110px);line-height:.95;letter-spacing:.015em;margin-bottom:26px}
+.hero .sub{font-size:clamp(19px,2.4vw,24px);font-style:italic;max-width:34em;opacity:.85}
+.scrollcue{margin-top:56px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.45;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
+@media (prefers-reduced-motion:reduce){.scrollcue{animation:none}}
+
+/* ===== Ären-Farbwelten ===== */
+.era{padding:8vh 0}
+.era-head{min-height:52vh;display:flex;align-items:center}
+.era-head .span{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(38px,6vw,64px);line-height:1;letter-spacing:.03em}
+.era-head .name{font-style:italic;font-size:clamp(19px,2.4vw,24px);opacity:.75;margin-top:10px}
+
+.era1{background:var(--paper);color:var(--ink)}
+.era1 .marker{min-height:105vh}
+
+.era2{background:var(--crt);color:var(--crtink)}
+.era2 .marker{min-height:88vh}
+.era2 .marker p{font-family:'IBM Plex Mono',monospace;font-size:clamp(17.5px,2.3vw,22px);line-height:1.7}
+.era2 .chip{opacity:.7}
+
+.era3{background:var(--glossy);color:var(--glossyink)}
+.era3 .marker{min-height:74vh}
+.era3 .marker p{font-family:'Inter',system-ui,sans-serif;font-weight:400;font-size:clamp(19px,2.5vw,24px);line-height:1.6}
+.era3 .chip{color:var(--blue);border-color:var(--blue)}
+
+.era4{background:var(--flat);color:var(--flatink)}
+.era4 .marker{min-height:52vh}
+.era4 .marker p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(19px,2.5vw,24px);line-height:1.5}
+.era4 .marker-inner{border-left:2px solid rgba(231,229,224,.16);padding-left:22px}
+.era4 .chip{opacity:.5}
+
+/* Vignette für die warme Frühzeit */
+.era1::after,.hero::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 58%,rgba(96,72,40,.14) 100%);
+}
+
+/* ===== Türzargen-Zwischenspiele ===== */
+.zarge{
+  min-height:70vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;
+}
+.zarge .z-inner{display:flex;flex-direction:column;align-items:center;gap:26px;padding:0 22px}
+.zarge svg{height:190px;width:auto}
+.zarge .z-text{font-style:italic;font-size:clamp(18px,2.3vw,22px);opacity:.8;max-width:26em}
+.zarge .stroke{stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.zarge .frame{stroke:currentColor;stroke-width:3;opacity:.4}
+.zarge .mark-new{stroke:var(--accent);stroke-width:3}
+.zarge .mlabel{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:currentColor;opacity:.55}
+.z1{background:var(--paper2);color:var(--ink)}
+.z2{background:#101613;color:var(--crtink)}
+.z3{background:#e6ebf2;color:var(--glossyink)}
+
+/* ===== Kipp ===== */
+.kipp{
+  background:#000;color:#f5efe3;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  overflow:hidden;
+}
+.kipp-stage{position:relative;width:100%;max-width:760px;padding:60px 22px;min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+.kipp-year{
+  font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(90px,20vw,220px);
+  line-height:1;letter-spacing:.04em;
+}
+.kipp-word{
+  font-family:'IBM Plex Mono',monospace;font-size:clamp(14px,2vw,19px);
+  letter-spacing:.12em;text-transform:uppercase;min-height:1.6em;opacity:.7;
+}
+.kipp-phone{opacity:0;transition:opacity .8s ease;height:150px}
+.kipp-phone.on{opacity:1}
+.kipp-phone .ln{stroke:#f5efe3;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.kipp-note{font-style:italic;font-size:clamp(17px,2.2vw,21px);opacity:0;transition:opacity .8s ease}
+.kipp-note.on{opacity:.75}
+.kipp.flash{animation:freeze .5s ease 1}
+@keyframes freeze{0%{background:#000}35%{background:#f5efe3}100%{background:#000}}
+@media (prefers-reduced-motion:reduce){.kipp.flash{animation:none}}
+.replay{
+  margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;
+  text-transform:uppercase;border:1px solid rgba(245,239,227,.35);border-radius:999px;
+  padding:8px 18px;opacity:0;transition:opacity .6s ease;color:#f5efe3;
+}
+.replay.on{opacity:.7}
+.replay:hover{opacity:1}
+
+/* ===== Kernsätze & Finale ===== */
+.kern{background:#000;color:#f5efe3;padding:4vh 0}
+.kern .marker{min-height:80vh}
+.kern p{font-size:clamp(23px,3.2vw,31px);font-style:italic;line-height:1.5}
+.finale{background:#000;color:#f5efe3;padding:10vh 0 16vh;text-align:center}
+.finale .devices{
+  font-family:'IBM Plex Mono',monospace;font-size:clamp(14px,2vw,18px);
+  letter-spacing:.08em;line-height:2.1;opacity:.7;max-width:36em;margin:0 auto 8vh;
+}
+.finale .devices .gone{text-decoration:line-through;text-decoration-thickness:1px;opacity:.55}
+.finale .last{
+  font-size:clamp(24px,3.6vw,34px);font-style:italic;line-height:1.5;max-width:22em;margin:0 auto;
+}
+.finale .coda{
+  margin-top:9vh;font-family:'IBM Plex Mono',monospace;font-size:12px;
+  letter-spacing:.2em;text-transform:uppercase;opacity:.4;
+}
+</style>
+</head>
+<body>
+
+<div class="ticker" id="ticker" aria-hidden="true">1986</div>
+<nav class="rail" id="rail" aria-label="Zeitstrahl">
+  <div class="rail-line"></div>
+  <div class="rail-fill" id="railFill"></div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker reveal">1986 → 2026 · Ein Leben in 26 Momenten</div>
+    <h1 class="reveal">Zurück in die Zukunft</h1>
+    <p class="sub reveal">Du bist sechs Jahre alt. An der Türzarge im Flur ist ein Bleistiftstrich, dein Name daneben. Alles, was jetzt kommt, ist einfach nur: dein Leben.</p>
+    <div class="scrollcue reveal">▼ Scroll</div>
+  </div>
+</section>
+
+<!-- ===== Ära 1 · 1986–1990 ===== -->
+<section class="era era1">
+  <div class="era-head">
+    <div class="wrap">
+      <div class="span reveal">1986–1990</div>
+      <div class="name reveal">Die analoge Kindheit</div>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1986">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kommunikation</span>
+      <p class="reveal">Das Telefon hängt im Flur an der Wand, mit Schnur. Du drehst die Scheibe, wartest, bis sie zurücksurrt — und die halbe Familie hört mit.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1987">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Medien</span>
+      <p class="reveal">Um Viertel nach acht sitzt ihr alle vor demselben Bild. Drei Programme, ein Röhrenkasten schwer wie ein Möbelstück — und wenn dein Vater umschalten will, schickt er dich zum Fernseher.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1988">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Musik</span>
+      <p class="reveal">Du hältst den Finger über die Aufnahmetaste und betest, dass der Moderator nicht in dein Lieblingslied reinquatscht.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1989">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">1989</span>
+      <p class="reveal">Der Fernseher läuft mitten in der Nacht. Deine Mutter weint, auf dem Bildschirm tanzen Leute auf einer Mauer — und niemand schickt dich ins Bett.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Zarge I -->
+<section class="zarge z1" data-year="1990">
+  <div class="z-inner">
+    <svg viewBox="0 0 90 190" aria-hidden="true">
+      <line class="frame" x1="30" y1="6" x2="30" y2="184"/>
+      <line class="stroke" x1="30" y1="160" x2="52" y2="160"/><text class="mlabel" x="57" y="163">86</text>
+      <line class="stroke" x1="30" y1="141" x2="52" y2="141"/><text class="mlabel" x="57" y="144">88</text>
+      <line class="mark-new" x1="30" y1="118" x2="55" y2="118"/><text class="mlabel" x="60" y="121">90</text>
+    </svg>
+    <p class="z-text reveal">An der Zarge kommt ein neuer Strich dazu. Zehn Zentimeter über dem letzten.</p>
+  </div>
+</section>
+
+<!-- ===== Ära 2 · 1991–1999 ===== -->
+<section class="era era2">
+  <div class="era-head">
+    <div class="wrap">
+      <div class="span reveal">1991–1999</div>
+      <div class="name reveal">Die Welt wird digital, leise</div>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1993">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kommunikation</span>
+      <p class="reveal">Dein Onkel zieht die Antenne mit den Zähnen aus und legt das Handy gut sichtbar neben den Bierdeckel. Telefoniert hat er damit noch nie — zu teuer.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1996">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Computer/Netz</span>
+      <p class="reveal">Der erste Familien-PC steht im Wohnzimmer. Du klickst auf »Verbinden«, das Modem kreischt und rauscht — und später schimpft deine Mutter, Oma habe den ganzen Abend nur das Besetztzeichen gehört.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1997">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Spiel</span>
+      <p class="reveal">Unterm Tisch fütterst du ein Plastik-Küken am Schlüsselband, damit es die Mathestunde überlebt. Als es piept, dreht sich die halbe Klasse um — und der Lehrer weiß genau, wonach er sucht.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1998">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Musik</span>
+      <p class="reveal">Du brennst deiner besten Freundin eine CD: 74 Minuten, keine Sekunde mehr passt auf den Rohling. Mit Stift und Zettel rechnest du die Lieder zusammen, wie früher die Kassettenseiten.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="1999">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kommunikation</span>
+      <p class="reveal">Abends macht es »uh-oh«: ICQ blinkt. Du tippst mit einem Finger. Die Leitung ist wieder belegt — Mama hat es aufgegeben.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Zarge II -->
+<section class="zarge z2" data-year="1999">
+  <div class="z-inner">
+    <svg viewBox="0 0 90 190" aria-hidden="true">
+      <line class="frame" x1="30" y1="6" x2="30" y2="184"/>
+      <line class="stroke" x1="30" y1="160" x2="52" y2="160"/><text class="mlabel" x="57" y="163">86</text>
+      <line class="stroke" x1="30" y1="141" x2="52" y2="141"/><text class="mlabel" x="57" y="144">88</text>
+      <line class="stroke" x1="30" y1="118" x2="52" y2="118"/><text class="mlabel" x="57" y="121">90</text>
+      <line class="stroke" x1="30" y1="82" x2="52" y2="82"/><text class="mlabel" x="57" y="85">94</text>
+      <line class="mark-new" x1="30" y1="46" x2="55" y2="46"/><text class="mlabel" x="60" y="49">99</text>
+    </svg>
+    <p class="z-text reveal">Der neue Strich ist fast auf Augenhöhe deines Vaters. Es wird der letzte sein.</p>
+  </div>
+</section>
+
+<!-- ===== Ära 3 · 2000–2009 ===== -->
+<section class="era era3">
+  <div class="era-head">
+    <div class="wrap">
+      <div class="span reveal">2000–2009</div>
+      <div class="name reveal">Alles kommt zusammen</div>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2001">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Computer/Netz</span>
+      <p class="reveal">Das Kreischen ist weg, das Internet ist einfach immer da. Beim Abendessen streitet ihr, wer 1990 im Finale stand — zum ersten Mal holt keiner den Brockhaus. Einer tippt. Zehn Sekunden, Streit vorbei.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2002">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">2002</span>
+      <p class="reveal">Über Nacht liegen fremde Münzen im Portemonnaie. An der Kasse rechnest du heimlich mal zwei zurück — und alle sagen denselben Satz: »In Mark war das doch billiger.«</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2003">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Navigation</span>
+      <p class="reveal">Vor der Fahrt druckst du dir die Route bei Map24 aus, drei Seiten, und hoffst, dass du keine Abfahrt verpasst.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2004">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Foto</span>
+      <p class="reveal">Die Digitalkamera hängt dir um den Hals. 24 Bilder sind nicht mehr das Limit — du knipst, guckst aufs Display, löschst, knipst neu.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2006">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Medien</span>
+      <p class="reveal">Du meldest dich bei StudiVZ an, weil plötzlich alle da sind. Um Mitternacht klickst du dich durch Urlaubsfotos von Leuten, mit denen du seit dem Abi kein Wort gewechselt hast — und bestätigst sie als »Freunde«.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2007">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kommunikation</span><span class="year-stamp reveal">2007</span>
+      <p class="reveal">Ein Kollege legt ein Telefon ohne Tasten auf den Tisch — nur Glas. Du wischst über ein Foto, und es gleitet unter deinem Finger zur Seite. Du gibst es zurück und denkst: schickes Spielzeug.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2009">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Alltag</span>
+      <p class="reveal">Irgendwann fällt dir auf, dass die gelbe Telefonzelle an der Ecke weg ist. Du weißt nicht, seit wann. Keiner bemerkt den Moment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Zarge III (gedreht: diesmal misst du) -->
+<section class="zarge z3" data-year="2009">
+  <div class="z-inner">
+    <svg viewBox="0 0 90 190" aria-hidden="true">
+      <line class="frame" x1="60" y1="6" x2="60" y2="184"/>
+      <line class="mark-new" x1="35" y1="150" x2="60" y2="150"/><text class="mlabel" x="12" y="153">?</text>
+    </svg>
+    <p class="z-text reveal">Neue Striche an einer neuen Türzarge. Diesmal misst du.</p>
+  </div>
+</section>
+
+<!-- ===== Ära 4 · 2010–2026 ===== -->
+<section class="era era4">
+  <div class="era-head">
+    <div class="wrap">
+      <div class="span reveal">2010–2026</div>
+      <div class="name reveal">Die unsichtbare Gegenwart</div>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2012">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Musik</span>
+      <p class="reveal">Deine gebrannten CDs stehen im Keller. Jedes Lied der Welt steckt jetzt in deiner Hosentasche.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2013">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Alltag</span>
+      <p class="reveal">Du verlässt die Wohnung: Schlüssel, Telefon. Mehr nicht.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2014">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Medien</span>
+      <p class="reveal">Viertel nach acht gibt es nicht mehr. Alles fängt an, wann du willst — und keiner sitzt daneben.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2015">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Mobilität</span><span class="year-stamp reveal">2015</span>
+      <p class="reveal">Ein Junge rollt auf dem E-Board vorbei — elektrisch, ohne einen Schritt. Nicht schwebend wie im Film. Aber du drehst dich um.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2016">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Wearable</span>
+      <p class="reveal">Abends legst du ab: Stöpsel aus den Ohren, Uhr vom Handgelenk. Getragen seit dem Aufstehen.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2018">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Geld</span>
+      <p class="reveal">Karte ans Terminal. Piep. Du hast nichts angefasst.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2019">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Alltag</span>
+      <p class="reveal">Es klingelt: das Essen. Bestellt mit drei Tippern. Das »Danke« an der Tür ist dein einziges Wort.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2020">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Kollektiv</span><span class="year-stamp reveal">2020</span>
+      <p class="reveal">Über Nacht bleibt das ganze Land zu Hause. Als die Türen wieder aufgehen, ist die Speisekarte ein QR-Code. Das Virus geht, die Codes bleiben.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2021">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">Arbeit</span>
+      <p class="reveal">Der Kollege ist eine Kachel auf dem Bildschirm, du sitzt im Wohnzimmer — und das ist einfach Mittwoch.</p>
+    </div>
+  </div>
+
+  <div class="marker" data-year="2026">
+    <div class="wrap marker-inner">
+      <span class="chip reveal">KI</span><span class="year-stamp reveal">2026</span>
+      <p class="reveal">Du sitzt im Fitnessstudio zwischen zwei Sätzen und redest mit einer Maschine wie mit einem Menschen. Es fällt dir nicht mal auf.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Der Kipp ===== -->
+<section class="kipp" id="kipp">
+  <div class="kipp-stage">
+    <div class="kipp-year" id="kippYear">2026</div>
+    <div class="kipp-word" id="kippWord">&nbsp;</div>
+    <svg class="kipp-phone" id="kippPhone" viewBox="0 0 120 110" aria-hidden="true">
+      <!-- Wählscheibentelefon, reduziert auf Linien -->
+      <path class="ln" d="M18 44 Q18 26 38 24 L82 24 Q102 26 102 44 L102 88 Q102 96 94 96 L26 96 Q18 96 18 88 Z"/>
+      <path class="ln" d="M26 24 Q22 8 38 10 L44 12 Q50 14 48 22"/>
+      <path class="ln" d="M94 24 Q98 8 82 10 L76 12 Q70 14 72 22"/>
+      <path class="ln" d="M28 12 Q60 2 92 12"/>
+      <circle class="ln" cx="60" cy="62" r="24"/>
+      <circle class="ln" cx="60" cy="44" r="3.2"/>
+      <circle class="ln" cx="74" cy="49" r="3.2"/>
+      <circle class="ln" cx="79" cy="63" r="3.2"/>
+      <circle class="ln" cx="73" cy="76" r="3.2"/>
+      <circle class="ln" cx="60" cy="81" r="3.2"/>
+      <circle class="ln" cx="47" cy="76" r="3.2"/>
+      <circle class="ln" cx="41" cy="63" r="3.2"/>
+    </svg>
+    <p class="kipp-note" id="kippNote">Und dann friert das Bild wieder ein: heute.</p>
+    <button class="replay" id="replayBtn" type="button">↺ Noch mal zurückspulen</button>
+  </div>
+</section>
+
+<!-- ===== Kernsätze ===== -->
+<section class="kern">
+  <div class="marker">
+    <div class="wrap marker-inner">
+      <p class="reveal">Menschen leben nicht in Epochen, sondern in Tagen. Erst im Rückblick werden Tage zu Epochen.</p>
+    </div>
+  </div>
+  <div class="marker">
+    <div class="wrap marker-inner">
+      <p class="reveal">Die Zukunft kam nicht durch Explosion. Sie kam durch Gewöhnung.</p>
+    </div>
+  </div>
+  <div class="marker">
+    <div class="wrap marker-inner">
+      <p class="reveal">Vierzig Jahre. Ein völlig anderes Leben. Und du hast keinen einzigen dieser Umbrüche kommen sehen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Finale ===== -->
+<section class="finale">
+  <div class="wrap">
+    <p class="devices reveal">
+      <span class="gone">Wecker</span> · <span class="gone">Kamera</span> · <span class="gone">Bankfiliale</span> · <span class="gone">Zeitung</span> · <span class="gone">Fernbedienung</span> · <span class="gone">Landkarte</span> · <span class="gone">Fotoalbum</span><br>
+      — alles in dem einen Ding in deiner Hand.
+    </p>
+    <p class="last reveal">Das Gerät, auf dem du das gerade liest, war 1986 undenkbar.</p>
+    <div class="coda reveal">1986 → 2026 · Ende</div>
+  </div>
+</section>
+
+<script>
+(function(){
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ===== Reveals ===== */
+  var revealIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('on'); revealIO.unobserve(e.target); }
+    });
+  },{threshold:0.2});
+  document.querySelectorAll('.reveal').forEach(function(el){ revealIO.observe(el); });
+
+  /* ===== Jahres-Anker einsammeln ===== */
+  var anchors = [];   // {el, year, mid}
+  function collectAnchors(){
+    anchors = [];
+    document.querySelectorAll('[data-year]').forEach(function(el){
+      var y = parseInt(el.getAttribute('data-year'),10);
+      if(!isNaN(y)){
+        var r = el.getBoundingClientRect();
+        anchors.push({ el: el, year: y, mid: r.top + window.scrollY + r.height/2 });
+      }
+    });
+    anchors.sort(function(a,b){ return a.mid - b.mid; });
+  }
+
+  /* ===== Zeitstrahl-Leiste: Punkte nach Jahr platziert (drängen sich hinten) ===== */
+  var rail = document.getElementById('rail');
+  var railFill = document.getElementById('railFill');
+  var dots = [];
+  function buildRail(){
+    dots.forEach(function(d){ d.dom.remove(); });
+    dots = [];
+    var Y0 = 1986, Y1 = 2026;
+    document.querySelectorAll('.marker[data-year]').forEach(function(el){
+      var y = parseInt(el.getAttribute('data-year'),10);
+      var frac = (y - Y0) / (Y1 - Y0);
+      var d = document.createElement('button');
+      d.className = 'rail-dot';
+      d.style.top = (frac*100) + '%';
+      d.setAttribute('aria-label', 'Zum Jahr ' + y + ' springen');
+      d.addEventListener('click', function(){
+        el.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'center'});
+      });
+      rail.appendChild(d);
+      dots.push({ dom: d, el: el, year: y });
+    });
+  }
+
+  /* ===== Ticker: Jahr aus Scrollposition interpolieren ===== */
+  var ticker = document.getElementById('ticker');
+  var kippSec = document.getElementById('kipp');
+  var currentYear = 1986;
+  function yearAt(pos){
+    if(!anchors.length) return 1986;
+    if(pos <= anchors[0].mid) return anchors[0].year;
+    for(var i=0;i<anchors.length-1;i++){
+      var a = anchors[i], b = anchors[i+1];
+      if(pos >= a.mid && pos < b.mid){
+        var t = (pos - a.mid) / (b.mid - a.mid);
+        return Math.round(a.year + t*(b.year - a.year));
+      }
+    }
+    return anchors[anchors.length-1].year;
+  }
+  function onScroll(){
+    var pos = window.scrollY + window.innerHeight*0.55;
+    var y = yearAt(pos);
+    if(y !== currentYear){ currentYear = y; ticker.textContent = y; }
+
+    // Ticker/Leiste erst nach dem Hero zeigen, im Kipp-Bereich ausblenden
+    var heroGone = window.scrollY > window.innerHeight*0.6;
+    var kippTop = kippSec.getBoundingClientRect().top + window.scrollY;
+    var beforeKipp = (window.scrollY + window.innerHeight*0.5) < kippTop;
+    ticker.classList.toggle('show', heroGone && beforeKipp);
+    rail.classList.toggle('show', heroGone && beforeKipp);
+
+    // dunkle Ären → helle Leiste
+    var dark = document.elementFromPoint(24, 40);
+    var darkBg = dark && dark.closest && dark.closest('.era2, .era4, .kipp, .kern, .finale, .z2');
+    document.body.classList.toggle('on-dark', !!darkBg);
+
+    // Leiste füllen + Punkte markieren
+    var frac = (currentYear - 1986) / (2026 - 1986);
+    railFill.style.height = (frac*100) + '%';
+    dots.forEach(function(d){ d.dom.classList.toggle('passed', d.year <= currentYear); });
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      ticking = true;
+      requestAnimationFrame(function(){ onScroll(); ticking = false; });
+    }
+  }, {passive:true});
+
+  /* ===== Kipp: Rücklauf in 3 Sekunden ===== */
+  var kippYear = document.getElementById('kippYear');
+  var kippWord = document.getElementById('kippWord');
+  var kippPhone = document.getElementById('kippPhone');
+  var kippNote = document.getElementById('kippNote');
+  var replayBtn = document.getElementById('replayBtn');
+  var rewindWords = [
+    'KI','Homeoffice','QR-Code','Lieferung','kontaktlos','Stöpsel','E-Board',
+    'Streaming','Smartphone','StudiVZ','Digitalkamera','Map24','Euro','Flatrate',
+    'ICQ','CD-Rohling','Tamagotchi','Modem','Handy-Klotz','Mauerfall','Kassette','Wählscheibe'
+  ];
+  var rewindRunning = false;
+  function runRewind(){
+    if(rewindRunning) return;
+    rewindRunning = true;
+    kippPhone.classList.remove('on');
+    kippNote.classList.remove('on');
+    replayBtn.classList.remove('on');
+
+    if(reduced){
+      // Ohne Animation: direkt das Ergebnis zeigen
+      kippYear.textContent = '1986';
+      kippWord.textContent = 'Wählscheibe';
+      finishRewind();
+      return;
+    }
+    var DUR = 3000, t0 = performance.now();
+    function step(now){
+      var t = Math.min(1, (now - t0) / DUR);
+      // beschleunigter Rücklauf: hinten schnell, vorn auslaufend
+      var eased = 1 - Math.pow(1 - t, 2.2);
+      var y = Math.round(2026 - eased * (2026 - 1986));
+      kippYear.textContent = y;
+      var wi = Math.min(rewindWords.length - 1, Math.floor(eased * rewindWords.length));
+      kippWord.textContent = rewindWords[wi];
+      if(t < 1){ requestAnimationFrame(step); } else { finishRewind(); }
+    }
+    requestAnimationFrame(step);
+  }
+  function finishRewind(){
+    kippYear.textContent = '1986';
+    kippWord.textContent = 'Wählscheibe';
+    kippPhone.classList.add('on');
+    // kurz stehen lassen, dann in der Gegenwart einfrieren
+    setTimeout(function(){
+      kippSec.classList.add('flash');
+      kippYear.textContent = '2026';
+      kippWord.innerHTML = '&nbsp;';
+      kippNote.classList.add('on');
+      replayBtn.classList.add('on');
+      setTimeout(function(){ kippSec.classList.remove('flash'); }, 600);
+      rewindRunning = false;
+    }, reduced ? 0 : 1100);
+  }
+  var kippIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ runRewind(); kippIO.unobserve(kippSec); }
+    });
+  },{threshold:0.55});
+  kippIO.observe(kippSec);
+  replayBtn.addEventListener('click', runRewind);
+
+  /* ===== Setup ===== */
+  function refresh(){ collectAnchors(); onScroll(); }
+  window.addEventListener('resize', refresh);
+  window.addEventListener('load', refresh);
+  buildRail();
+  refresh();
+})();
+</script>
+</body>
+</html>
