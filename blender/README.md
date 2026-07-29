@@ -76,3 +76,9 @@ nur die Vorschau prüft, hätte ihn durchgewinkt.
 Der Wert entsteht also in der Schleife aus Rendern, Hinschauen und
 Korrigieren — nicht im ersten Prompt. Und die Prüfung muss auf der Stufe
 stattfinden, auf der der Fehler überhaupt sichtbar wird.
+
+## Renders im Repo
+
+`render_*.png` ist bewusst nicht eingecheckt. Die Bilder sind abgeleitete
+Artefakte — Quelle der Wahrheit sind `room_detector.py` und die `.blend`.
+Wer ein Bild braucht, erzeugt es mit einem der drei Befehle oben neu.
