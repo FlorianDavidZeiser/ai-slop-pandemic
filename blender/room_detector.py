@@ -35,7 +35,7 @@ def mat(name, col, rough=0.6, metal=0.0, alpha=1.0, emit=None, emit_s=1.0, trans
     return m
 
 M_WALL  = mat("Wand",     (0.72, 0.71, 0.68), 0.85)
-M_FLOOR = mat("Boden",    (0.205, 0.135, 0.082), 0.32)
+M_FLOOR = mat("Boden",    (0.215, 0.140, 0.085), 0.52)
 M_CEIL  = mat("Decke",    (0.93, 0.93, 0.92), 0.90)
 M_DESK  = mat("Tisch",    (0.55, 0.42, 0.28), 0.40)
 M_METAL = mat("Metall",   (0.55, 0.56, 0.58), 0.30, 1.0)
@@ -106,6 +106,19 @@ ring = add("primitive_torus_add", M_RING, loc=(*DET_XY, 0.012),
            major_segments=96, minor_segments=8)
 for flag in ("visible_shadow", "visible_diffuse", "visible_glossy"):
     setattr(ring, flag, False)
+
+# Rauminnenvolumen als Schnittkoerper -- der Erfassungsbereich endet an der Wand
+bpy.ops.mesh.primitive_cube_add(location=(0, 0, (RH-DET_H)/2), size=2)
+clip = bpy.context.object
+clip.name = "Clip_Rauminneres"
+clip.scale = (RW/2 - 0.05, RD/2 - 0.05, (RH-DET_H)/2)
+clip.hide_render = True
+clip.display_type = 'WIRE'
+for annot in (cone, ring):
+    b = annot.modifiers.new("clip", 'BOOLEAN')
+    b.operation = 'INTERSECT'
+    b.object = clip
+    b.solver = 'EXACT'
 
 # ---------------------------------------------------------------- Schreibtisch
 DX, DY = -1.5, 0.6
