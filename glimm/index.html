@@ -2618,6 +2618,7 @@ const Actions={
   },
   showReport(rep){
     S.pendingReport=null;
+    $('#toast').classList.remove('on');
     $('#reporttitle').textContent=rep.title;
     $('#reporticons').textContent=rep.icons.join(' ');
     $('#reporttext').textContent=rep.text;
@@ -2712,10 +2713,12 @@ const Games={
     S.stats[g]+=statGain.v;
     S.needs.laune=clamp(S.needs.laune+7,10,100);
     saveNow();
+    const zeroCase=score<=0;
     $('#gamebody').innerHTML=`<div id="gameresult">
       <div style="font-size:44px">${statGain.em}</div>
-      <div>${line}</div><div class="rscore">${score}</div>
-      <div class="rbest">${isBest?'Neue Bestleistung! ✨':'Bestleistung: '+(S.highs[id]||0)}</div>
+      <div>${zeroCase?'Das war ein Anfang. Gleich nochmal?':line}</div>
+      <div class="rscore">${zeroCase?'✨':score}</div>
+      <div class="rbest">${zeroCase?'':(isBest?'Neue Bestleistung! ✨':'Bestleistung: '+(S.highs[id]||0))}</div>
       ${S.stage>=2?`<div class="chip2" style="display:inline-block;margin-top:8px">${STATEM[g]} +${statGain.v} ${STATNAMES[g]}</div>`:''}
     </div>`;
     $('#gamehud').innerHTML='';
@@ -3581,6 +3584,48 @@ if(DEBUG.on){
 }
 
 document.addEventListener('DOMContentLoaded',()=>Boot.start());
+
+/* ---------- PWA: Manifest + Icon zur Laufzeit erzeugen ----------
+   Ein Data-URI-Manifest braucht absolute URLs; die kennen wir erst hier. */
+(function pwa(){
+  try{
+    if(location.protocol!=='https:'&&location.hostname!=='localhost')return;
+    const size=512, c=document.createElement('canvas');c.width=c.height=size;
+    const x=c.getContext('2d');
+    x.fillStyle='#141b33';
+    const rr=size*0.22;
+    x.beginPath();x.moveTo(rr,0);x.arcTo(size,0,size,size,rr);x.arcTo(size,size,0,size,rr);
+    x.arcTo(0,size,0,0,rr);x.arcTo(0,0,size,0,rr);x.fill();
+    // Körper
+    x.fillStyle='#4a4560';
+    x.beginPath();x.ellipse(size/2,size*0.62,size*0.27,size*0.24,0,0,7);x.fill();
+    x.beginPath();x.arc(size/2,size*0.38,size*0.21,0,7);x.fill();
+    // Ohren
+    x.beginPath();x.ellipse(size*0.36,size*0.22,size*0.06,size*0.1,-0.3,0,7);x.fill();
+    x.beginPath();x.ellipse(size*0.64,size*0.22,size*0.06,size*0.1,0.3,0,7);x.fill();
+    // Glimmen
+    const g=x.createRadialGradient(size/2,size*0.62,10,size/2,size*0.62,size*0.2);
+    g.addColorStop(0,'#fff6e0');g.addColorStop(0.4,'rgba(255,179,92,.85)');g.addColorStop(1,'rgba(255,179,92,0)');
+    x.fillStyle=g;x.beginPath();x.arc(size/2,size*0.62,size*0.2,0,7);x.fill();
+    // Augen
+    x.fillStyle='#f6efdd';
+    x.beginPath();x.ellipse(size*0.43,size*0.38,size*0.035,size*0.045,0,0,7);x.fill();
+    x.beginPath();x.ellipse(size*0.57,size*0.38,size*0.035,size*0.045,0,0,7);x.fill();
+    x.fillStyle='#2b2836';
+    x.beginPath();x.arc(size*0.43,size*0.385,size*0.018,0,7);x.fill();
+    x.beginPath();x.arc(size*0.57,size*0.385,size*0.018,0,7);x.fill();
+    const icon=c.toDataURL('image/png');
+    const man={name:'GLIMM',short_name:'GLIMM',display:'standalone',orientation:'portrait',
+      background_color:'#141b33',theme_color:'#141b33',
+      start_url:location.href.split('#')[0],
+      icons:[{src:icon,sizes:'512x512',type:'image/png'},{src:icon,sizes:'192x192',type:'image/png'}]};
+    const link=document.createElement('link');link.rel='manifest';
+    link.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(man));
+    document.head.appendChild(link);
+    const ap=document.createElement('link');ap.rel='apple-touch-icon';ap.href=icon;
+    document.head.appendChild(ap);
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
