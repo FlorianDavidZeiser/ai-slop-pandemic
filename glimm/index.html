@@ -3720,6 +3720,10 @@ document.addEventListener('DOMContentLoaded',()=>Boot.start());
     document.head.appendChild(link);
     const ap=document.createElement('link');ap.rel='apple-touch-icon';ap.href=icon;
     document.head.appendChild(ap);
+    // Service Worker (liegt als sw.js daneben): macht die installierte App offline-fähig.
+    // Wo es kein sw.js gibt (z. B. Artifact-Vorschau), schlägt das leise fehl.
+    if('serviceWorker' in navigator)
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
   }catch(e){}
 })();
 </script>
