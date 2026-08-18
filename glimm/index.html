@@ -1,0 +1,3586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#101828">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>GLIMM</title>
+<style>
+/* ============================================================
+   GLIMM — ein Wesen, das ein Licht in sich trägt
+   Single-File. Keine externen Requests. Kein Build.
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  font-family:-apple-system,'SF Pro Rounded','Segoe UI',Roboto,'Noto Sans',sans-serif;
+  background:#0c1226;color:var(--ink,#2c3038);
+  user-select:none;-webkit-user-select:none;touch-action:manipulation;
+  font-size:17px;line-height:1.45;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;touch-action:manipulation}
+input{font:inherit}
+svg{display:block}
+
+/* ---------- Tageszeit-Paletten ---------- */
+#app{
+  --sky1:#b9dcea;--sky2:#eef6ee;--hill1:#a5c9ad;--hill2:#83b191;--hill3:#63997c;
+  --ground:#8fbf9c;--accent:#5fa89a;--ink:#2c3a3a;--chrome:rgba(255,255,255,.55);
+  --card:#fffaf0;--cardink:#33313d;--soft:rgba(30,50,50,.10);
+  --starop:0;--sunc:#fff3c9;--heart:#e8756d;
+  position:relative;height:100%;max-width:560px;margin:0 auto;overflow:hidden;
+  color:var(--ink);
+}
+#app.t-mittag{--sky1:#5eb1e4;--sky2:#f4eec0;--hill1:#8cc262;--hill2:#68ad4c;--hill3:#4c953e;
+  --ground:#74b656;--accent:#e8935a;--ink:#27392c;--chrome:rgba(255,255,255,.6);--sunc:#ffd95e}
+#app.t-abend{--sky1:#e0795c;--sky2:#f7cf92;--hill1:#b08370;--hill2:#8f6668;--hill3:#6d4c5c;
+  --ground:#9c7466;--accent:#e8875a;--ink:#3d2a30;--chrome:rgba(255,244,224,.5);--sunc:#ff9d47}
+#app.t-nacht{--sky1:#0d1b3e;--sky2:#2b4674;--hill1:#22335a;--hill2:#1a2947;--hill3:#121d33;
+  --ground:#1b2c4d;--accent:#8fa8d8;--ink:#e6ebf7;--chrome:rgba(20,32,64,.45);
+  --soft:rgba(0,0,20,.3);--starop:1;--sunc:#f3edda}
+
+/* ---------- Himmel & Landschaft ---------- */
+#sky{position:absolute;inset:0;background:linear-gradient(var(--sky1),var(--sky2) 70%);
+  transition:background 2.5s ease}
+#skyfade{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 2.2s ease}
+#stars{position:absolute;inset:0 0 30% 0;opacity:var(--starop);transition:opacity 2.5s ease;pointer-events:none}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#f5f2e2;
+  animation:twinkle 3.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.9}50%{opacity:.25}}
+#orb{position:absolute;width:74px;height:74px;border-radius:50%;background:var(--sunc);
+  filter:blur(1px);box-shadow:0 0 46px 18px var(--sunc);opacity:.9;
+  transition:all 2.5s ease;pointer-events:none}
+#hills{position:absolute;left:0;right:0;bottom:0;height:46%;pointer-events:none}
+#hills svg{width:100%;height:100%}
+.hillA{fill:var(--hill1)}.hillB{fill:var(--hill2)}.hillC{fill:var(--hill3)}
+.hillA,.hillB,.hillC{transition:fill 2.5s ease}
+#fireflies{position:absolute;inset:30% 0 20% 0;pointer-events:none;opacity:var(--starop);transition:opacity 2s}
+.ffly{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe9a0;
+  box-shadow:0 0 8px 3px rgba(255,233,160,.6);animation:drift 9s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translate(0,0);opacity:.2}30%{opacity:.95}60%{opacity:.3}100%{transform:translate(46px,-34px);opacity:.85}}
+
+/* ---------- Screens ---------- */
+.screen{position:absolute;inset:0;display:none;flex-direction:column}
+.screen.on{display:flex}
+.overlay{position:absolute;inset:0;display:none;z-index:40;flex-direction:column;
+  align-items:center;justify-content:center;padding:22px;
+  background:rgba(14,18,34,.55);backdrop-filter:blur(3px)}
+.overlay.on{display:flex}
+.card{background:var(--card);color:var(--cardink);border-radius:24px;
+  padding:22px 20px;max-width:420px;width:100%;box-shadow:0 14px 44px rgba(10,14,30,.35);
+  max-height:86vh;max-height:86dvh;overflow-y:auto;overscroll-behavior:contain}
+.card h2{font-size:1.25em;font-weight:800;letter-spacing:.01em;margin-bottom:10px}
+.bigbtn{display:block;width:100%;min-height:60px;border-radius:18px;
+  background:var(--accent);color:#fff;font-weight:700;font-size:1.05em;
+  box-shadow:0 4px 0 rgba(0,0,0,.15);margin-top:12px;padding:12px 16px}
+.bigbtn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.bigbtn.ghost{background:transparent;color:var(--cardink);box-shadow:inset 0 0 0 2px rgba(0,0,0,.14)}
+.bigbtn.ghost:active{transform:translateY(1px)}
+
+/* ---------- Top-Chrome ---------- */
+#chrome{position:absolute;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;
+  justify-content:space-between;padding:calc(10px + env(safe-area-inset-top)) 12px 8px}
+.chip{width:52px;height:52px;border-radius:50%;background:var(--chrome);
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);
+  box-shadow:0 2px 10px var(--soft);transition:background 2s ease}
+.chip:active{transform:scale(.92)}
+.chip svg{width:26px;height:26px}
+.chip .st{stroke:var(--ink);transition:stroke 2s ease}
+#hearts{display:flex;gap:8px;background:var(--chrome);border-radius:999px;
+  padding:9px 14px;backdrop-filter:blur(6px);box-shadow:0 2px 10px var(--soft);transition:background 2s ease}
+.hbeat{width:24px;height:24px;transition:transform .3s}
+.hbeat path{fill:var(--heart);transition:fill .5s,opacity .5s}
+.hbeat.off path{fill:none;stroke:var(--ink);stroke-width:2;opacity:.45}
+.hbeat.spend{animation:hspend .55s ease}
+@keyframes hspend{0%{transform:scale(1)}40%{transform:scale(1.5)}100%{transform:scale(1)}}
+
+/* ---------- Statuszeile ---------- */
+#statusline{position:absolute;left:0;right:0;top:calc(72px + env(safe-area-inset-top));
+  text-align:center;z-index:25;pointer-events:none;padding:0 24px}
+#statusline span{display:inline-block;background:var(--chrome);border-radius:999px;
+  padding:7px 16px;font-size:.92em;backdrop-filter:blur(6px);color:var(--ink);
+  box-shadow:0 2px 10px var(--soft);transition:background 2s ease,color 2s ease;
+  opacity:0;transform:translateY(-6px);transition:opacity .6s,transform .6s}
+#statusline span.on{opacity:1;transform:none}
+
+/* ---------- Wesen-Bühne ---------- */
+#stage{position:absolute;inset:0;z-index:10}
+#wesen{position:absolute;left:50%;top:56%;width:min(64vw,300px);aspect-ratio:1;
+  transform:translate(-50%,-50%);touch-action:none;cursor:pointer;
+  transition:filter 1.5s ease}
+#wesen.away{display:none}
+#wesen svg{width:100%;height:100%;overflow:visible}
+.w-shadow{fill:rgba(10,14,30,.18);transition:all 2s}
+.t-abend .w-shadow{transform:scaleX(1.9) translateX(-14px);opacity:.75}
+.t-nacht .w-shadow{opacity:.4}
+#wesen .breath{animation:breathe 3.2s ease-in-out infinite;transform-origin:100px 132px}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.028,1.045)}}
+#wesen.sleeping .breath{animation-duration:5s}
+#wesen .headg{transition:transform .25s ease-out;transform-origin:100px 108px}
+#wesen .eyes-w{transform-origin:center;transition:transform .12s}
+#wesen.blink .eyes-w{transform:scaleY(.08)}
+#wesen.sleeping .eyes-w{transform:scaleY(.08)}
+#wesen .pupils{transition:transform .3s}
+#wesen.happy-hop{animation:hop .5s ease}
+@keyframes hop{0%,100%{transform:translate(-50%,-50%)}35%{transform:translate(-50%,-58%) scale(1.04,.97)}65%{transform:translate(-50%,-49%) scale(.98,1.03)}}
+#wesen.nuzzle svg{animation:nuzzle .9s ease}
+@keyframes nuzzle{0%,100%{transform:rotate(0)}30%{transform:rotate(-5deg)}70%{transform:rotate(4deg)}}
+#wesen.sad .mouth-happy{display:none}
+#wesen .mouth-sad{display:none}
+#wesen.sad .mouth-sad{display:block}
+#wesen.sad .earL{transform:rotate(-14deg)}#wesen.sad .earR{transform:rotate(14deg)}
+.earL,.earR{transition:transform .8s;transform-origin:100px 70px}
+
+/* Glimmen — die Statusanzeige */
+.glim{transform-origin:100px 128px}
+.glim-hell{animation:gHell 3.6s ease-in-out infinite}
+@keyframes gHell{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.85;transform:scale(1.07)}}
+.glim-ruhig{animation:gRuhig 4.2s ease-in-out infinite}
+@keyframes gRuhig{0%,100%{opacity:.8}50%{opacity:.62}}
+.glim-flackern{animation:gFlack 1.15s linear infinite}
+@keyframes gFlack{0%{opacity:.85}12%{opacity:.3}24%{opacity:.75}35%{opacity:.42}55%{opacity:.88}68%{opacity:.25}82%{opacity:.7}100%{opacity:.85}}
+.glim-langsam{animation:gLang 6.5s ease-in-out infinite}
+@keyframes gLang{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:.2;transform:scale(.88)}}
+.glim-trueb{animation:gTrueb 5s ease-in-out infinite;filter:saturate(.25)}
+@keyframes gTrueb{0%,100%{opacity:.35}50%{opacity:.25}}
+.dirt{opacity:0;transition:opacity 1.2s}
+#wesen.dirty .dirt{opacity:.85}
+
+/* Herzchen / Partikel */
+.pop{position:absolute;z-index:35;pointer-events:none;font-size:22px;
+  animation:popup 1.1s ease forwards}
+@keyframes popup{0%{opacity:0;transform:translateY(6px) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-52px) scale(1.15)}}
+.sparkle{position:absolute;z-index:35;pointer-events:none;width:8px;height:8px;border-radius:50%;
+  animation:sprk .8s ease forwards}
+@keyframes sprk{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(1.6) translateY(-26px)}}
+
+/* ---------- Futterleiste ---------- */
+#drawer{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);z-index:30;background:var(--chrome);backdrop-filter:blur(8px);
+  border-radius:26px;padding:10px 12px;display:flex;gap:6px;max-width:92%;
+  overflow-x:auto;box-shadow:0 4px 16px var(--soft);transition:background 2s ease;
+  scrollbar-width:none}
+#drawer::-webkit-scrollbar{display:none}
+.fooditem{min-width:58px;height:72px;border-radius:18px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;font-size:30px;touch-action:none;
+  position:relative;background:rgba(255,255,255,.35)}
+.t-nacht .fooditem{background:rgba(255,255,255,.08)}
+.fooditem small{font-size:10px;max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink);opacity:.85}
+.fooditem .cnt{position:absolute;top:2px;right:4px;font-size:11px;font-weight:800;color:var(--ink);opacity:.7}
+.fooditem.dragging{opacity:.25}
+#dragGhost{position:absolute;z-index:60;pointer-events:none;font-size:38px;display:none;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
+#actionrow{position:absolute;left:0;right:0;bottom:calc(96px + env(safe-area-inset-bottom));
+  display:flex;justify-content:center;gap:10px;z-index:29;padding:0 16px;flex-wrap:wrap}
+.pillbtn{background:var(--chrome);backdrop-filter:blur(6px);border-radius:999px;
+  min-height:52px;padding:10px 18px;font-weight:700;color:var(--ink);
+  box-shadow:0 2px 10px var(--soft);display:flex;align-items:center;gap:8px;font-size:.98em;
+  transition:background 2s ease,color 2s ease}
+.pillbtn:active{transform:scale(.95)}
+.pillbtn .em{font-size:20px}
+
+/* ---------- Startbildschirm ---------- */
+#scr-start{z-index:20;align-items:center;justify-content:center;gap:18px;padding:24px}
+#scr-start h1{font-size:2.1em;font-weight:800;letter-spacing:.14em;color:var(--ink);
+  text-shadow:0 2px 14px rgba(255,255,255,.2)}
+#profilecards{display:flex;gap:16px;width:100%;max-width:440px;justify-content:center}
+.pcard{flex:1;max-width:210px;background:var(--card);border-radius:26px;padding:16px 12px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--cardink);
+  box-shadow:0 10px 30px rgba(10,14,30,.3);min-height:230px;justify-content:center}
+.pcard:active{transform:scale(.97)}
+.pcard .mini{width:120px;height:120px}
+.pcard .pname{font-weight:800;font-size:1.15em}
+.pcard .pstat{font-size:.82em;opacity:.7;text-align:center;min-height:2.2em}
+.pcard.empty .pname{opacity:.55;font-weight:600;font-size:.95em}
+#startextra{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+#startextra .pillbtn{font-size:.9em}
+
+/* ---------- Ritual ---------- */
+#scr-ritual{z-index:22;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 60%,#1b2547,#0b1020 75%)}
+#ritualhint{position:absolute;bottom:14%;left:0;right:0;text-align:center;color:#cfd8f2;
+  font-size:1.05em;opacity:.85;padding:0 30px;transition:opacity .8s}
+#knospe{width:200px;height:220px;cursor:pointer;touch-action:none}
+#knospe.shake{animation:kshake .5s ease}
+@keyframes kshake{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg) scale(1.02)}75%{transform:rotate(3deg)}}
+#sparks{position:absolute;inset:0;pointer-events:none}
+.spark{position:absolute;width:64px;height:64px;border-radius:50%;cursor:pointer;
+  pointer-events:auto;touch-action:none;display:flex;align-items:center;justify-content:center;
+  animation:sfloat 4s ease-in-out infinite alternate}
+.spark::before{content:'';width:26px;height:26px;border-radius:50%;background:var(--sc);
+  box-shadow:0 0 22px 10px var(--sg)}
+@keyframes sfloat{from{transform:translateY(0)}to{transform:translateY(-16px)}}
+#namecard{max-width:340px}
+#nameinput{width:100%;font-size:1.3em;padding:12px 14px;border-radius:14px;border:2px solid #d8d2c4;
+  background:#fffdf6;text-align:center;font-weight:700;color:#33313d}
+#nameinput:focus{outline:none;border-color:var(--accent,#5fa89a)}
+.namerow{display:flex;gap:10px;margin-top:12px}
+.namerow .bigbtn{margin-top:0}
+#dicebtn{flex:0 0 64px;font-size:26px;background:#efe9da;color:#33313d}
+
+/* ---------- Unterwegs-Szene ---------- */
+#awayscene{position:absolute;inset:0;z-index:12;display:none}
+#awayscene.on{display:block}
+#awaypath{position:absolute;left:8%;right:8%;top:52%;height:80px}
+#awaywalker{position:absolute;width:92px;height:92px;transition:left 1.2s linear;cursor:pointer}
+#awaywalker svg{width:100%;height:100%}
+#awaywalker .walkbob{animation:walkbob 1.6s ease-in-out infinite}
+@keyframes walkbob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+#awayinfo{position:absolute;left:0;right:0;top:63%;text-align:center;color:var(--ink);pointer-events:none}
+#awayinfo .big{font-weight:800;font-size:1.1em}
+#awayinfo .sub{opacity:.75;font-size:.9em;margin-top:4px}
+
+/* ---------- Bericht ---------- */
+#reportcard .icons{font-size:34px;letter-spacing:8px;text-align:center;margin:8px 0 12px}
+#reportcard .rtext{font-size:1.08em;line-height:1.6;font-family:Georgia,'Times New Roman',serif}
+#reportcard .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip2{background:#efe9da;border-radius:999px;padding:6px 12px;font-size:.85em;font-weight:700}
+#readbtn{margin-top:10px}
+
+/* ---------- Senden ---------- */
+.focusgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.focusbtn{border-radius:18px;background:#f2ecdd;padding:14px 8px;display:flex;flex-direction:column;
+  align-items:center;gap:4px;min-height:84px;font-weight:700;font-size:.92em}
+.focusbtn .em{font-size:32px}
+.focusbtn.sel{background:var(--accent);color:#fff}
+.taskrow{display:flex;gap:8px;margin-top:12px}
+.taskbtn{flex:1;border-radius:16px;background:#f2ecdd;padding:10px 6px;text-align:center;
+  font-size:.85em;font-weight:700;min-height:66px}
+.taskbtn .em{font-size:22px;display:block}
+.taskbtn.sel{background:var(--accent);color:#fff}
+.taskbtn small{display:block;font-weight:600;opacity:.7;font-size:.85em}
+
+/* ---------- Kampf ---------- */
+#battlefield{display:flex;justify-content:space-between;align-items:flex-end;margin:6px 0 4px;min-height:130px}
+.fighter{width:120px;text-align:center}
+.fighter .fsvg{width:110px;height:110px;margin:0 auto}
+.fighter .femoji{font-size:64px;line-height:110px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
+.fighter.hit{animation:fhit .4s ease}
+@keyframes fhit{0%,100%{transform:translateX(0)}30%{transform:translateX(-8px) rotate(-4deg)}60%{transform:translateX(5px)}}
+.fighter.attack{animation:fatk .45s ease}
+@keyframes fatk{0%,100%{transform:translateX(0)}40%{transform:translateX(26px) scale(1.06)}}
+.fighter.enemy.attack{animation:fatkE .45s ease}
+@keyframes fatkE{0%,100%{transform:translateX(0)}40%{transform:translateX(-26px) scale(1.06)}}
+.hpbar{height:12px;border-radius:8px;background:#e3dccb;overflow:hidden;margin-top:6px}
+.hpfill{height:100%;border-radius:8px;background:linear-gradient(90deg,#7cc96f,#a8dd8c);transition:width .5s ease}
+.hpfill.low{background:linear-gradient(90deg,#e8a25a,#e8c25a)}
+.fname{font-size:.85em;font-weight:800;margin-top:4px}
+.elem{display:inline-block;width:20px;height:20px;border-radius:50%;vertical-align:-4px;margin-left:4px;
+  box-shadow:0 0 8px 2px var(--eg)}
+#timingwrap{margin-top:10px;position:relative;height:64px;border-radius:16px;background:#efe9da;
+  overflow:hidden;touch-action:manipulation}
+#timingzone{position:absolute;top:0;bottom:0;background:rgba(124,201,111,.55);border-radius:8px}
+#timingzone.gold{background:rgba(232,185,73,.65)}
+#timingcursor{position:absolute;top:4px;bottom:4px;width:7px;border-radius:4px;background:#33313d}
+#timinghint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-weight:800;opacity:.5;font-size:.95em;pointer-events:none}
+#battlemsg{text-align:center;min-height:2.6em;font-size:.95em;margin-top:8px;font-weight:600}
+
+/* ---------- Minispiele ---------- */
+#gamearea{position:relative;width:100%;height:min(62vh,520px);border-radius:20px;overflow:hidden;
+  background:linear-gradient(var(--sky1),var(--sky2));touch-action:none}
+.falling{position:absolute;font-size:36px;pointer-events:none;will-change:transform}
+#gcatcher{position:absolute;bottom:6px;width:86px;height:86px;pointer-events:none;will-change:left}
+#gcatcher svg{width:100%;height:100%}
+.simonwrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:26px;height:100%;align-content:center}
+.simonstone{border-radius:26px;aspect-ratio:1.25;display:flex;align-items:center;justify-content:center;
+  font-size:44px;background:var(--stc);opacity:.55;transition:opacity .18s,transform .18s;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+.simonstone.lit{opacity:1;transform:scale(1.06);box-shadow:0 0 26px 6px var(--stg),inset 0 -6px 0 rgba(0,0,0,.12)}
+#rhywrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:26px}
+#rhydrum{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff6e0,#e8c98a);
+  box-shadow:0 8px 0 #c9a76a,0 12px 24px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:56px}
+#rhydrum.beat{animation:drumbeat .22s ease}
+@keyframes drumbeat{0%,100%{transform:scale(1)}40%{transform:scale(.9)}}
+#gamehud{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:700}
+#gameresult{text-align:center}
+#gameresult .rscore{font-size:2.4em;font-weight:800;margin:6px 0}
+#gameresult .rbest{font-size:.9em;opacity:.7}
+
+/* ---------- Evolution ---------- */
+#ov-evo{background:rgba(6,8,18,.92)}
+#evotext{color:#e8ecf6;font-size:1.25em;line-height:1.75;max-width:360px;text-align:center;
+  font-family:Georgia,serif;min-height:7em}
+#evostage{width:min(70vw,320px);aspect-ratio:1;position:relative}
+#evostage .eold,#evostage .enew{position:absolute;inset:0;transition:opacity 2.2s ease,filter 2.2s ease}
+#evostage .enew{opacity:0}
+#evostage.morph .eold{opacity:0;filter:blur(8px) brightness(3)}
+#evostage.morph .enew{opacity:1}
+#evoflash{position:absolute;inset:0;background:radial-gradient(circle,#fff8e0,transparent 70%);
+  opacity:0;pointer-events:none;transition:opacity 1.6s}
+#evostage.morph #evoflash{animation:eflash 2.4s ease}
+@keyframes eflash{0%{opacity:0}45%{opacity:.95}100%{opacity:0}}
+#evocompare{display:flex;gap:16px;align-items:center;justify-content:center}
+#evocompare .half{text-align:center}
+#evocompare .half svg{width:120px;height:120px}
+#evocompare .arrow{font-size:30px;color:#e8ecf6}
+
+/* ---------- Hilfe ---------- */
+#helptabs{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
+.htab{width:64px;height:56px;border-radius:16px;background:#efe9da;display:flex;
+  align-items:center;justify-content:center}
+.htab svg{width:34px;height:34px}
+.htab.sel{background:var(--accent)}
+.helpcard{background:#f7f2e6;border-radius:18px;padding:16px;margin-bottom:12px;text-align:center}
+.helpcard .demo{height:130px;position:relative;margin-bottom:8px}
+.helpcard .demo svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:110px;height:110px}
+.helpcard h3{font-size:1.15em;font-weight:800;margin-bottom:4px}
+.helpcard p{font-size:1.02em}
+.hand{position:absolute;font-size:40px;z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
+.hand.stroke{animation:handstroke 2s ease-in-out infinite}
+@keyframes handstroke{0%,100%{transform:translate(-46px,-6px) rotate(-10deg)}50%{transform:translate(30px,-16px) rotate(8deg)}}
+.hand.circle{animation:handcircle 2.4s linear infinite}
+@keyframes handcircle{0%{transform:translate(-30px,-10px)}25%{transform:translate(0,-34px)}50%{transform:translate(30px,-10px)}75%{transform:translate(0,14px)}100%{transform:translate(-30px,-10px)}}
+.hand.lift{animation:handlift 2.2s ease-in-out infinite}
+@keyframes handlift{0%,20%{transform:translate(0,44px)}55%,70%{transform:translate(0,-30px)}100%{transform:translate(0,44px)}}
+.hand.pull{animation:handpull 2.4s ease-in-out infinite}
+@keyframes handpull{0%,15%{transform:translate(-20px,0)}60%,75%{transform:translate(58px,0)}100%{transform:translate(-20px,0)}}
+.glowrow{display:flex;justify-content:space-between;gap:4px;margin-top:6px}
+.glowrow .gr{flex:1;text-align:center;font-size:.72em;font-weight:700}
+.glowrow .gr svg{width:100%;max-width:58px;height:58px;margin:0 auto}
+details.hsec{background:#f7f2e6;border-radius:14px;margin-bottom:8px;padding:2px 0}
+details.hsec summary{padding:13px 16px;font-weight:800;cursor:pointer;list-style:none;min-height:52px;display:flex;align-items:center}
+details.hsec summary::before{content:'▸';margin-right:8px;transition:transform .2s;display:inline-block}
+details.hsec[open] summary::before{transform:rotate(90deg)}
+details.hsec .htxt{padding:0 16px 14px;font-size:.95em;line-height:1.55}
+
+/* ---------- Code / Statistik ---------- */
+#codeshow{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.25em;letter-spacing:2px;
+  background:#efe9da;padding:12px;border-radius:12px;text-align:center;user-select:all;-webkit-user-select:all;margin:8px 0;overflow-wrap:anywhere}
+#codein{width:100%;font-family:ui-monospace,Menlo,monospace;font-size:1.1em;padding:12px;
+  border-radius:12px;border:2px solid #d8d2c4;text-align:center;text-transform:uppercase;background:#fffdf6;color:#33313d}
+.statrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.statrow .sname{flex:0 0 92px;font-weight:700;font-size:.9em}
+.statrow .sbar{flex:1;height:14px;border-radius:8px;background:#e8e2d2;overflow:hidden}
+.statrow .sfill{height:100%;border-radius:8px;background:var(--accent)}
+.statrow .sval{flex:0 0 34px;text-align:right;font-weight:800;font-size:.9em}
+.needicons{display:flex;justify-content:space-around;margin:6px 0 2px}
+.needicons .ni{text-align:center;font-size:24px}
+.needicons .ni small{display:block;font-size:11px;font-weight:700;opacity:.7}
+
+/* ---------- Chronik ---------- */
+.chronentry{background:#f7f2e6;border-radius:14px;padding:12px 14px;margin-bottom:10px;font-size:.95em}
+.chronentry .cd{font-size:.8em;opacity:.6;font-weight:700}
+
+/* ---------- Toast & Sonstiges ---------- */
+#toast{position:absolute;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
+  background:var(--card);color:var(--cardink);padding:12px 20px;border-radius:16px;z-index:70;
+  opacity:0;transition:all .45s ease;pointer-events:none;font-weight:600;box-shadow:0 8px 24px rgba(10,14,30,.3);
+  max-width:86%;text-align:center;font-size:.95em}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.closex{position:sticky;top:0;float:right;width:44px;height:44px;border-radius:50%;
+  background:#efe9da;font-size:20px;font-weight:800;z-index:5;margin-left:8px}
+.hidden{display:none !important}
+#treffenstage{position:relative;height:240px}
+#treffenstage .tw{position:absolute;top:30px;width:150px;height:150px;transition:left 2.2s ease,right 2.2s ease}
+@media (prefers-reduced-motion:reduce){
+  .hand,.ffly,.star{animation-duration:8s !important}
+  #wesen.happy-hop,.fighter.attack,.fighter.hit{animation:none !important}
+}
+</style>
+</head>
+<body>
+<div id="app" class="t-morgen">
+  <div id="sky"></div><div id="skyfade"></div>
+  <div id="stars"></div>
+  <div id="orb"></div>
+  <div id="hills">
+    <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+      <path class="hillA" d="M0,80 Q70,30 150,68 T400,55 V200 H0 Z"/>
+      <path class="hillB" d="M0,120 Q110,70 210,108 T400,100 V200 H0 Z"/>
+      <path class="hillC" d="M0,165 Q130,125 260,155 T400,150 V200 H0 Z"/>
+    </svg>
+  </div>
+  <div id="fireflies"></div>
+
+  <!-- ======= Startbildschirm ======= -->
+  <div id="scr-start" class="screen">
+    <h1>GLIMM</h1>
+    <div id="profilecards"></div>
+    <div id="startextra"></div>
+  </div>
+
+  <!-- ======= Entstehungsritual ======= -->
+  <div id="scr-ritual" class="screen">
+    <div id="knospe"></div>
+    <div id="sparks"></div>
+    <div id="ritualhint"></div>
+  </div>
+
+  <!-- ======= Hauptbildschirm ======= -->
+  <div id="scr-home" class="screen">
+    <div id="stage">
+      <div id="wesen"></div>
+      <div id="awayscene">
+        <div id="awaypath"><div id="awaywalker"></div></div>
+        <div id="awayinfo"><div class="big"></div><div class="sub"></div></div>
+      </div>
+    </div>
+    <div id="statusline"><span></span></div>
+    <div id="actionrow"></div>
+    <div id="drawer"></div>
+  </div>
+
+  <!-- Chrome (nur im Home sichtbar) -->
+  <div id="chrome" class="hidden">
+    <button class="chip" id="homebtn" aria-label="Zurück zum Start">
+      <svg viewBox="0 0 24 24" fill="none"><path class="st" d="M3 11.5 12 4l9 7.5M5.5 10v9h13v-9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div id="hearts"></div>
+    <div style="display:flex;gap:8px">
+      <button class="chip" id="soundbtn" aria-label="Ton"></button>
+      <button class="chip" id="helpbtn" aria-label="Hilfe">
+        <svg viewBox="0 0 24 24" fill="none"><path class="st" d="M9 9.2a3 3 0 1 1 4.2 2.9c-.9.5-1.2 1-1.2 2.1" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.5" fill="currentColor" class="stf"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="dragGhost"></div>
+  <div id="toast"></div>
+
+  <!-- ======= Overlays ======= -->
+  <div id="ov-name" class="overlay"><div class="card" id="namecard">
+    <h2>Wie soll es heißen?</h2>
+    <input id="nameinput" maxlength="12" autocomplete="off" placeholder="Name">
+    <div class="namerow">
+      <button id="dicebtn" class="bigbtn" aria-label="Namen würfeln">🎲</button>
+      <button id="nameok" class="bigbtn">So heißt es</button>
+    </div>
+  </div></div>
+
+  <div id="ov-report" class="overlay"><div class="card" id="reportcard">
+    <button class="closex" id="reportclose">✕</button>
+    <h2 id="reporttitle"></h2>
+    <div class="icons" id="reporticons"></div>
+    <div class="rtext" id="reporttext"></div>
+    <div class="chips" id="reportchips"></div>
+    <button class="bigbtn ghost" id="readbtn">🔊 Vorlesen</button>
+    <button class="bigbtn" id="reportok">Schön</button>
+  </div></div>
+
+  <div id="ov-send" class="overlay"><div class="card">
+    <button class="closex" id="sendclose">✕</button>
+    <h2 id="sendtitle">Wohin soll es gehen?</h2>
+    <div class="taskrow" id="taskrow"></div>
+    <div class="focusgrid" id="focusgrid"></div>
+    <button class="bigbtn" id="sendok">Losschicken</button>
+  </div></div>
+
+  <div id="ov-battle" class="overlay"><div class="card">
+    <button class="closex hidden" id="battleclose">✕</button>
+    <h2 id="battletitle"></h2>
+    <div id="battlefield">
+      <div class="fighter me"><div class="fsvg"></div><div class="hpbar"><div class="hpfill"></div></div><div class="fname"></div></div>
+      <div class="fighter enemy"><div class="femoji"></div><div class="hpbar"><div class="hpfill"></div></div><div class="fname"></div></div>
+    </div>
+    <div id="timingwrap"><div id="timingzone"></div><div id="timingcursor"></div><div id="timinghint">Tipp in der grünen Zone</div></div>
+    <div id="battlemsg"></div>
+    <div id="battlebtns"></div>
+  </div></div>
+
+  <div id="ov-game" class="overlay"><div class="card">
+    <button class="closex" id="gameclose">✕</button>
+    <h2 id="gametitle"></h2>
+    <div id="gamebody"></div>
+    <div id="gamehud"></div>
+  </div></div>
+
+  <div id="ov-evo" class="overlay">
+    <div id="evotext"></div>
+    <div id="evostage" class="hidden"><div class="eold"></div><div class="enew"></div><div id="evoflash"></div></div>
+    <div id="evocompare" class="hidden"></div>
+    <button class="bigbtn" id="evonext" style="max-width:280px">Weiter</button>
+  </div>
+
+  <div id="ov-help" class="overlay"><div class="card">
+    <button class="closex" id="helpclose">✕</button>
+    <div id="helptabs"></div>
+    <div id="helpbody"></div>
+  </div></div>
+
+  <div id="ov-menu" class="overlay"><div class="card">
+    <button class="closex" id="menuclose">✕</button>
+    <h2 id="menutitle"></h2>
+    <div id="menubody"></div>
+  </div></div>
+
+  <div id="ov-treffen" class="overlay"><div class="card">
+    <h2 id="treffentitle">Zusammen spielen</h2>
+    <div id="treffenstage"></div>
+    <div id="treffenmsg" style="text-align:center;min-height:2.4em;font-weight:600"></div>
+    <button class="bigbtn" id="treffenok">Schön war's</button>
+  </div></div>
+</div>
+<script>
+/* Von Inhalts-Agenten erzeugte Spieltexte + statische Spieldaten */
+const DATA={
+ "berichte": {
+  "orte": [
+   {
+    "id": "moosfelsen",
+    "satz": "Ich bin bis zum Moosfelsen gelaufen.",
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🪨"
+   },
+   {
+    "id": "tautal",
+    "satz": "Ich bin bis ins Tautal gelaufen.",
+    "tageszeit": [
+     "morgen"
+    ],
+    "emoji": "💧"
+   },
+   {
+    "id": "birkenlichtung",
+    "satz": "Ich war auf der Birkenlichtung.",
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🌳"
+   },
+   {
+    "id": "glitzerbach",
+    "satz": "Ich bin bis zum Glitzerbach gelaufen.",
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🏞️"
+   },
+   {
+    "id": "hummelwiese",
+    "satz": "Ich war auf der Hummelwiese.",
+    "tageszeit": [
+     "mittag"
+    ],
+    "emoji": "🐝"
+   },
+   {
+    "id": "farnhoehle",
+    "satz": "Ich war in der kleinen Farnhöhle.",
+    "tageszeit": [
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🌿"
+   },
+   {
+    "id": "kieselbucht",
+    "satz": "Ich bin bis zur Kieselbucht am Weiher gelaufen.",
+    "tageszeit": [
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🐚"
+   },
+   {
+    "id": "nebelwiese",
+    "satz": "Ich war auf der Nebelwiese.",
+    "tageszeit": [
+     "morgen"
+    ],
+    "emoji": "🌫️"
+   },
+   {
+    "id": "sternenhuegel",
+    "satz": "Ich bin bis auf den Sternenhügel gelaufen.",
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "⭐"
+   },
+   {
+    "id": "leuchtpilz-ecke",
+    "satz": "Ich war bei den Leuchtpilzen hinter dem Brombeerbusch.",
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🍄"
+   },
+   {
+    "id": "apfelgarten",
+    "satz": "Ich bin bis zum alten Apfelgarten gelaufen.",
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🍎"
+   },
+   {
+    "id": "windecke",
+    "satz": "Ich war an der Windecke, wo die Blätter tanzen.",
+    "tageszeit": [
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🍃"
+   },
+   {
+    "id": "grillenfeld",
+    "satz": "Ich war im hohen Gras am Grillenfeld.",
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🦗"
+   },
+   {
+    "id": "mondteich",
+    "satz": "Ich bin bis zum Mondteich gelaufen.",
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🌙"
+   },
+   {
+    "id": "eichenwurzel",
+    "satz": "Ich war unter der großen Eichenwurzel.",
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🪵"
+   },
+   {
+    "id": "sonnenbeerenhang",
+    "satz": "Ich bin bis zum Sonnenbeerenhang gelaufen.",
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🫐"
+   }
+  ],
+  "ereignisse": [
+   {
+    "id": "marienkaefer-nase",
+    "satz": "Ein Marienkäfer ist auf meiner Nase gelandet. Ich hab ganz still gehalten, bis er fertig war.",
+    "fokus": [
+     "erkunden",
+     "ruhe"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🐞"
+   },
+   {
+    "id": "regen-blatt",
+    "satz": "Es hat kurz geregnet. Ich hab mich unter ein großes Blatt gestellt und dem Klopfen zugehört.",
+    "fokus": [
+     "ruhe",
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🌧️"
+   },
+   {
+    "id": "schnecken-rennen",
+    "satz": "Ich hab ein Wettrennen mit einer Schnecke gemacht. Ich hab gewonnen, aber ich hab ihr gesagt, es war knapp.",
+    "fokus": [
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🐌"
+   },
+   {
+    "id": "stein-heben",
+    "satz": "Ich hab einen Stein hochgehoben, der fast so groß war wie ich. Danach musste ich kurz sitzen.",
+    "fokus": [
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🪨"
+   },
+   {
+    "id": "beeren-busch",
+    "satz": "Ich hab einen Busch voller Sonnenbeeren gefunden. Ich hab nur die genommen, die schon von allein geleuchtet haben.",
+    "fokus": [
+     "essen"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🫐"
+   },
+   {
+    "id": "vogel-uebt",
+    "satz": "Ein Vogel hat ein neues Lied geübt und sich zweimal versungen. Ich hab so getan, als hätte ich nichts gemerkt.",
+    "fokus": [
+     "ruhe",
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🐦"
+   },
+   {
+    "id": "pfuetzen-himmel",
+    "satz": "In einer Pfütze war der ganze Himmel drin. Ich bin vorsichtig außen herum gegangen, damit er heil bleibt.",
+    "fokus": [
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🌥️"
+   },
+   {
+    "id": "gegenwind",
+    "satz": "Der Wind kam heute von vorn. Ich bin extra gegen ihn gelaufen, zum Üben.",
+    "fokus": [
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🌬️"
+   },
+   {
+    "id": "ameisen-strasse",
+    "satz": "Ich hab einer Ameisenstraße zugeschaut. Alle wussten genau, wo sie hinwollen. Ich hab kurz gewinkt.",
+    "fokus": [
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🐜"
+   },
+   {
+    "id": "honig-duft",
+    "satz": "Irgendwo hat es nach Honig gerochen. Ich hab die Stelle nicht gefunden, aber meine Nase war trotzdem froh.",
+    "fokus": [
+     "essen"
+    ],
+    "tageszeit": [
+     "mittag"
+    ],
+    "emoji": "🍯"
+   },
+   {
+    "id": "moos-nickerchen",
+    "satz": "Ich hab ein kleines Nickerchen im Moos gemacht. Es war fast so weich wie bei dir.",
+    "fokus": [
+     "ruhe"
+    ],
+    "tageszeit": [
+     "mittag",
+     "abend"
+    ],
+    "emoji": "😴"
+   },
+   {
+    "id": "wurzel-stolpern",
+    "satz": "Ich bin über eine Wurzel gestolpert. Nur ein Eichhörnchen hat es gesehen. Es hat nichts gesagt.",
+    "fokus": [
+     "training",
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🐿️"
+   },
+   {
+    "id": "hoehlen-echo",
+    "satz": "Ich hab in eine kleine Höhle hineingerufen. Da wohnt ein Echo. Es sagt alles nach, aber auf die freundliche Art.",
+    "fokus": [
+     "erkunden"
+    ],
+    "tageszeit": [
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🕳️"
+   },
+   {
+    "id": "falter-begleitung",
+    "satz": "Ein Falter ist ein Stück neben mir hergeflogen. Vielleicht sind wir verwandt.",
+    "fokus": [
+     "erkunden",
+     "ruhe"
+    ],
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🦋"
+   },
+   {
+    "id": "nuss-verloren",
+    "satz": "Ich hab eine Nuss gefunden und gleich wieder verloren. Vielleicht findet sie jemand, der sie mehr braucht.",
+    "fokus": [
+     "essen"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🌰"
+   },
+   {
+    "id": "huegel-rennen",
+    "satz": "Ich bin den Hügel dreimal hochgerannt. Beim dritten Mal haben meine Beine gebrummt, aber gut gebrummt.",
+    "fokus": [
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "⛰️"
+   },
+   {
+    "id": "pilz-kreis",
+    "satz": "Ich hab Pilze gefunden, die im Kreis standen. Ich hab keinen probiert, nur gezählt. Es waren sieben.",
+    "fokus": [
+     "essen",
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🍄"
+   },
+   {
+    "id": "grillen-musik",
+    "satz": "Die Grillen haben Musik gemacht. Ich hab ganz leise mitgesummt, damit ich nicht störe.",
+    "fokus": [
+     "ruhe"
+    ],
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🦗"
+   },
+   {
+    "id": "tau-trinken",
+    "satz": "Ich hab Tau von einem Blatt getrunken. Er schmeckt nach Morgen.",
+    "fokus": [
+     "essen",
+     "ruhe"
+    ],
+    "tageszeit": [
+     "morgen"
+    ],
+    "emoji": "💧"
+   },
+   {
+    "id": "spinnennetz-tropfen",
+    "satz": "In einem Spinnennetz hingen lauter kleine Wassertropfen wie Perlen. Ich hab nur geschaut, nicht angefasst.",
+    "fokus": [
+     "erkunden"
+    ],
+    "tageszeit": [
+     "morgen"
+    ],
+    "emoji": "🕸️"
+   },
+   {
+    "id": "stamm-balance",
+    "satz": "Ich bin über einen liegenden Baumstamm balanciert. Einmal gewackelt, nicht gefallen.",
+    "fokus": [
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🪵"
+   },
+   {
+    "id": "igel-nicken",
+    "satz": "Ich hab einen Igel getroffen. Wir haben uns angeschaut und beide einmal genickt.",
+    "fokus": [
+     "erkunden"
+    ],
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🦔"
+   },
+   {
+    "id": "sonnenfleck",
+    "satz": "Ich hab einen Sonnenfleck gefunden und mich genau hineingesetzt. Er hat gepasst wie gemacht.",
+    "fokus": [
+     "ruhe"
+    ],
+    "tageszeit": [
+     "mittag"
+    ],
+    "emoji": "☀️"
+   },
+   {
+    "id": "matsch-pfote",
+    "satz": "Ich bin mitten in den Matsch getreten. Meine Pfote war ganz braun. Ich hab sie im Bach gewaschen.",
+    "fokus": [
+     "erkunden",
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🐾"
+   },
+   {
+    "id": "pusteblume",
+    "satz": "Ich hab eine Pusteblume gefunden. Ich hab einmal gepustet und den Samen hinterhergewinkt.",
+    "fokus": [
+     "erkunden"
+    ],
+    "tageszeit": [
+     "mittag"
+    ],
+    "emoji": "🌼"
+   },
+   {
+    "id": "brustlicht-heller",
+    "satz": "Als es dämmrig wurde, ist mein Licht von allein ein bisschen heller geworden. Ich glaube, es wollte mir den Weg zeigen.",
+    "fokus": [
+     "erkunden",
+     "ruhe"
+    ],
+    "tageszeit": [
+     "abend"
+    ],
+    "emoji": "🔆"
+   },
+   {
+    "id": "frosch-springen",
+    "satz": "Ein Frosch hat mir gezeigt, wie er springt. Ich hab es nachgemacht. Mein Sprung war kleiner, aber es war meiner.",
+    "fokus": [
+     "training"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag"
+    ],
+    "emoji": "🐸"
+   },
+   {
+    "id": "blatt-boot",
+    "satz": "Ich hab ein Blatt auf den Bach gesetzt. Es ist losgefahren wie ein kleines Boot. Ich hab gewinkt, bis es um die Kurve war.",
+    "fokus": [
+     "erkunden",
+     "ruhe"
+    ],
+    "tageszeit": [
+     "morgen",
+     "mittag",
+     "abend"
+    ],
+    "emoji": "🍂"
+   }
+  ],
+  "selten": [
+   {
+    "id": "zweites-licht",
+    "satz": "Ganz weit weg hab ich ein Licht gesehen, das aussah wie meins. Es hat zweimal geblinkt, und ich hab zweimal zurückgeblinkt. Ich glaube, da draußen ist noch so einer wie ich.",
+    "emoji": "✨"
+   },
+   {
+    "id": "tiefer-stern",
+    "satz": "Heute hing ein Stern viel zu tief, fast bei den Baumwipfeln. Ich hab ihm gezeigt, wo oben ist. Beim Hochsteigen hat er noch einmal für mich gefunkelt.",
+    "emoji": "⭐"
+   },
+   {
+    "id": "mond-im-teich",
+    "satz": "Der Mond hat sich im Teich ausgeruht. Ich war ganz still, bis er wieder oben am Himmel war. Das bleibt unter uns, ja?",
+    "emoji": "🌕"
+   },
+   {
+    "id": "summender-baum",
+    "satz": "Ich hab einen Baum gefunden, der ganz leise gesummt hat. Ich hab mein Ohr an die Rinde gelegt. Ich glaube, er kennt ein Lied, das älter ist als er.",
+    "emoji": "🌳"
+   },
+   {
+    "id": "leuchtfalter-tanz",
+    "satz": "Auf einmal waren überall Leuchtfalter um mich herum. Sie haben getanzt, und mein Licht hat mitgetanzt. Danach war mir noch lange warm in der Brust.",
+    "emoji": "🦋"
+   },
+   {
+    "id": "regenbogen-stueck",
+    "satz": "Nach dem Regen stand ein Regenbogen da, nur für einen Moment. Ich wollte dir eine Farbe mitbringen. Das Grün hab ich mir gemerkt, das schenk ich dir.",
+    "emoji": "🌈"
+   }
+  ],
+  "fundsaetze": [
+   {
+    "satz": "Ich hab {n} {fund} mitgebracht. Unterwegs hab ich schon davon probiert. Tut mir leid."
+   },
+   {
+    "satz": "Ich hab {n} {fund} mitgebracht. Die sind für dich."
+   },
+   {
+    "satz": "Ich hab {n} {fund} gefunden. Ich hab sie den ganzen Weg festgehalten."
+   },
+   {
+    "satz": "Guck mal, {n} {fund}. Ich hab sie ganz vorsichtig getragen."
+   },
+   {
+    "satz": "Ich hab {n} {fund} dabei. Sie riechen noch nach draußen."
+   },
+   {
+    "satz": "Ich bring dir {n} {fund} mit. Ich hab beim Laufen immer wieder nachgezählt."
+   },
+   {
+    "satz": "Ich hab {n} {fund} mitgebracht. Fast hätte ich sie einem Eichhörnchen geschenkt, aber dann hab ich an dich gedacht."
+   },
+   {
+    "satz": "Ich hab {n} {fund} gefunden. Sie lagen da, als hätten sie auf mich gewartet."
+   },
+   {
+    "satz": "Hier, {n} {fund}. Mehr waren es nicht, aber die hier sind gut."
+   },
+   {
+    "satz": "Ich hab {n} {fund} mitgebracht. Ein paar sind etwas zerdrückt. Das war der Wind, glaub ich."
+   }
+  ],
+  "schluss": [
+   {
+    "id": "fuesse-muede",
+    "satz": "Jetzt sind meine Füße müde, aber gut müde.",
+    "fokus": []
+   },
+   {
+    "id": "alles-gemerkt",
+    "satz": "Ich hab unterwegs an dich gedacht. Darum hab ich mir alles gemerkt.",
+    "fokus": []
+   },
+   {
+    "id": "licht-ruhig",
+    "satz": "Mein Licht ist heute ganz ruhig. Das heißt, es war ein guter Tag.",
+    "fokus": []
+   },
+   {
+    "id": "bei-dir-sitzen",
+    "satz": "Jetzt möchte ich ein bisschen bei dir sitzen. Einfach nur so.",
+    "fokus": []
+   },
+   {
+    "id": "bauch-zufrieden",
+    "satz": "Mein Bauch ist rund und zufrieden. Er brummt ein Dankeschön.",
+    "fokus": [
+     "essen"
+    ]
+   },
+   {
+    "id": "hunger-geheimnis",
+    "satz": "Vom Futtersuchen kriegt man selber Hunger. Das ist ein Geheimnis, das ich jetzt kenne.",
+    "fokus": [
+     "essen"
+    ]
+   },
+   {
+    "id": "staerker-fuehl",
+    "satz": "Ich glaube, ich bin ein kleines bisschen stärker geworden. Fühl mal.",
+    "fokus": [
+     "training"
+    ]
+   },
+   {
+    "id": "beine-schlafen-gut",
+    "satz": "Meine Beine sind müde vom Üben. Die schlafen heute bestimmt besonders gut.",
+    "fokus": [
+     "training"
+    ]
+   },
+   {
+    "id": "weiter-morgen",
+    "satz": "Morgen möchte ich noch ein Stück weiter laufen. Nur ein kleines Stück.",
+    "fokus": [
+     "erkunden"
+    ]
+   },
+   {
+    "id": "kopf-geht-weiter",
+    "satz": "Ich hab so viel gesehen, dass es in meinem Kopf noch weitergeht.",
+    "fokus": [
+     "erkunden"
+    ]
+   },
+   {
+    "id": "ausgeruhte-ohren",
+    "satz": "Ich bin so schön ausgeruht. Sogar meine Ohren sind ausgeruht.",
+    "fokus": [
+     "ruhe"
+    ]
+   },
+   {
+    "id": "gaehnen-zeichen",
+    "satz": "Jetzt muss ich gähnen. Das ist ein gutes Zeichen.",
+    "fokus": [
+     "ruhe"
+    ]
+   }
+  ]
+ },
+ "traeume": {
+  "traumfragmente": [
+   {
+    "id": "sternenloecher",
+    "satz": "Ich habe geträumt, dass die Sterne kleine Löcher sind. Dahinter wohnt ein Licht, das uns gerne mag.",
+    "emoji": "✨"
+   },
+   {
+    "id": "mondtreppe",
+    "satz": "Ich habe von einer Treppe aus Mondlicht geträumt. Ganz oben saß eine Schnecke und hat gewunken.",
+    "emoji": "🐌"
+   },
+   {
+    "id": "grasmusik",
+    "satz": "Im Traum konnte ich das Gras singen hören. Es war ein Lied nur aus grünen Tönen.",
+    "emoji": "🌿"
+   },
+   {
+    "id": "rueckwaertsregen",
+    "satz": "Ich habe geträumt, dass der Regen rückwärts fällt. Die Pfützen sind nach Hause geflogen.",
+    "emoji": "🌧️"
+   },
+   {
+    "id": "laterne",
+    "satz": "Ich habe geträumt, ich wäre eine Laterne. Die Nachtfalter haben sich zu mir gesetzt und mir Geschichten erzählt.",
+    "emoji": "🏮"
+   },
+   {
+    "id": "himmelsdecke",
+    "satz": "Im Traum war der Himmel eine große weiche Decke. Jemand hat uns alle zugedeckt.",
+    "emoji": "🌌"
+   },
+   {
+    "id": "milchsee",
+    "satz": "Ich habe von einem See aus warmer Milch geträumt. Am Ufer standen kleine Tassen und haben geduldig gewartet.",
+    "emoji": "🥛"
+   },
+   {
+    "id": "wolkenkissen",
+    "satz": "Ich habe geträumt, dass Wolken abends schlafen gehen. Sie legen sich auf Berge, weil das ihre Kissen sind.",
+    "emoji": "☁️"
+   },
+   {
+    "id": "steinnamen",
+    "satz": "Im Traum hatte jeder Stein einen Namen. Ich habe fast alle vergessen, aber einer hieß Brummel.",
+    "emoji": "🪨"
+   },
+   {
+    "id": "lichtfisch",
+    "satz": "Ich habe geträumt, dass mein Licht ein kleiner Fisch ist. Er ist in mir herumgeschwommen und hat leise geblubbert.",
+    "emoji": "🐟"
+   },
+   {
+    "id": "fluesterwald",
+    "satz": "Ich habe von einem Wald geträumt, in dem die Bäume flüstern. Sie haben sich gute Nacht gesagt, einer nach dem anderen.",
+    "emoji": "🌲"
+   },
+   {
+    "id": "langsamfliegen",
+    "satz": "Im Traum konnte ich fliegen, aber nur ganz langsam. Der Wind hat mich getragen wie eine Feder, die es nicht eilig hat.",
+    "emoji": "🪶"
+   },
+   {
+    "id": "mondbad",
+    "satz": "Ich habe geträumt, dass der Mond in einen See geplumpst ist. Die Fische haben ihn vorsichtig wieder hochgeschoben.",
+    "emoji": "🌕"
+   },
+   {
+    "id": "kerzenstadt",
+    "satz": "Ich habe von einer Stadt aus Kerzen geträumt. Alle Fenster waren hell und niemand war allein.",
+    "emoji": "🕯️"
+   },
+   {
+    "id": "honigschnee",
+    "satz": "Im Traum hat es Schnee geschneit, der nach Honig schmeckt. Ich habe ein bisschen probiert. Nur ein bisschen.",
+    "emoji": "🍯"
+   },
+   {
+    "id": "nachttier",
+    "satz": "Ich habe geträumt, dass die Nacht ein großes weiches Tier ist. Sie hat geschnurrt, als ich sie gestreichelt habe.",
+    "emoji": "🐈"
+   },
+   {
+    "id": "sonnenknopf",
+    "satz": "Ich habe von einem Knopf geträumt, der die Sonne anmacht. Er war unter einem Blatt versteckt und ganz warm.",
+    "emoji": "🔆"
+   },
+   {
+    "id": "sternebaden",
+    "satz": "Im Traum haben die Sterne im Meer gebadet. Danach haben sie ein bisschen getropft. Das nennt man dann Sternschnuppen.",
+    "emoji": "🌠"
+   }
+  ],
+  "traumschluss": [
+   {
+    "id": "fell",
+    "satz": "Als ich aufgewacht bin, war noch ein bisschen Traum in meinem Fell. Ich habe ihn für dich aufgehoben."
+   },
+   {
+    "id": "flackern",
+    "satz": "Als ich aufgewacht bin, hat mein Licht noch geflackert wie im Traum. Jetzt ist es wieder ruhig."
+   },
+   {
+    "id": "oben",
+    "satz": "Als ich aufgewacht bin, wusste ich kurz nicht, wo oben ist. Dann habe ich an dich gedacht. Da war alles wieder richtig."
+   },
+   {
+    "id": "lied",
+    "satz": "Als ich aufgewacht bin, hatte ich noch das Lied im Ohr. Ich summe es dir vor, wenn du magst."
+   },
+   {
+    "id": "kissen",
+    "satz": "Als ich aufgewacht bin, war mein Kissen verrutscht. Vielleicht war ich im Traum wirklich unterwegs."
+   },
+   {
+    "id": "augenzu",
+    "satz": "Als ich aufgewacht bin, habe ich schnell die Augen wieder zugemacht. Aber der Traum war schon fertig. Schön war er trotzdem."
+   }
+  ],
+  "rueckschau": [
+   {
+    "form": "wehr",
+    "stufe": 2,
+    "text": "Du hast {n} Mal mit mir geübt, mutig zu sein. Am Anfang hat mein Licht dabei gezittert. Jetzt zittert es nicht mehr, es steht ganz gerade. {name} kann sich jetzt vor dich stellen, wenn du magst."
+   },
+   {
+    "form": "wehr",
+    "stufe": 3,
+    "text": "Wir zwei haben {n} Kämpfe zusammen geschafft. Ich bin dabei gewachsen, außen und ein bisschen mehr innen. Mein Licht ist jetzt ruhig wie ein kleines Wachtfeuer. Solange {name} da ist, muss niemand allein mutig sein."
+   },
+   {
+    "form": "flink",
+    "stufe": 2,
+    "text": "Du hast {n} Mal mit mir gespielt, bis meine Ohren geflattert haben. Ich bin gehüpft und gesaust und einmal fast geflogen. Jetzt ist {name} schneller als der eigene Schatten. Fast."
+   },
+   {
+    "form": "flink",
+    "stufe": 3,
+    "text": "{n} Mal haben wir zusammen gespielt, du und ich. Aus Hüpfen wurde Sausen, aus Sausen wurde Flitzen. Wenn {name} jetzt losläuft, muss sich sogar der Wind beeilen. Danke, dass du nie aufgehört hast zu spielen."
+   },
+   {
+    "form": "traum",
+    "stufe": 2,
+    "text": "Du hast mich {n} Mal auf Traumreise geschickt. Ich habe von Orten geträumt, die noch niemand kennt. Ein paar davon habe ich mir gemerkt. {name} ist jetzt innen größer als außen."
+   },
+   {
+    "form": "traum",
+    "stufe": 3,
+    "text": "Du hast mich {n} Mal träumen lassen. Die Träume haben sich in mir gestapelt wie Bücher in einem Regal. Jetzt kann ich darin blättern, wann immer ich will. Wenn du mal etwas wissen möchtest: {name} schaut für dich nach."
+   },
+   {
+    "form": "herz",
+    "stufe": 2,
+    "text": "Du hast mich {n} Mal gestreichelt. Jedes Mal ist ein bisschen Wärme in mir geblieben. Jetzt bin ich innen wie eine kleine Heizung. Wer {name} umarmt, bekommt etwas davon ab."
+   },
+   {
+    "form": "herz",
+    "stufe": 3,
+    "text": "Ich habe deine Streicheleinheiten gezählt: {n}. Jede einzelne habe ich behalten. Mein Licht ist jetzt so warm, dass man sich die Hände daran wärmen kann. {name} leuchtet jetzt ein bisschen wie du."
+   }
+  ],
+  "formnamen": [
+   {
+    "form": "wehr",
+    "stufe": 2,
+    "name": "Mutling"
+   },
+   {
+    "form": "wehr",
+    "stufe": 3,
+    "name": "Schildschimmer"
+   },
+   {
+    "form": "flink",
+    "stufe": 2,
+    "name": "Hüpferling"
+   },
+   {
+    "form": "flink",
+    "stufe": 3,
+    "name": "Windflitzer"
+   },
+   {
+    "form": "traum",
+    "stufe": 2,
+    "name": "Träumling"
+   },
+   {
+    "form": "traum",
+    "stufe": 3,
+    "name": "Mondlauscher"
+   },
+   {
+    "form": "herz",
+    "stufe": 2,
+    "name": "Wärmling"
+   },
+   {
+    "form": "herz",
+    "stufe": 3,
+    "name": "Herzleuchte"
+   }
+  ],
+  "namen": [
+   "Pim",
+   "Piko",
+   "Plum",
+   "Pomm",
+   "Fips",
+   "Filu",
+   "Flumi",
+   "Fussel",
+   "Lumo",
+   "Luni",
+   "Lami",
+   "Lupp",
+   "Mumi",
+   "Mullo",
+   "Mopp",
+   "Mimo",
+   "Nuki",
+   "Noki",
+   "Nimbi",
+   "Nulu",
+   "Bimo",
+   "Bubu",
+   "Bommel",
+   "Brumsi",
+   "Wumi",
+   "Wobbel",
+   "Wuli",
+   "Tapsi",
+   "Tilu",
+   "Schnuff",
+   "Sumsi",
+   "Purzel",
+   "Kumo",
+   "Knopsi",
+   "Zumi",
+   "Jipp",
+   "Dimmi",
+   "Ruki",
+   "Oki",
+   "Hoppel"
+  ],
+  "wecksaetze": [
+   {
+    "id": "mmh",
+    "satz": "Mmh. Bist du das? Schön."
+   },
+   {
+    "id": "fastwach",
+    "satz": "Ich bin wach. Also fast. Gleich richtig."
+   },
+   {
+    "id": "lichtgaehnt",
+    "satz": "Mein Licht braucht noch einen Moment. Es gähnt noch."
+   },
+   {
+    "id": "vermisst",
+    "satz": "Guten Morgen. Ich glaube, ich habe dich im Schlaf vermisst."
+   },
+   {
+    "id": "froh",
+    "satz": "Noch ein bisschen verschlafen. Aber schon ein bisschen froh."
+   },
+   {
+    "id": "blinzeln",
+    "satz": "Ich habe geblinzelt, und da warst du. Guter Anfang."
+   },
+   {
+    "id": "ohrenwach",
+    "satz": "Meine Ohren sind schon wach. Der Rest kommt gleich nach."
+   },
+   {
+    "id": "pfoten",
+    "satz": "Warte, ich sortiere noch meine Pfoten. So. Guten Morgen."
+   }
+  ],
+  "ruhesaetze": [
+   {
+    "satz": "{name} döst noch in der Morgensonne. Um {zeit} gibt es wieder etwas zu tun.",
+    "tageszeit": "morgen"
+   },
+   {
+    "satz": "{name} hat sich eingerollt und schnauft leise. Ab {zeit} seid ihr wieder dran.",
+    "tageszeit": "morgen"
+   },
+   {
+    "satz": "{name} träumt noch ein Weilchen vor sich hin. Der Morgen hat es nicht eilig.",
+    "tageszeit": "morgen"
+   },
+   {
+    "satz": "{name} liegt im warmen Gras und blinzelt in den Himmel. Um {zeit} geht es weiter.",
+    "tageszeit": "mittag"
+   },
+   {
+    "satz": "{name} hält Mittagsruhe. Das Licht in der Brust glimmt ganz leise.",
+    "tageszeit": "mittag"
+   },
+   {
+    "satz": "{name} schaut den Wolken beim Heimgehen zu. Um {zeit} gibt es wieder etwas zu tun.",
+    "tageszeit": "abend"
+   },
+   {
+    "satz": "{name} sitzt am Fenster und wird langsam müde. Morgen ist auch noch ein Tag.",
+    "tageszeit": "abend"
+   },
+   {
+    "satz": "{name} sammelt schon Träume für die Nacht. Um {zeit} seid ihr wieder dran.",
+    "tageszeit": "abend"
+   },
+   {
+    "satz": "{name} schläft tief und fest. Das kleine Licht glimmt wie eine Nachtlampe.",
+    "tageszeit": "nacht"
+   },
+   {
+    "satz": "{name} ist auf Traumreise. Um {zeit} gibt es bestimmt etwas zu erzählen.",
+    "tageszeit": "nacht"
+   }
+  ]
+ },
+ "welt": {
+  "futter": [
+   {
+    "id": "sonnenbeere",
+    "name": "Sonnenbeere",
+    "emoji": "🍊",
+    "satt": 20,
+    "stat": "herz",
+    "statplus": 3,
+    "selten": false
+   },
+   {
+    "id": "moosknolle",
+    "name": "Moosknolle",
+    "emoji": "🥔",
+    "satt": 30,
+    "stat": "kraft",
+    "statplus": 3,
+    "selten": false
+   },
+   {
+    "id": "taublatt",
+    "name": "Taublatt",
+    "emoji": "🥬",
+    "satt": 15,
+    "stat": "tempo",
+    "statplus": 2,
+    "selten": false
+   },
+   {
+    "id": "huepfkirsche",
+    "name": "Hüpfkirsche",
+    "emoji": "🍒",
+    "satt": 18,
+    "stat": "tempo",
+    "statplus": 3,
+    "selten": false
+   },
+   {
+    "id": "sternzwieback",
+    "name": "Sternzwieback",
+    "emoji": "🍪",
+    "satt": 25,
+    "stat": "klugheit",
+    "statplus": 3,
+    "selten": false
+   },
+   {
+    "id": "honigwoelkchen",
+    "name": "Honigwölkchen",
+    "emoji": "🍯",
+    "satt": 32,
+    "stat": "herz",
+    "statplus": 2,
+    "selten": false
+   },
+   {
+    "id": "flimmerpilz",
+    "name": "Flimmerpilz",
+    "emoji": "🍄",
+    "satt": 22,
+    "stat": "klugheit",
+    "statplus": 5,
+    "selten": true
+   },
+   {
+    "id": "funkennuss",
+    "name": "Funkennuss",
+    "emoji": "🌰",
+    "satt": 26,
+    "stat": "kraft",
+    "statplus": 5,
+    "selten": true
+   }
+  ],
+  "gegner": [
+   {
+    "id": "glutigel",
+    "name": "Glutigel",
+    "element": "glut",
+    "emoji": "🦔",
+    "auftritt": "Ein Glutigel sitzt am Wegrand und wärmt die Steine um sich herum.",
+    "sieg": "Der Glutigel nickt anerkennend und rollt gemütlich weiter.",
+    "niederlage": "Der Glutigel pustet deinem Glimmling warme Luft ins Fell und zieht leise weiter."
+   },
+   {
+    "id": "ofenkaetzchen",
+    "name": "Ofenkätzchen",
+    "element": "glut",
+    "emoji": "🐈",
+    "auftritt": "Ein Ofenkätzchen liegt auf der Mauer und schnurrt kleine Wärmewolken.",
+    "sieg": "Das Ofenkätzchen gibt deinem Glimmling ein Köpfchen und schnurrt zufrieden.",
+    "niederlage": "Das Ofenkätzchen legt sich kurz an deinen Glimmling und wärmt ihn wieder auf."
+   },
+   {
+    "id": "glutschnecke",
+    "name": "Glutschnecke",
+    "element": "glut",
+    "emoji": "🐌",
+    "auftritt": "Eine Glutschnecke zieht eine warm leuchtende Spur durch das Abendgras.",
+    "sieg": "Die Glutschnecke malt langsam einen Kringel als Gratulation und wandert weiter.",
+    "niederlage": "Die Glutschnecke zieht deinem Glimmling eine warme Spur um die Füße, damit er nicht friert."
+   },
+   {
+    "id": "troepfling",
+    "name": "Tröpfling",
+    "element": "tau",
+    "emoji": "💧",
+    "auftritt": "Ein Tröpfling sitzt auf dem Zaun und schaukelt mit den Beinen.",
+    "sieg": "Der Tröpfling plitscht vergnügt vom Zaun und winkt beim Davonkullern.",
+    "niederlage": "Der Tröpfling reicht deinem Glimmling einen Schluck frischen Tau zum Ausruhen."
+   },
+   {
+    "id": "nebelfrosch",
+    "name": "Nebelfrosch",
+    "element": "tau",
+    "emoji": "🐸",
+    "auftritt": "Ein Nebelfrosch hüpft aus dem Abendnebel und wartet geduldig.",
+    "sieg": "Der Nebelfrosch quakt einmal leise, das heißt bei ihm: schön gekämpft.",
+    "niederlage": "Der Nebelfrosch legt deinem Glimmling ein kühles Blatt auf die Stirn und bleibt noch ein bisschen."
+   },
+   {
+    "id": "tauwal",
+    "name": "Tauwal",
+    "element": "tau",
+    "emoji": "🐳",
+    "auftritt": "Ein kleiner Tauwal schwimmt langsam durch die feuchte Abendluft.",
+    "sieg": "Der Tauwal pustet eine Fontäne aus winzigen Tropfen, das ist sein Glückwunsch.",
+    "niederlage": "Der Tauwal summt deinem Glimmling ein tiefes, ruhiges Lied, bis es ihm wieder gut geht."
+   },
+   {
+    "id": "moosmuffel",
+    "name": "Moosmuffel",
+    "element": "moos",
+    "emoji": "🐢",
+    "auftritt": "Ein Moosmuffel schiebt sich aus dem Farn und blinzelt langsam herüber.",
+    "sieg": "Der Moosmuffel zieht kurz den Kopf ein, kommt wieder heraus und nickt zufrieden.",
+    "niederlage": "Der Moosmuffel schiebt deinem Glimmling ein weiches Mooskissen hin, zum Ausruhen."
+   },
+   {
+    "id": "farnhaeschen",
+    "name": "Farnhäschen",
+    "element": "moos",
+    "emoji": "🐰",
+    "auftritt": "Ein Farnhäschen mümmelt am Wegrand und wackelt mit den grünen Ohren.",
+    "sieg": "Das Farnhäschen macht einen kleinen Freudenhüpfer und mümmelt friedlich weiter.",
+    "niederlage": "Das Farnhäschen legt deinem Glimmling ein Kleeblatt hin und hoppelt leise davon."
+   },
+   {
+    "id": "rindenkaefer",
+    "name": "Rindenkäfer",
+    "element": "moos",
+    "emoji": "🪲",
+    "auftritt": "Ein Rindenkäfer klettert vom Baum herunter und stellt sich ordentlich hin.",
+    "sieg": "Der Rindenkäfer klappt kurz die Flügel auf, das ist seine Art zu klatschen.",
+    "niederlage": "Der Rindenkäfer krabbelt zu deinem Glimmling und bleibt als Trost ein Weilchen sitzen."
+   },
+   {
+    "id": "funkengrille",
+    "name": "Funkengrille",
+    "element": "funke",
+    "emoji": "🦗",
+    "auftritt": "Eine Funkengrille zirpt kleine Lichtpunkte in die Dämmerung.",
+    "sieg": "Die Funkengrille zirpt ein Lied für deinen Glimmling und hüpft davon.",
+    "niederlage": "Die Funkengrille setzt sich zu deinem Glimmling und zirpt ihm ein leises Mutmachlied."
+   },
+   {
+    "id": "flackerfink",
+    "name": "Flackerfink",
+    "element": "funke",
+    "emoji": "🐦",
+    "auftritt": "Ein Flackerfink landet auf dem Ast und leuchtet zur Begrüßung kurz auf.",
+    "sieg": "Der Flackerfink blinkt dreimal, das heißt bei ihm: gut gespielt.",
+    "niederlage": "Der Flackerfink setzt sich neben deinen Glimmling und leuchtet sanft, bis er wieder lächelt."
+   },
+   {
+    "id": "blinkbiene",
+    "name": "Blinkbiene",
+    "element": "funke",
+    "emoji": "🐝",
+    "auftritt": "Eine Blinkbiene summt eine leuchtende Schleife über die Abendwiese.",
+    "sieg": "Die Blinkbiene malt aus Licht einen kleinen Kreis um deinen Glimmling, wie eine Medaille.",
+    "niederlage": "Die Blinkbiene bringt deinem Glimmling einen Tupfer Honig, dann summt sie sachte weiter."
+   }
+  ],
+  "bildhilfe": [
+   {
+    "id": "streicheln",
+    "titel": "So streichelst du.",
+    "satz": "Fahr mit dem Finger langsam über das Fell."
+   },
+   {
+    "id": "fuettern",
+    "titel": "So fütterst du.",
+    "satz": "Zieh das Futter hoch zu deinem Glimmling."
+   },
+   {
+    "id": "waschen",
+    "titel": "So wäschst du.",
+    "satz": "Mal mit dem Finger Kreise auf dem Fell, bis es sauber ist."
+   },
+   {
+    "id": "losschicken",
+    "titel": "So schickst du los.",
+    "satz": "Zieh deinen Glimmling zum Rand, dann wandert er los."
+   },
+   {
+    "id": "herzen",
+    "titel": "Die drei Herzen.",
+    "satz": "Füttern, Spielen und Losschicken brauchen je ein Herz. Später gibt es neue."
+   },
+   {
+    "id": "licht",
+    "titel": "Das kleine Licht.",
+    "satz": "Wenn es deinem Glimmling gut geht, leuchtet seine Brust hell."
+   },
+   {
+    "id": "treffen",
+    "titel": "Zusammen spielen.",
+    "satz": "Zwei Glimmlinge können sich treffen und zusammen spielen."
+   }
+  ],
+  "texthilfe": [
+   {
+    "id": "werte",
+    "titel": "Die vier Werte",
+    "text": "Dein Glimmling hat vier Werte: Kraft, Tempo, Klugheit und Herz. Sie wachsen durch Futter, durch Aufgaben und am stärksten durch Traumreisen. Im Kampf bestimmen die Werte, wie gut dein Glimmling trifft und wie viel er aushält. Aber Achtung: Ist er hungrig, schmutzig oder unausgeschlafen, werden seine Werte im Kampf gedämpft. Erst versorgen, dann kämpfen, so holt er alles aus sich heraus."
+   },
+   {
+    "id": "elemente",
+    "titel": "Elemente und Konter",
+    "text": "Jedes Wanderwesen gehört zu einem Element: Glut, Tau, Moos oder Funke. Die Elemente kontern sich im Kreis: Glut schlägt Moos, Moos schlägt Funke, Funke schlägt Tau und Tau schlägt wieder Glut. Wer im Vorteil ist, macht stärkere Züge, wer gekontert wird, muss sich mehr anstrengen. Merk dir den Kreis, dann weißt du vor jedem Kampf schon, wie schwer er ungefähr wird."
+   },
+   {
+    "id": "kampf",
+    "titel": "So läuft ein Kampf",
+    "text": "Im Kampf schwingt ein Balken hin und her. Tippe genau dann, wenn der Zeiger in der grünen Zone ist, dann gelingt der Zug am besten. Je näher an der Mitte, desto stärker wird er. Verpasst du die Zone, ist das nicht schlimm, der Zug wird nur schwächer. Die grüne Zone kann je nach Gegner größer oder kleiner sein, also schau kurz hin, bevor du tippst."
+   },
+   {
+    "id": "aufgaben",
+    "titel": "Aufgaben und Wege",
+    "text": "Du kannst deinen Glimmling auf Aufgaben schicken, zum Beispiel Sammeln, Erkunden oder Üben. Jede Aufgabe hat eine Ausrichtung, das heißt, sie lässt einen bestimmten Wert wachsen. Aufgaben laufen in Echtzeit weiter, auch wenn du das Spiel zumachst. Schau später wieder hinein, dann ist dein Glimmling zurück und erzählt, was er erlebt hat. Längere Aufgaben bringen mehr, dafür musst du aber auch länger warten."
+   },
+   {
+    "id": "traumreise",
+    "titel": "Die Traumreise",
+    "text": "Nachts, wenn dein Glimmling schläft, geht er auf Traumreise. Dort wächst er am meisten, mehr als bei allem, was ihr tagsüber macht. Du musst dafür nichts drücken, nur ihn abends satt und zufrieden schlafen lassen. Je besser es ihm beim Einschlafen geht, desto weiter kommt er im Traum. Am Morgen findest du seinen Traumbericht und siehst, was gewachsen ist."
+   },
+   {
+    "id": "freundescode",
+    "titel": "Kämpfen mit Freunden",
+    "text": "Mit dem Freundescode kannst du gegen den Glimmling eines Freundes kämpfen. So geht es: Öffne Treffen und tippe auf Code zeigen, dann siehst du deinen Code und kannst ihn kopieren. Schick ihn deinem Freund, zum Beispiel als Nachricht. Wenn du seinen Code bekommst, füge ihn unter Code einfügen ein, danach könnt ihr gegeneinander antreten. Spielt ihr als Geschwister am selben Gerät, braucht ihr keinen Code: Wählt einfach Geschwisterkampf, dann treten eure beiden Glimmlinge direkt gegeneinander an."
+   },
+   {
+    "id": "evolution",
+    "titel": "Die Verwandlung",
+    "text": "Irgendwann verwandelt sich dein Glimmling und bekommt eine neue Form. Welche das wird, hängt davon ab, wie du ihn behandelst: was ihr oft zusammen macht und wie du dich um ihn kümmerst. Das Spiel verrät vorher nicht, was zu welcher Form führt, das findet ihr selbst heraus. Es gibt keine falsche Form, jede kann etwas Eigenes. Spiel also einfach so, wie es zu euch passt, und lass dich überraschen."
+   }
+  ],
+  "microcopy": {
+   "abschied": [
+    "Bis später. {name} rollt sich jetzt gemütlich ein.",
+    "Bis bald. {name} hat noch was vor, glaub ich.",
+    "Gute Pause. {name} träumt schon mal vor."
+   ],
+   "rueckkehr_titel": [
+    "Ich bin wieder da.",
+    "Das hab ich erlebt."
+   ],
+   "traum_titel": [
+    "Ich hab was geträumt.",
+    "Heute Nacht war ich woanders."
+   ],
+   "kampf_sieg": [
+    "Gewonnen. Und keiner ist böse.",
+    "Das war ein gutes Spiel."
+   ],
+   "kampf_trost": [
+    "{name} kuschelt sich kurz an dich. Nächstes Mal.",
+    "Verloren ist nicht schlimm. {name} hat sich getraut."
+   ],
+   "treffen": [
+    "{a} und {b} jagen zusammen Lichtpunkte durch die Dämmerung.",
+    "{a} zeigt {b} sein bestes Versteck im Moos."
+   ],
+   "vorliebe": "Mmh. Das mag {name} am allerliebsten.",
+   "lehnt_ab": "Ich bin ganz satt. Vielleicht später."
+  }
+ }
+};
+
+/* ---------- Statische Spieldaten ---------- */
+const TASKS={
+  streifzug:{name:'Streifzug',em:'🥾',dauerMin:30,fenster:['morgen','mittag','abend'],desc:'eine halbe Stunde'},
+  sammelgang:{name:'Sammelgang',em:'🧺',dauerMin:180,fenster:['morgen','mittag'],desc:'drei Stunden'},
+  wanderung:{name:'Wanderung',em:'🗺️',dauerMin:360,fenster:['mittag','abend'],desc:'sechs Stunden'},
+  traum:{name:'Traumreise',em:'🌙',dauerMin:0,fenster:['nacht'],desc:'bis zum Morgen'},
+};
+const FOCUS={
+  essen:{name:'Such was zu essen',em:'🫐'},
+  training:{name:'Trainier dich',em:'🪨'},
+  erkunden:{name:'Erkunde die Gegend',em:'🧭'},
+  ruhe:{name:'Ruh dich aus',em:'😴'},
+};
+const STATNAMES={kraft:'Kraft',tempo:'Tempo',klugheit:'Klugheit',herz:'Herz'};
+const STATEM={kraft:'💪',tempo:'🌀',klugheit:'🌟',herz:'💛'};
+const FORMNAME=(form,stufe)=>{
+  const f=DATA.traeume.formnamen.find(x=>x.form===form&&x.stufe===stufe);
+  return f?f.name:'Glimmling';
+};
+
+/* Grammatik der Futterarten (Artikel + Plural) */
+const FUTTER_GRAM={
+  sonnenbeere:{art:'die',pl:'Sonnenbeeren'},
+  moosknolle:{art:'die',pl:'Moosknollen'},
+  taublatt:{art:'das',pl:'Taublätter'},
+  huepfkirsche:{art:'die',pl:'Hüpfkirschen'},
+  sternzwieback:{art:'der',pl:'Sternzwiebäcke'},
+  honigwoelkchen:{art:'das',pl:'Honigwölkchen'},
+  flimmerpilz:{art:'der',pl:'Flimmerpilze'},
+  funkennuss:{art:'die',pl:'Funkennüsse'},
+};
+function fundSatz(f,n){
+  const g=FUTTER_GRAM[f.id]||{art:'die',pl:f.name+'n'};
+  if(n===1){
+    const ein={die:'eine',der:'einen',das:'ein'}[g.art];
+    const pron={die:'Die',der:'Der',das:'Das'}[g.art];
+    return 'Ich hab dir '+ein+' '+f.name+' mitgebracht. '+pron+' ist für dich.';
+  }
+  const zahl=['','eins','zwei','drei','vier','fünf'][n]||n;
+  return rnd(DATA.berichte.fundsaetze).satz.replace('{n}',zahl).replace('{fund}',g.pl);
+}
+/* ============================================================
+   KERN: Zeit, Speicher, Zustand, Offline-Berechnung
+   ============================================================ */
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const el=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+
+/* ---------- Debug (nur mit #debug in der URL) ---------- */
+const DEBUG={on:location.hash.indexOf('debug')>=0,offset:0};
+
+/* ---------- Zeit ---------- */
+const nowMs=()=>Date.now()+DEBUG.offset;
+const WINDOWS=[
+  {id:'morgen',von:6,bis:11,label:'Morgen'},
+  {id:'mittag',von:11,bis:17,label:'Mittag'},
+  {id:'abend',von:17,bis:22,label:'Abend'},
+  {id:'nacht',von:22,bis:6,label:'Nacht'},
+];
+function windowOf(t){
+  const h=new Date(t).getHours();
+  if(h>=6&&h<11)return 'morgen';
+  if(h>=11&&h<17)return 'mittag';
+  if(h>=17&&h<22)return 'abend';
+  return 'nacht';
+}
+function dstr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function windowId(t){
+  const d=new Date(t), w=windowOf(t);
+  if(w==='nacht'&&d.getHours()<6){const p=new Date(t-864e5);return dstr(p)+'-nacht'}
+  return dstr(d)+'-'+w;
+}
+function windowEndMs(t){
+  const d=new Date(t), h=d.getHours(), e=new Date(t);
+  e.setMinutes(0,0,0);
+  if(h>=6&&h<11)e.setHours(11); else if(h>=11&&h<17)e.setHours(17);
+  else if(h>=17&&h<22)e.setHours(22);
+  else if(h>=22){e.setHours(6);e.setTime(e.getTime()+864e5)} else e.setHours(6);
+  return e.getTime();
+}
+function nextMorningMs(t){
+  const d=new Date(t), e=new Date(t); e.setMinutes(0,0,0); e.setHours(6);
+  if(d.getHours()>=6)e.setTime(e.getTime()+864e5);
+  return e.getTime();
+}
+const beatsMax=w=>w==='nacht'?1:3;
+const fmtTime=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+
+/* ---------- Speicher (mit In-Memory-Rückfallebene) ---------- */
+const store=(()=>{
+  const mem={};let ok=true;
+  try{localStorage.setItem('glimm.__t','1');localStorage.removeItem('glimm.__t')}catch(e){ok=false}
+  return{
+    get(k){try{if(ok){const v=localStorage.getItem(k);return v?JSON.parse(v):null}}catch(e){}return mem[k]?JSON.parse(mem[k]):null},
+    set(k,v){const s=JSON.stringify(v);mem[k]=s;if(ok)try{localStorage.setItem(k,s)}catch(e){}},
+    volatile:!ok
+  };
+})();
+
+/* ---------- Zustand ---------- */
+const ELEMENTS={
+  glut:{name:'Glut',farbe:'#ffb35c',glow:'rgba(255,179,92,.8)',em:'🔥'},
+  tau:{name:'Tau',farbe:'#5fe0d0',glow:'rgba(95,224,208,.8)',em:'💧'},
+  moos:{name:'Moos',farbe:'#8fe07a',glow:'rgba(143,224,122,.8)',em:'🌿'},
+  funke:{name:'Funke',farbe:'#c9a0ff',glow:'rgba(201,160,255,.8)',em:'✨'},
+};
+const KONTER={glut:'moos',moos:'funke',funke:'tau',tau:'glut'}; // schlägt
+const STUFE2_FENSTER=8, STUFE3_FENSTER=30;
+
+function newState(name,element){
+  const t=nowMs();
+  return {v:1,name,element,stage:1,form:null,variant:null,born:t,lastSeen:t,
+    windowId:windowId(t),beats:beatsMax(windowOf(t)),
+    needs:{satt:80,ausgeruht:80,laune:85,sauber:90},
+    stats:{kraft:5,tempo:5,klugheit:5,herz:5},
+    counters:{kaempfe:0,siege:0,traeume:0,streicheln:0,spiele:0,fuetterungen:0,gewaschen:0,fenster:0},
+    pref:null, task:null, inventory:{}, seenRare:[],
+    log:[], chronicle:[], highs:{beeren:0,echo:0,rhythmus:0},
+    care:{fensterId:'',beatSpent:false,pet:false,wash:0,geweckt:false,gekaempft:false,gespielt:false},
+    seen:{hilfe:false,stage2:false,stage3:false,futterHint:false,sendHint:false},
+    settings:{sound:false},
+  };
+}
+let meta=store.get('glimm.meta')||{v:1,profiles:{p1:null,p2:null},lastActive:null,treffenWindow:''};
+let P=null;       // aktives Profil-Id ('p1'|'p2')
+let S=null;       // aktiver Zustand
+function save(pid,state){ if(!pid||!state)return; state.lastSeen=nowMs(); store.set('glimm.'+pid,state); }
+function saveMeta(){ store.set('glimm.meta',meta); }
+function saveNow(){ if(P&&S)save(P,S); saveMeta(); }
+function loadProfile(pid){ return store.get('glimm.'+pid); }
+
+/* ---------- Bedürfnisverfall ---------- */
+function applyDecay(st,fromMs,toMs){
+  let dt=(toMs-fromMs)/36e5; // Stunden
+  if(dt<=0)return;
+  dt=Math.min(dt,14); // Verfallsdeckel
+  const n=st.needs, onTask=!!st.task, taskMul=onTask&&st.task.type!=='traum'?1.5:1;
+  // stückweise pro Stunde, damit Nacht-Regeneration & Laune-Kopplung stimmen
+  let t=fromMs; const step=36e5/4; let rest=dt*36e5;
+  while(rest>0){
+    const d=Math.min(step,rest)/36e5;
+    const w=windowOf(t);
+    n.satt=clamp(n.satt-4*d*taskMul,10,100);
+    if(w==='nacht'&&(!st.task||st.task.type==='traum')) n.ausgeruht=clamp(n.ausgeruht+8*d,10,100);
+    else n.ausgeruht=clamp(n.ausgeruht-3*d*taskMul,10,100);
+    const lmul=(n.satt<30||n.ausgeruht<30)?2:1;
+    n.laune=clamp(n.laune-2*d*lmul,10,100);
+    n.sauber=clamp(n.sauber-2*d,10,100);
+    t+=Math.min(step,rest);rest-=step;
+  }
+}
+
+/* ---------- Offline-Berechnung beim Öffnen eines Profils ---------- */
+function offlineCatchup(st){
+  const t=nowMs(); const events=[];
+  if(t<st.lastSeen){ st.lastSeen=t; return events; } // Uhr zurückgestellt: nichts gutschreiben
+  const from=Math.max(st.lastSeen,t-14*36e5);
+  applyDecay(st,from,t);
+  // Aufgabe fertig?
+  if(st.task&&t>=st.task.end){ events.push({typ:'bericht',task:st.task}); }
+  // Fensterwechsel
+  const wid=windowId(t);
+  if(wid!==st.windowId){
+    st.windowId=wid;
+    st.beats=beatsMax(windowOf(t));
+    st.care={fensterId:wid,beatSpent:false,pet:false,wash:0,geweckt:false,gekaempft:false,gespielt:false};
+  }
+  if(st.care.fensterId!==wid){st.care.fensterId=wid;}
+  // Evolution am Morgen
+  if(windowOf(t)==='morgen'&&st.stage<3){
+    const need=st.stage===1?STUFE2_FENSTER:STUFE3_FENSTER;
+    if(st.counters.fenster>=need) events.push({typ:'evolution'});
+  }
+  st.lastSeen=t;
+  return events;
+}
+
+/* ---------- Effektive Werte ---------- */
+function effStats(st){
+  const n=st.needs,s=st.stats;
+  return {
+    kraft:s.kraft*(0.5+0.5*n.satt/100),
+    tempo:s.tempo*(0.5+0.5*n.ausgeruht/100),
+    klugheit:s.klugheit*(0.5+0.5*n.sauber/100),
+    herz:s.herz*(0.5+0.5*n.laune/100),
+  };
+}
+
+/* ---------- Herzschlag ausgeben ---------- */
+function spendBeat(){
+  if(S.beats<=0)return false;
+  S.beats--;
+  if(!S.care.beatSpent){S.care.beatSpent=true;S.counters.fenster++;}
+  UI.renderHearts(true);
+  saveNow();
+  return true;
+}
+
+/* ---------- Ton ---------- */
+const Sound=(()=>{
+  let ctx=null;
+  function ac(){ if(!ctx)try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){} return ctx; }
+  function blip(freq,dur,type,vol,when){
+    if(!S||!S.settings.sound)return; const c=ac(); if(!c)return;
+    if(c.state==='suspended')c.resume();
+    const t=c.currentTime+(when||0);
+    const o=c.createOscillator(),g=c.createGain();
+    o.type=type||'sine';o.frequency.setValueAtTime(freq,t);
+    o.frequency.exponentialRampToValueAtTime(freq*1.06,t+dur);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+0.05);
+  }
+  return{
+    stimme(){blip(620,0.12);blip(840,0.14,'sine',0.1,0.13)},
+    freude(){blip(520,0.1);blip(700,0.1,'sine',0.11,0.1);blip(940,0.16,'sine',0.1,0.2)},
+    mampf(){blip(300,0.08,'triangle',0.1);blip(240,0.09,'triangle',0.09,0.1)},
+    plink(){blip(880,0.1,'sine',0.08)},
+    tief(){blip(220,0.25,'sine',0.1)},
+    trommel(){blip(180,0.12,'triangle',0.16)},
+    treffer(){blip(660,0.08,'square',0.05);blip(990,0.1,'sine',0.08,0.07)},
+  };
+})();
+const vibr=p=>{try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}};
+/* ============================================================
+   DER GLIMMLING — SVG-Figur, Formen, Glimmen
+   ============================================================ */
+let __uid=0;
+function svgWesen(opts){
+  const o=Object.assign({element:'glut',stage:1,form:null,variant:null,mood:'happy',glow:'ruhig',glowOp:1,dirty:false,sleeping:false},opts);
+  const uid='w'+(++__uid);
+  const E=ELEMENTS[o.element]||ELEMENTS.glut;
+  const bodyC=o.variant==='still'?'#413c55':'#4a4560';
+  const bellyC=o.variant==='hell'?'#615a7d':'#585270';
+  const inkC='#2b2836', eyeC='#f6efdd';
+  const formCls=o.form?' w-'+o.form:'', stageCls=' w-s'+o.stage;
+  const glowR=o.form==='herz'?40:30;
+  const horn=o.form==='wehr'?`
+    <g class="horns" fill="#c9a06a" stroke="#a9855a" stroke-width="1.5">
+      <path d="M84,34 Q88,18 96,32 Q92,40 86,40 Z"/>
+      <path d="M100,30 Q104,12 113,28 Q109,38 102,38 Z"/>
+      <path d="M117,38 Q124,24 129,38 Q125,45 119,45 Z"/>
+    </g>`:'';
+  const wehrPlates=o.form==='wehr'?`
+    <g fill="#8f7a63" opacity=".9">
+      <ellipse cx="100" cy="98" rx="26" ry="9"/>
+      <ellipse cx="100" cy="112" rx="30" ry="9" opacity=".7"/>
+    </g>`:'';
+  const traumStars=o.form==='traum'?`
+    <g class="tstars" fill="#e8e2ff" opacity=".9">
+      <circle cx="46" cy="70" r="2.5"><animate attributeName="opacity" values=".9;.2;.9" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="158" cy="90" r="2"><animate attributeName="opacity" values=".2;.9;.2" dur="4s" repeatCount="indefinite"/></circle>
+      <circle cx="150" cy="52" r="1.8"><animate attributeName="opacity" values=".7;.15;.7" dur="3.6s" repeatCount="indefinite"/></circle>
+    </g>`:'';
+  const blushOp=o.form==='herz'?.5:.32;
+  const mouth=o.mood==='sad'
+    ?`<path class="mouth" d="M92,99 Q100,93 108,99" fill="none" stroke="${inkC}" stroke-width="3" stroke-linecap="round"/>`
+    :`<path class="mouth" d="M92,95 Q100,102 108,95" fill="none" stroke="${inkC}" stroke-width="3" stroke-linecap="round"/>`;
+  const eyes=o.sleeping
+    ?`<g class="eyes-w">
+        <path d="M74,78 Q82,84 90,78" fill="none" stroke="${inkC}" stroke-width="3" stroke-linecap="round"/>
+        <path d="M110,78 Q118,84 126,78" fill="none" stroke="${inkC}" stroke-width="3" stroke-linecap="round"/></g>`
+    :`<g class="eyes-w">
+        <ellipse cx="82" cy="76" rx="10" ry="12" fill="${eyeC}"/>
+        <ellipse cx="118" cy="76" rx="10" ry="12" fill="${eyeC}"/>
+        <g class="pupils">
+          <circle cx="82" cy="77" r="5.6" fill="${inkC}"/><circle cx="118" cy="77" r="5.6" fill="${inkC}"/>
+          <circle cx="84" cy="74.5" r="2" fill="#fff"/><circle cx="120" cy="74.5" r="2" fill="#fff"/>
+        </g></g>`;
+  return `<svg viewBox="0 0 200 200" class="wsvg${formCls}${stageCls}${o.dirty?' isdirty':''}">
+  <defs>
+    <radialGradient id="${uid}-gl"><stop offset="0%" stop-color="#fff6e0" stop-opacity=".95"/>
+      <stop offset="35%" stop-color="${E.farbe}" stop-opacity=".85"/>
+      <stop offset="100%" stop-color="${E.farbe}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${uid}-tl"><stop offset="0%" stop-color="${E.farbe}"/>
+      <stop offset="60%" stop-color="${E.farbe}" stop-opacity=".5"/>
+      <stop offset="100%" stop-color="${E.farbe}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${uid}-bd" cx="42%" cy="30%"><stop offset="0%" stop-color="${bellyC}"/>
+      <stop offset="100%" stop-color="${bodyC}"/></radialGradient>
+  </defs>
+  <ellipse class="w-shadow" cx="100" cy="181" rx="52" ry="10"/>
+  <g class="sizeg"><g class="breath">
+    <g class="tailg">
+      <path d="M152,142 C176,134 186,118 180,100" fill="none" stroke="${bodyC}" stroke-width="11" stroke-linecap="round"/>
+      <circle cx="181" cy="97" r="17" fill="url(#${uid}-tl)"/>
+      <circle cx="181" cy="97" r="7" fill="${E.farbe}"/>
+    </g>
+    <path class="bodyp" d="M100,86 C138,86 158,112 158,138 C158,166 132,180 100,180 C68,180 42,166 42,138 C42,112 62,86 100,86 Z" fill="url(#${uid}-bd)"/>
+    ${wehrPlates}
+    <g class="glim glim-${o.glow}" style="opacity:${o.glowOp}">
+      <circle cx="100" cy="130" r="${glowR}" fill="url(#${uid}-gl)"/>
+      <circle cx="100" cy="130" r="9" fill="#fff9e8" opacity=".92"/>
+    </g>
+    <g class="dirt" fill="#6b5a44">
+      <ellipse cx="70" cy="152" rx="9" ry="6" opacity=".55"/>
+      <ellipse cx="127" cy="160" rx="11" ry="7" opacity=".5"/>
+      <ellipse cx="98" cy="170" rx="7" ry="4" opacity=".5"/>
+    </g>
+    <g class="headg">
+      <g class="earL"><ellipse cx="72" cy="42" rx="14" ry="21" fill="${bodyC}" transform="rotate(-18 72 42)"/>
+        <ellipse cx="73" cy="45" rx="7" ry="12" fill="${E.farbe}" opacity=".75" transform="rotate(-18 73 45)"/></g>
+      <g class="earR"><ellipse cx="128" cy="42" rx="14" ry="21" fill="${bodyC}" transform="rotate(18 128 42)"/>
+        <ellipse cx="127" cy="45" rx="7" ry="12" fill="${E.farbe}" opacity=".75" transform="rotate(18 127 45)"/></g>
+      ${horn}
+      <circle cx="100" cy="76" r="45" fill="url(#${uid}-bd)"/>
+      <g class="dirt"><ellipse cx="120" cy="58" rx="8" ry="5" opacity=".5" fill="#6b5a44"/></g>
+      ${eyes}
+      ${mouth}
+      <circle cx="72" cy="90" r="6.5" fill="${E.farbe}" opacity="${blushOp}"/>
+      <circle cx="128" cy="90" r="6.5" fill="${E.farbe}" opacity="${blushOp}"/>
+    </g>
+    ${traumStars}
+  </g></g></svg>`;
+}
+
+/* Form-spezifische Feinheiten per CSS */
+const formCss=document.createElement('style');
+formCss.textContent=`
+.wsvg .sizeg{transform-origin:100px 180px}
+.wsvg.w-s1 .sizeg{transform:scale(.8)}
+.wsvg.w-s3 .sizeg{transform:scale(1.06)}
+.wsvg.w-flink .earL{transform:scale(1,1.45) translateY(-6px)}
+.wsvg.w-flink .earR{transform:scale(1,1.45) translateY(-6px)}
+.wsvg.w-flink .bodyp{transform:scaleX(.9);transform-origin:100px 130px}
+.wsvg.w-herz .bodyp{transform:scale(1.1,1.02);transform-origin:100px 135px}
+.wsvg.w-traum{opacity:.94}
+.wsvg.w-traum .w-shadow{transform:scale(.6);transform-origin:100px 181px;opacity:.5}
+.wsvg.w-traum .sizeg{animation:whover 4.5s ease-in-out infinite}
+@keyframes whover{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.wsvg.w-s1.w-traum .sizeg{animation:whoverS1 4.5s ease-in-out infinite}
+@keyframes whoverS1{0%,100%{transform:scale(.8) translateY(0)}50%{transform:scale(.8) translateY(-11px)}}
+.wsvg .dirt{opacity:0;transition:opacity 1s}
+.wsvg.isdirty .dirt{opacity:1}
+`;
+document.head.appendChild(formCss);
+
+/* ---------- Knospe (Ritual & leere Profilkarte) ---------- */
+function svgKnospe(glowCol,uidp){
+  const uid=(uidp||'k')+(++__uid);const g=glowCol||'#8fa8d8';
+  return `<svg viewBox="0 0 200 220">
+  <defs><radialGradient id="${uid}g"><stop offset="0%" stop-color="${g}" stop-opacity=".7"/><stop offset="100%" stop-color="${g}" stop-opacity="0"/></radialGradient></defs>
+  <ellipse cx="100" cy="205" rx="46" ry="9" fill="rgba(10,14,30,.25)"/>
+  <path d="M100,30 C140,55 152,105 148,150 C144,190 122,205 100,205 C78,205 56,190 52,150 C48,105 60,55 100,30 Z" fill="#37324a"/>
+  <path d="M100,30 C118,50 126,90 124,140 C122,180 112,200 100,205" fill="none" stroke="#4a4462" stroke-width="5" stroke-linecap="round"/>
+  <path d="M100,30 C82,50 74,90 76,140 C78,180 88,200 100,205" fill="none" stroke="#2c2840" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="100" cy="140" r="34" fill="url(#${uid}g)" class="glim glim-ruhig"/>
+  </svg>`;
+}
+
+/* ---------- Wesen-Controller (Hauptbühne) ---------- */
+const Creature={
+  elmt:null,lastPointer:null,blinkT:0,lookT:0,
+  mount(){ this.elmt=$('#wesen'); this.render(); },
+  render(){
+    if(!S)return;
+    const g=this.glowState();
+    this.elmt.innerHTML=svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,
+      mood:this.mood(),glow:g.cls,glowOp:g.op,dirty:S.needs.sauber<35,sleeping:this.isSleeping()});
+    this.elmt.classList.toggle('sleeping',this.isSleeping());
+    this.elmt.classList.toggle('sad',this.mood()==='sad');
+    this.elmt.classList.toggle('dirty',S.needs.sauber<35);
+  },
+  mood(){ return (S.needs.laune<32)?'sad':'happy'; },
+  isSleeping(){
+    if(S.wakePending)return true;
+    const w=windowOf(nowMs());
+    if(w==='nacht')return (S.task&&S.task.type==='traum')||S.beats<=0;
+    return false;
+  },
+  glowState(){
+    const n=S.needs;
+    let cls='ruhig';
+    if(n.satt<30)cls='flackern';
+    else if(n.ausgeruht<30)cls='langsam';
+    else if(n.sauber<30)cls='trueb';
+    else if(n.laune>=70)cls='hell';
+    return {cls,op:(0.4+0.6*n.laune/100).toFixed(2)};
+  },
+  refreshGlow(){
+    if(!S)return;
+    const g=this.glowState(), gl=this.elmt.querySelector('.glim');
+    if(gl){gl.className.baseVal='glim glim-'+g.cls;gl.style.opacity=g.op;}
+    this.elmt.classList.toggle('dirty',S.needs.sauber<35);
+    const sv=this.elmt.querySelector('.wsvg');if(sv)sv.classList.toggle('isdirty',S.needs.sauber<35);
+  },
+  headFollow(x,y){
+    const svg=this.elmt.querySelector('svg');if(!svg||this.isSleeping())return;
+    const r=this.elmt.getBoundingClientRect();
+    const cx=r.left+r.width/2, cy=r.top+r.height*0.38;
+    const dx=clamp((x-cx)/r.width,-0.6,0.6), dy=clamp((y-cy)/r.height,-0.5,0.5);
+    const hg=svg.querySelector('.headg');
+    if(hg)hg.style.transform=`rotate(${(dx*10).toFixed(1)}deg) translate(${(dx*5).toFixed(1)}px,${(dy*3).toFixed(1)}px)`;
+    const pu=svg.querySelector('.pupils');
+    if(pu)pu.style.transform=`translate(${(dx*4.5).toFixed(1)}px,${(dy*3.5).toFixed(1)}px)`;
+  },
+  headRelax(){
+    const svg=this.elmt.querySelector('svg');if(!svg)return;
+    const hg=svg.querySelector('.headg'),pu=svg.querySelector('.pupils');
+    if(hg)hg.style.transform='';if(pu)pu.style.transform='';
+  },
+  blink(){
+    this.elmt.classList.add('blink');
+    setTimeout(()=>this.elmt.classList.remove('blink'),140);
+  },
+  hop(){ this.elmt.classList.remove('happy-hop');void this.elmt.offsetWidth;this.elmt.classList.add('happy-hop'); },
+  nuzzle(){ this.elmt.classList.remove('nuzzle');void this.elmt.offsetWidth;this.elmt.classList.add('nuzzle'); },
+  tick(){
+    if(!S||!$('#scr-home').classList.contains('on'))return;
+    const t=Date.now();
+    if(t>this.blinkT){ if(!this.isSleeping())this.blink(); this.blinkT=t+2200+Math.random()*3800; }
+    if(this.lastPointer&&t-this.lastPointer>3000){
+      this.headRelax();
+      if(t>this.lookT){ // gelegentlich umschauen
+        const svg=this.elmt.querySelector('svg'),hg=svg&&svg.querySelector('.headg');
+        if(hg&&!this.isSleeping()){
+          hg.style.transition='transform 1.1s ease';
+          hg.style.transform=`rotate(${(Math.random()*14-7).toFixed(0)}deg)`;
+          setTimeout(()=>{if(hg){hg.style.transform=''}},1600);
+          setTimeout(()=>{if(hg){hg.style.transition=''}},2800);
+        }
+        this.lookT=t+5000+Math.random()*6000;
+      }
+    }
+  },
+};
+/* ============================================================
+   SZENE & UI: Paletten, Herzen, Statuszeile, Futterleiste
+   ============================================================ */
+const UI={
+  screen:'start',
+  show(name){
+    this.screen=name;
+    $$('.screen').forEach(s=>s.classList.remove('on'));
+    $('#scr-'+name).classList.add('on');
+    $('#chrome').classList.toggle('hidden',name!=='home');
+  },
+  overlay(id,on){ $('#'+id).classList.toggle('on',on!==false); },
+  anyOverlay(){ return [...$$('.overlay')].some(o=>o.classList.contains('on')); },
+
+  applyPalette(w){
+    const app=$('#app');
+    ['t-morgen','t-mittag','t-abend','t-nacht'].forEach(c=>app.classList.remove(c));
+    app.classList.add('t-'+w);
+    const orb=$('#orb');
+    const pos={morgen:{left:'16%',top:'26%'},mittag:{left:'50%',top:'9%'},
+               abend:{left:'76%',top:'34%'},nacht:{left:'72%',top:'12%'}}[w];
+    orb.style.left=pos.left;orb.style.top=pos.top;
+    orb.style.width=w==='nacht'?'58px':'74px';orb.style.height=orb.style.width;
+  },
+
+  buildSkyDeco(){
+    const st=$('#stars');st.innerHTML='';
+    for(let i=0;i<46;i++){const s=el('div','star');
+      s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';
+      s.style.animationDelay=(Math.random()*3)+'s';
+      s.style.width=s.style.height=(1.5+Math.random()*2.4)+'px';st.appendChild(s)}
+    const ff=$('#fireflies');ff.innerHTML='';
+    for(let i=0;i<7;i++){const f=el('div','ffly');
+      f.style.left=(5+Math.random()*90)+'%';f.style.top=(Math.random()*90)+'%';
+      f.style.animationDelay=(Math.random()*8)+'s';f.style.animationDuration=(7+Math.random()*6)+'s';ff.appendChild(f)}
+  },
+
+  renderHearts(spent){
+    const w=windowOf(nowMs()),max=beatsMax(w),h=$('#hearts');
+    const HP='M12 20.6C7.2 16.9 3 13.3 3 9.3 3 6.4 5.3 4.4 7.9 4.4c1.6 0 3.1.8 4.1 2.2 1-1.4 2.5-2.2 4.1-2.2 2.6 0 4.9 2 4.9 4.9 0 4-4.2 7.6-9 11.3Z';
+    if(h.childElementCount!==max){h.innerHTML='';
+      for(let i=0;i<max;i++){const s=el('div','hbeat');
+        s.innerHTML=`<svg viewBox="0 0 24 24"><path d="${HP}"/></svg>`;h.appendChild(s)}}
+    [...h.children].forEach((c,i)=>{
+      const off=i>=S.beats;
+      if(spent&&!c.classList.contains('off')&&off){c.classList.add('spend');setTimeout(()=>c.classList.remove('spend'),600)}
+      c.classList.toggle('off',off);
+    });
+  },
+
+  status(msg,stay){
+    const sp=$('#statusline span');
+    sp.textContent=msg||'';sp.classList.toggle('on',!!msg);
+    clearTimeout(this._stT);
+    if(msg&&!stay)this._stT=setTimeout(()=>sp.classList.remove('on'),5000);
+  },
+  ruheStatus(){
+    const w=windowOf(nowMs());
+    const opts=DATA.traeume.ruhesaetze.filter(r=>r.tageszeit===w);
+    let s=opts.length?rnd(opts).satz:'{name} ruht sich aus.';
+    s=s.replace('{name}',S.name).replace('{zeit}',fmtTime(windowEndMs(nowMs())));
+    this.status(s,true);
+  },
+
+  toast(msg,ms){
+    const t=$('#toast');t.textContent=msg;t.classList.add('on');
+    clearTimeout(this._toT);this._toT=setTimeout(()=>t.classList.remove('on'),ms||2600);
+  },
+  pop(x,y,em){
+    const p=el('div','pop',em);p.style.left=(x-12)+'px';p.style.top=(y-16)+'px';
+    p.style.transform='rotate('+(Math.random()*30-15)+'deg)';
+    $('#app').appendChild(p);setTimeout(()=>p.remove(),1150);
+  },
+  sparkleAt(x,y,col){
+    for(let i=0;i<5;i++){const s=el('div','sparkle');
+      s.style.left=(x+Math.random()*44-22)+'px';s.style.top=(y+Math.random()*30-15)+'px';
+      s.style.background=col||'#ffe9a0';s.style.boxShadow='0 0 8px 2px '+(col||'#ffe9a0');
+      $('#app').appendChild(s);setTimeout(()=>s.remove(),820)}
+  },
+
+  renderDrawer(){
+    const d=$('#drawer');d.innerHTML='';
+    if(S.task||Creature.isSleeping()){d.style.display='none';return}
+    d.style.display='flex';
+    const inv=S.inventory;
+    const foods=DATA.welt.futter.filter(f=>(inv[f.id]||0)>0||!f.selten);
+    foods.forEach(f=>{
+      const cnt=inv[f.id]!=null?inv[f.id]:(f.selten?0:Infinity);
+      if(cnt===0&&f.selten)return;
+      const fi=el('div','fooditem');fi.dataset.food=f.id;
+      fi.innerHTML=`<span>${f.emoji}</span><small>${f.name}</small>`+
+        (Number.isFinite(cnt)?`<span class="cnt">${cnt}</span>`:'');
+      d.appendChild(fi);
+    });
+  },
+
+  renderActions(){
+    const row=$('#actionrow');row.innerHTML='';
+    if(!S||S.task)return;
+    const w=windowOf(nowMs());
+    const mk=(id,em,label)=>{const b=el('button','pillbtn');b.id=id;
+      b.innerHTML=`<span class="em">${em}</span>${label}`;row.appendChild(b);return b};
+    if(Creature.isSleeping())return; // nachts erst wecken? nein: nachts schläft es oder Traumreise
+    if(S.beats>0){
+      if(w==='nacht'){ mk('act-traum','🌙','Traumreise'); }
+      else{
+        mk('act-send','🥾','Losschicken');
+        if(w==='mittag') mk('act-spiel','🎈','Spielen');
+        if(w==='abend'&&S.stage>=2&&!S.care.gekaempft) mk('act-kampf','⚔️','Kampf');
+      }
+    }
+    if(S.stage>=2) mk('act-mehr','☰','Mehr');
+  },
+
+  refreshHome(){
+    const w=windowOf(nowMs());
+    this.applyPalette(w);
+    this.renderHearts();
+    this.renderDrawer();
+    this.renderActions();
+    Away.refresh();
+    if(S.task){ /* Statuszeile macht Away */ }
+    else if(S.wakePending){ this.status('Pssst. '+S.name+' schläft noch. Tipp es wach.',true); }
+    else if(Creature.isSleeping()){ this.status(S.name+' schläft. Wacht um 6 Uhr auf.',true); }
+    else if(S.beats<=0){ this.ruheStatus(); }
+    else this.status('');
+  },
+};
+/* ============================================================
+   GESTEN: Streicheln, Waschen, Ziehen, Füttern — am Wesen selbst
+   ============================================================ */
+const gestCss=document.createElement('style');
+gestCss.textContent=`#wesen{transform:translate(calc(-50% + var(--dx,0px)),calc(-50% + var(--dy,0px)))}`;
+document.head.appendChild(gestCss);
+
+const Gestures={
+  sess:null, foodDrag:null,
+  init(){
+    const stage=$('#stage');
+    document.addEventListener('pointermove',e=>{
+      if(UI.screen==='home'&&!UI.anyOverlay()&&S&&!S.task){Creature.lastPointer=Date.now();Creature.headFollow(e.clientX,e.clientY)}
+      this.move(e);
+    },{passive:true});
+    document.addEventListener('pointerup',e=>this.up(e));
+    document.addEventListener('pointercancel',e=>this.up(e));
+    $('#wesen').addEventListener('pointerdown',e=>this.down(e));
+    $('#drawer').addEventListener('pointerdown',e=>{
+      const fi=e.target.closest('.fooditem');if(!fi)return;
+      e.preventDefault();
+      this.foodDrag={id:fi.dataset.food,elmt:fi,x:e.clientX,y:e.clientY,moved:false};
+      const g=$('#dragGhost');g.textContent=fi.querySelector('span').textContent;
+      g.style.display='block';this.ghostAt(e.clientX,e.clientY);
+    });
+    $('#awaywalker').addEventListener('pointerdown',e=>{
+      UI.pop(e.clientX,e.clientY,'💛');Sound.stimme();vibr(15);
+    });
+  },
+  ghostAt(x,y){const g=$('#dragGhost');g.style.left=(x-19)+'px';g.style.top=(y-24)+'px'},
+  down(e){
+    if(UI.anyOverlay()||!S||S.task)return;
+    e.preventDefault();
+    this.sess={x0:e.clientX,y0:e.clientY,lx:e.clientX,ly:e.clientY,t0:Date.now(),
+      path:0,rev:0,lastSign:0,wind:0,petTicks:0,petAcc:0,mode:'unknown',washDone:false};
+  },
+  move(e){
+    if(this.foodDrag){this.foodDrag.moved=true;this.ghostAt(e.clientX,e.clientY);return}
+    const s=this.sess;if(!s)return;
+    const dx=e.clientX-s.lx,dy=e.clientY-s.ly;
+    s.path+=Math.hypot(dx,dy);
+    const sign=dx>1?1:dx<-1?-1:0;
+    if(sign&&s.lastSign&&sign!==s.lastSign)s.rev++;
+    if(sign)s.lastSign=sign;
+    // Winding um Wesenmitte (für Waschen) — nahe der Mitte nicht zählen,
+    // sonst kippt ein gerader Zug durch die Mitte den Winkel um pi
+    const r=$('#wesen').getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    const r1=Math.hypot(s.lx-cx,s.ly-cy),r2=Math.hypot(e.clientX-cx,e.clientY-cy);
+    if(r1>34&&r2>34){
+      const a1=Math.atan2(s.ly-cy,s.lx-cx),a2=Math.atan2(e.clientY-cy,e.clientX-cx);
+      let da=a2-a1;if(da>Math.PI)da-=2*Math.PI;if(da<-Math.PI)da+=2*Math.PI;
+      s.wind+=da;
+    }
+    s.lx=e.clientX;s.ly=e.clientY;
+    const disp=Math.hypot(e.clientX-s.x0,e.clientY-s.y0);
+    if(s.mode==='unknown'&&disp>110&&s.rev<2&&Math.abs(s.wind)<1.2){s.mode='drag'}
+    if(s.mode==='drag'){
+      const w=$('#wesen');
+      w.style.setProperty('--dx',clamp(e.clientX-s.x0,-160,160)+'px');
+      w.style.setProperty('--dy',clamp((e.clientY-s.y0)*0.35,-40,40)+'px');
+      return;
+    }
+    // Waschen: zwei volle Kreise
+    if(!s.washDone&&Math.abs(s.wind)>2*2*Math.PI){
+      s.washDone=true;s.mode='wash';Actions.wash(e.clientX,e.clientY);
+    }
+    // Streicheln: hin und her
+    s.petAcc+=Math.hypot(dx,dy);
+    if(s.rev>=1&&s.petAcc>85&&s.mode!=='wash'){
+      s.petAcc=0;s.petTicks++;s.mode='pet';
+      Actions.petTick(e.clientX,e.clientY,s.petTicks);
+    }
+    if(s.mode==='wash'&&Math.random()<0.3)UI.pop(e.clientX,e.clientY,'🫧');
+  },
+  up(e){
+    if(this.foodDrag){
+      const g=$('#dragGhost');g.style.display='none';
+      const r=$('#wesen').getBoundingClientRect();
+      const over=e.clientX>r.left-20&&e.clientX<r.right+20&&e.clientY>r.top-20&&e.clientY<r.bottom+30;
+      if(this.foodDrag.moved&&over&&!$('#wesen').classList.contains('away'))Actions.feed(this.foodDrag.id);
+      else if(!this.foodDrag.moved){ /* nur angetippt: kleiner Hinweis */
+        if(!S.seen.futterHint){S.seen.futterHint=true;saveNow();UI.toast('Zieh das Futter zu '+S.name+' hoch.')}
+      }
+      this.foodDrag=null;return;
+    }
+    const s=this.sess;if(!s)return;this.sess=null;
+    const w=$('#wesen');
+    const disp=Math.hypot(e.clientX-s.x0,e.clientY-s.y0);
+    if(s.mode==='drag'){
+      w.style.setProperty('--dx','0px');w.style.setProperty('--dy','0px');
+      if(Math.abs(e.clientX-s.x0)>130)Actions.openSend();
+      return;
+    }
+    if(s.mode==='pet'){Actions.petEnd(s.petTicks);return}
+    if(s.path<14&&Date.now()-s.t0<450)Actions.tap(e.clientX,e.clientY);
+  },
+};
+/* ============================================================
+   AKTIONEN: Füttern, Streicheln, Waschen, Wecken, Losschicken, Berichte
+   ============================================================ */
+const Actions={
+  /* ---------- Antippen ---------- */
+  tap(x,y){
+    if(!S)return;
+    if(S.wakePending||Creature.isSleeping()){this.wakeTap(x,y);return}
+    Creature.hop();Sound.stimme();vibr(12);
+    if(Math.random()<0.4)UI.pop(x,y-30,'💛');
+  },
+  wakeTapCount:0,
+  wakeTap(x,y){
+    if(windowOf(nowMs())==='nacht'&&!S.wakePending){ // nachts schlafen lassen
+      UI.pop(x,y-20,'💤');Sound.tief();return;
+    }
+    this.wakeTapCount++;
+    if(this.wakeTapCount===1){
+      Creature.nuzzle();UI.pop(x,y-20,'💤');Sound.tief();
+      UI.status('Noch ganz verschlafen. Tipp nochmal.',false);
+    } else {
+      this.wakeTapCount=0;
+      S.care.geweckt=true;S.wakePending=false;
+      Creature.render();Creature.hop();Sound.freude();vibr([20,40,20]);
+      const ws=rnd(DATA.traeume.wecksaetze).satz;
+      UI.toast('„'+ws+'“',3200);
+      saveNow();UI.refreshHome();
+      if(S.pendingReport)setTimeout(()=>this.showReport(S.pendingReport),1600);
+    }
+  },
+
+  /* ---------- Füttern ---------- */
+  feed(foodId){
+    const f=DATA.welt.futter.find(x=>x.id===foodId);if(!f)return;
+    if(Creature.isSleeping()){UI.toast(S.name+' schläft gerade.');return}
+    if(S.needs.satt>=95){UI.toast(DATA.welt.microcopy.lehnt_ab.replace('{name}',S.name));Creature.nuzzle();return}
+    if(S.beats<=0){UI.ruheStatus();UI.toast('Keine Herzschläge mehr. '+rnd(DATA.welt.microcopy.abschied).replace('{name}',S.name),3200);return}
+    if((S.inventory[f.id]||0)<=0&&f.selten)return;
+    spendBeat();
+    if(f.selten||S.inventory[f.id]!=null){S.inventory[f.id]=Math.max(0,(S.inventory[f.id]||0)-1)}
+    const isPref=S.pref===f.id;
+    S.needs.satt=clamp(S.needs.satt+f.satt,10,100);
+    S.needs.laune=clamp(S.needs.laune+(isPref?10:4),10,100);
+    S.stats[f.stat]+=f.statplus*(isPref?1.5:1);
+    S.counters.fuetterungen++;
+    const r=$('#wesen').getBoundingClientRect();
+    UI.pop(r.left+r.width/2,r.top+r.height*0.45,f.emoji);
+    setTimeout(()=>{Creature.hop();Sound.mampf();vibr(18);
+      UI.sparkleAt(r.left+r.width/2,r.top+r.height*0.5,ELEMENTS[S.element].farbe);
+      if(isPref){UI.toast(DATA.welt.microcopy.vorliebe.replace('{name}',S.name));UI.pop(r.left+r.width/2,r.top+r.height*0.3,'💖')}
+    },350);
+    Creature.refreshGlow();UI.renderDrawer();UI.renderActions();saveNow();
+  },
+
+  /* ---------- Streicheln ---------- */
+  petTick(x,y,n){
+    S.needs.laune=clamp(S.needs.laune+0.7,10,100);
+    UI.pop(x,y-10,['💛','✨','💛','🩷'][n%4]);
+    if(n%2)Sound.plink();vibr(8);
+    Creature.refreshGlow();
+    if(n===3)Creature.nuzzle();
+  },
+  petEnd(ticks){
+    if(ticks>=6&&!S.care.pet){
+      S.care.pet=true;S.stats.herz+=1;S.counters.streicheln++;
+      Creature.hop();Sound.freude();
+    }
+    saveNow();
+  },
+
+  /* ---------- Waschen ---------- */
+  wash(x,y){
+    const dirty=S.needs.sauber<80;
+    S.needs.sauber=clamp(S.needs.sauber+40,10,100);
+    if(!S.care.wash){S.care.wash=1;S.stats.herz+=0.5;S.counters.gewaschen++}
+    for(let i=0;i<6;i++)setTimeout(()=>UI.pop(x+Math.random()*80-40,y+Math.random()*60-30,'🫧'),i*120);
+    setTimeout(()=>{Creature.render();Creature.hop();Sound.freude();vibr([15,30,15]);
+      if(dirty)UI.toast('Wieder blitzeblank.')},900);
+    saveNow();
+  },
+
+  /* ---------- Losschicken ---------- */
+  sendSel:{task:null,focus:null},
+  openSend(){
+    if(S.beats<=0){UI.ruheStatus();UI.toast('Keine Herzschläge mehr übrig.');return}
+    if(S.task)return;
+    const w=windowOf(nowMs());
+    const avail=Object.entries(TASKS).filter(([id,t])=>t.fenster.includes(w));
+    if(!avail.length)return;
+    this.sendSel={task:avail[0][0],focus:'erkunden'};
+    const tr=$('#taskrow');tr.innerHTML='';
+    avail.forEach(([id,t])=>{
+      const b=el('button','taskbtn'+(id===this.sendSel.task?' sel':''));
+      b.innerHTML=`<span class="em">${t.em}</span>${t.name}<small>${t.desc}</small>`;
+      b.onclick=()=>{this.sendSel.task=id;[...tr.children].forEach(c=>c.classList.remove('sel'));b.classList.add('sel')};
+      tr.appendChild(b);
+    });
+    const fg=$('#focusgrid');fg.innerHTML='';
+    Object.entries(FOCUS).forEach(([id,f])=>{
+      const b=el('button','focusbtn'+(id===this.sendSel.focus?' sel':''));
+      b.innerHTML=`<span class="em">${f.em}</span>${f.name}`;
+      b.onclick=()=>{this.sendSel.focus=id;[...fg.children].forEach(c=>c.classList.remove('sel'));b.classList.add('sel')};
+      fg.appendChild(b);
+    });
+    $('#sendtitle').textContent=windowOf(nowMs())==='nacht'?'Traumreise':'Wohin soll '+S.name+'?';
+    UI.overlay('ov-send');
+  },
+  confirmSend(){
+    const {task,focus}=this.sendSel;if(!task)return;
+    const t=TASKS[task];const now=nowMs();
+    if(!spendBeat())return;
+    const end=task==='traum'?nextMorningMs(now):now+t.dauerMin*6e4;
+    S.task={type:task,focus,start:now,end};
+    if(task==='traum')S.counters.traeume++;
+    UI.overlay('ov-send',false);
+    Sound.stimme();
+    UI.refreshHome();saveNow();
+  },
+  startTraum(){
+    this.sendSel={task:'traum',focus:'erkunden'};
+    if(S.beats<=0){UI.ruheStatus();return}
+    const now=nowMs();
+    if(!spendBeat())return;
+    S.task={type:'traum',focus:'traum',start:now,end:nextMorningMs(now)};
+    S.counters.traeume++;
+    Creature.render();UI.refreshHome();saveNow();
+    UI.toast(S.name+' rollt sich ein und träumt los.',3000);Sound.tief();
+  },
+
+  /* ---------- Aufgabe fertig → Bericht ---------- */
+  completeTask(task){
+    const isTraum=task.type==='traum';
+    const lenF={streifzug:1,sammelgang:2.5,wanderung:4,traum:4}[task.type]||1;
+    const gains={},loot={};
+    const add=(k,v)=>{gains[k]=(gains[k]||0)+v};
+    if(isTraum){
+      add('klugheit',Math.round(3+Math.random()*2));
+    } else {
+      if(task.focus==='training'){add('kraft',Math.round(lenF*(1+Math.random())));add('tempo',Math.round(lenF*0.6))}
+      if(task.focus==='erkunden'){add('klugheit',Math.round(lenF*(0.8+Math.random()*0.7)))}
+      if(task.focus==='ruhe'){S.needs.ausgeruht=clamp(S.needs.ausgeruht+10+lenF*5,10,100);S.needs.laune=clamp(S.needs.laune+8,10,100);add('herz',Math.round(lenF*0.5))}
+      if(task.focus==='essen'){S.needs.satt=clamp(S.needs.satt+8,10,100)}
+      const nLoot=task.focus==='essen'?2+Math.round(Math.random()*2):(Math.random()<0.7?1:0);
+      const rareOk=(task.type==='wanderung'||task.focus==='erkunden');
+      for(let i=0;i<nLoot;i++){
+        const pool=DATA.welt.futter.filter(f=>f.selten?(rareOk&&Math.random()<0.35):true);
+        const f=rnd(pool.length?pool:DATA.welt.futter);
+        loot[f.id]=(loot[f.id]||0)+1;
+      }
+      Object.entries(loot).forEach(([id,n])=>{S.inventory[id]=(S.inventory[id]||0)+n});
+    }
+    Object.entries(gains).forEach(([k,v])=>{S.stats[k]+=v});
+    const rep=this.buildReport(task,gains,loot,isTraum);
+    S.log.unshift(rep);S.log=S.log.slice(0,20);
+    S.task=null;
+    return rep;
+  },
+  buildReport(task,gains,loot,isTraum){
+    const B=DATA.berichte,mc=DATA.welt.microcopy;
+    let text='',icons=[],title='';
+    if(isTraum){
+      title=rnd(mc.traum_titel);
+      const frags=[];const pool=[...DATA.traeume.traumfragmente];
+      for(let i=0;i<2&&pool.length;i++){const f=pool.splice(Math.floor(Math.random()*pool.length),1)[0];frags.push(f)}
+      text=frags.map(f=>f.satz).join(' ')+' '+rnd(DATA.traeume.traumschluss).satz;
+      icons=['🌙',...frags.map(f=>f.emoji)];
+    } else {
+      title=rnd(mc.rueckkehr_titel);
+      const wz=windowOf(task.start);
+      const recent=S.log.slice(0,6).flatMap(r=>r.ids||[]);
+      const orte=B.orte.filter(o=>o.tageszeit.includes(wz)&&!recent.includes(o.id));
+      const ort=rnd(orte.length?orte:B.orte);
+      const evs=B.ereignisse.filter(e=>e.tageszeit.includes(wz)&&e.fokus.includes(task.focus)&&!recent.includes(e.id));
+      const evPool=evs.length?evs:B.ereignisse.filter(e=>e.tageszeit.includes(wz));
+      const ev1=rnd(evPool.length?evPool:B.ereignisse);
+      let parts=[ort.satz,ev1.satz];icons=[ort.emoji,ev1.emoji];
+      let ids=[ort.id,ev1.id];
+      if(task.type!=='streifzug'&&Math.random()<0.75){
+        const p2=evPool.filter(e=>e.id!==ev1.id);
+        if(p2.length){const ev2=rnd(p2);parts.push(ev2.satz);icons.push(ev2.emoji);ids.push(ev2.id)}
+      }
+      const lootIds=Object.keys(loot);
+      if(lootIds.length){
+        const f=DATA.welt.futter.find(x=>x.id===lootIds[0]);
+        parts.push(fundSatz(f,loot[lootIds[0]]));
+        icons.push(f.emoji);
+      }
+      // seltenes Ereignis
+      const unseenRare=B.selten.filter(r=>!S.seenRare.includes(r.id));
+      if(unseenRare.length&&(task.type==='wanderung'||task.focus==='erkunden')&&Math.random()<0.3){
+        const r=rnd(unseenRare);S.seenRare.push(r.id);
+        parts.push(r.satz);icons.push(r.emoji);
+      }
+      const schl=B.schluss.filter(s=>!s.fokus||!s.fokus.length||s.fokus.includes(task.focus));
+      parts.push(rnd(schl.length?schl:B.schluss).satz);
+      text=parts.join(' ');
+      this._lastIds=ids;
+    }
+    return {t:nowMs(),typ:isTraum?'traum':task.type,title,text,icons:icons.slice(0,4),
+      gains,loot,ids:this._lastIds||[]};
+  },
+  showReport(rep){
+    S.pendingReport=null;
+    $('#reporttitle').textContent=rep.title;
+    $('#reporticons').textContent=rep.icons.join(' ');
+    $('#reporttext').textContent=rep.text;
+    const ch=$('#reportchips');ch.innerHTML='';
+    Object.entries(rep.gains||{}).forEach(([k,v])=>{if(v>0)ch.appendChild(el('span','chip2',`${STATEM[k]} +${v} ${STATNAMES[k]}`))});
+    Object.entries(rep.loot||{}).forEach(([id,n])=>{
+      const f=DATA.welt.futter.find(x=>x.id===id);
+      if(f)ch.appendChild(el('span','chip2',`${f.emoji} ${n}× ${f.name}`));
+    });
+    if(S.stage<2)ch.querySelectorAll('.chip2').forEach((c,i)=>{if(c.textContent.includes('+'))c.style.display='none'});
+    $('#readbtn').style.display=('speechSynthesis' in window)?'block':'none';
+    UI.overlay('ov-report');
+    saveNow();UI.refreshHome();
+  },
+  readAloud(){
+    try{
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance($('#reporttext').textContent);
+      u.lang='de-DE';u.rate=0.92;u.pitch=1.25;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  },
+};
+/* ============================================================
+   UNTERWEGS-SZENE & MINISPIELE
+   ============================================================ */
+const Away={
+  refresh(){
+    const on=!!(S&&S.task&&S.task.type!=='traum');
+    $('#awayscene').classList.toggle('on',on);
+    $('#wesen').classList.toggle('away',on);
+    if(!on)return;
+    const t=S.task,T=TASKS[t.type];
+    const prog=clamp((nowMs()-t.start)/(t.end-t.start),0,1);
+    const wk=$('#awaywalker');
+    if(!wk.dataset.built){
+      wk.innerHTML=`<div class="walkbob">${svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'ruhig',glowOp:.85})}</div>`;
+      wk.dataset.built='1';
+    }
+    wk.style.left=(5+prog*80)+'%';
+    $('#awayinfo .big').textContent=T.name+' · '+FOCUS[t.focus].em;
+    $('#awayinfo .sub').textContent='Kommt um '+fmtTime(t.end)+' zurück';
+    UI.status(S.name+' ist unterwegs.',true);
+  },
+  clearWalker(){const wk=$('#awaywalker');wk.dataset.built='';wk.innerHTML='';},
+  arrive(){
+    // Rückkehr: Wesen kommt vom Rand zurückgehüpft
+    this.clearWalker();
+    $('#awayscene').classList.remove('on');
+    const w=$('#wesen');w.classList.remove('away');
+    w.style.setProperty('--dx','170px');
+    requestAnimationFrame(()=>{
+      w.style.transition='transform .9s cubic-bezier(.34,1.3,.6,1)';
+      w.style.setProperty('--dx','0px');
+      setTimeout(()=>{w.style.transition='';Creature.hop();Sound.freude()},950);
+    });
+  },
+};
+
+/* ---------- Minispiele ---------- */
+const Games={
+  current:null,raf:0,
+  open(){
+    if(S.beats<=0){UI.ruheStatus();UI.toast('Keine Herzschläge mehr übrig.');return}
+    const list=S.stage>=2?['beeren','echo','rhythmus']:['beeren'];
+    if(list.length===1){this.start('beeren');return}
+    $('#gametitle').textContent='Was wollt ihr spielen?';
+    const gb=$('#gamebody');gb.innerHTML='';$('#gamehud').innerHTML='';
+    const names={beeren:['🫐','Beerenfang'],echo:['🪨','Echofolge'],rhythmus:['🥁','Rhythmusklopfen']};
+    list.forEach(id=>{
+      const b=el('button','bigbtn ghost',`${names[id][0]} ${names[id][1]} <small style="opacity:.6">Best: ${S.highs[id]||0}</small>`);
+      b.onclick=()=>this.start(id);gb.appendChild(b);
+    });
+    UI.overlay('ov-game');
+  },
+  start(id){
+    if(!spendBeat())return;
+    S.counters.spiele++;S.care.gespielt=true;saveNow();
+    this.current=id;
+    $('#gamebody').innerHTML='<div id="gamearea"></div>';
+    $('#gamehud').innerHTML='';
+    UI.overlay('ov-game');
+    if(id==='beeren')this.beeren();
+    if(id==='echo')this.echo();
+    if(id==='rhythmus')this.rhythmus();
+  },
+  end(id,score,best,line,statGain){
+    cancelAnimationFrame(this.raf);
+    const prevBest=S.highs[id]||0,isBest=score>prevBest;
+    if(isBest)S.highs[id]=score;
+    const g=statGain.stat;
+    S.stats[g]+=statGain.v;
+    S.needs.laune=clamp(S.needs.laune+7,10,100);
+    saveNow();
+    $('#gamebody').innerHTML=`<div id="gameresult">
+      <div style="font-size:44px">${statGain.em}</div>
+      <div>${line}</div><div class="rscore">${score}</div>
+      <div class="rbest">${isBest?'Neue Bestleistung! ✨':'Bestleistung: '+(S.highs[id]||0)}</div>
+      ${S.stage>=2?`<div class="chip2" style="display:inline-block;margin-top:8px">${STATEM[g]} +${statGain.v} ${STATNAMES[g]}</div>`:''}
+    </div>`;
+    $('#gamehud').innerHTML='';
+    const ok=el('button','bigbtn','Schön');ok.onclick=()=>{UI.overlay('ov-game',false);UI.refreshHome()};
+    $('#gamebody').appendChild(ok);
+    Sound.freude();
+  },
+
+  /* --- Beerenfang --- */
+  beeren(){
+    $('#gametitle').textContent='Beerenfang';
+    const area=$('#gamearea');
+    area.innerHTML=`<div id="gcatcher">${svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'hell',glowOp:1})}</div>`;
+    const cat=$('#gcatcher');
+    let cx=area.clientWidth/2,target=cx,caught=0,missed=0,spawned=0,items=[],t0=performance.now(),last=t0;
+    const total=18, good=['🫐','🍓','🍇','🌰'],bad=['🍂','🪨'];
+    const speedLerp=0.06+0.10*clamp(effStats(S).tempo/60,0,1);
+    area.addEventListener('pointermove',e=>{const r=area.getBoundingClientRect();target=e.clientX-r.left},{passive:true});
+    area.addEventListener('pointerdown',e=>{const r=area.getBoundingClientRect();target=e.clientX-r.left},{passive:true});
+    const hud=$('#gamehud');
+    const loop=(t)=>{
+      const dt=Math.min(40,t-last);last=t;
+      cx+=(target-cx)*speedLerp*(dt/16);
+      cx=clamp(cx,40,area.clientWidth-40);
+      cat.style.left=(cx-43)+'px';
+      if(spawned<total&&Math.random()<0.028*(dt/16)){
+        spawned++;
+        const isGood=Math.random()<0.72;
+        const d=el('div','falling',isGood?rnd(good):rnd(bad));
+        d.dataset.good=isGood?'1':'';
+        d.dataset.x=40+Math.random()*(area.clientWidth-80);
+        d.dataset.y=-30;d.dataset.v=1.9+Math.random()*1.4+spawned*0.05;
+        d.style.transform=`translate(${d.dataset.x}px,-30px)`;
+        area.appendChild(d);items.push(d);
+      }
+      items=items.filter(d=>{
+        let y=parseFloat(d.dataset.y)+parseFloat(d.dataset.v)*(dt/16);
+        d.dataset.y=y;
+        d.style.transform=`translate(${d.dataset.x}px,${y}px)`;
+        const catchY=area.clientHeight-92;
+        if(y>catchY&&y<catchY+56&&Math.abs(parseFloat(d.dataset.x)+18-cx)<46){
+          if(d.dataset.good){caught++;UI.sparkleAt0(area,d);Sound.plink();vibr(10)}
+          else{missed++;Sound.tief();cat.style.filter='grayscale(.6)';setTimeout(()=>cat.style.filter='',420)}
+          d.remove();return false;
+        }
+        if(y>area.clientHeight){d.remove();return false}
+        return true;
+      });
+      hud.textContent='🫐 '+caught;
+      if(spawned>=total&&!items.length){
+        this.end('beeren',caught,0,'Gefangen:',{stat:'tempo',v:Math.max(1,Math.round(caught/4)),em:'🫐'});
+        return;
+      }
+      this.raf=requestAnimationFrame(loop);
+    };
+    UI.sparkleAt0=(area,d)=>{const r=area.getBoundingClientRect();UI.pop(r.left+parseFloat(d.dataset.x)+14,r.top+parseFloat(d.dataset.y),'✨')};
+    this.raf=requestAnimationFrame(loop);
+  },
+
+  /* --- Echofolge (Simon) --- */
+  echo(){
+    $('#gametitle').textContent='Echofolge';
+    const area=$('#gamearea');
+    const stones=[{c:'#e8756d',s:'●'},{c:'#e8b931',s:'▲'},{c:'#6fb3a8',s:'■'},{c:'#9a8fe8',s:'✦'}];
+    area.innerHTML='<div class="simonwrap">'+stones.map((st,i)=>
+      `<button class="simonstone" data-i="${i}" style="--stc:${st.c};--stg:${st.c}">${st.s}</button>`).join('')+'</div>';
+    const btns=[...area.querySelectorAll('.simonstone')];
+    const seq=[];let inputPos=0,playing=true,round=0;
+    const showMs=620+380*clamp(effStats(S).klugheit/60,0,1);
+    const tones=[392,494,587,740];
+    const lit=(i,ms)=>{btns[i].classList.add('lit');
+      if(S.settings.sound){Sound.plink()}
+      setTimeout(()=>btns[i].classList.remove('lit'),ms||showMs*0.6)};
+    const playSeq=async()=>{
+      playing=true;$('#gamehud').textContent='Schau gut hin … Runde '+(round+1);
+      await new Promise(r=>setTimeout(r,800));
+      for(const i of seq){lit(i);await new Promise(r=>setTimeout(r,showMs))}
+      playing=false;inputPos=0;$('#gamehud').textContent='Jetzt du.';
+    };
+    const next=()=>{seq.push(Math.floor(Math.random()*4));round++;playSeq()};
+    btns.forEach(b=>b.onclick=()=>{
+      if(playing)return;
+      const i=+b.dataset.i;lit(i,260);vibr(10);
+      if(i===seq[inputPos]){inputPos++;
+        if(inputPos>=seq.length){
+          if(round>=8){this.end('echo',round,0,'Runden geschafft:',{stat:'klugheit',v:Math.max(1,Math.round(round/2)),em:'🪨'});return}
+          setTimeout(next,700);
+        }
+      } else {
+        this.end('echo',round-1<0?0:round-1,0,'Runden geschafft:',{stat:'klugheit',v:Math.max(1,Math.round(round/2)),em:'🪨'});
+      }
+    });
+    next();
+  },
+
+  /* --- Rhythmusklopfen --- */
+  rhythmus(){
+    $('#gametitle').textContent='Rhythmusklopfen';
+    const area=$('#gamearea');
+    area.innerHTML=`<div id="rhywrap"><div id="rhydrum">🥁</div><div id="rhymsg" style="font-weight:700;min-height:1.6em"></div></div>`;
+    const drum=$('#rhydrum'),msg=$('#rhymsg');
+    const tol=300+220*clamp(effStats(S).herz/60,0,1);
+    let score=0,roundN=0,expect=[],taps=[],listening=false;
+    const patterns=[[0,500,1000],[0,400,800,1200],[0,300,600,1200],[0,350,700,1050,1400]];
+    const beat=()=>{drum.classList.remove('beat');void drum.offsetWidth;drum.classList.add('beat');Sound.trommel();vibr(20)};
+    const playRound=async()=>{
+      roundN++;
+      if(roundN>4){this.end('rhythmus',score,0,'Im Takt getroffen:',{stat:'herz',v:Math.max(1,Math.round(score/3)),em:'🥁'});return}
+      const pat=patterns[Math.min(roundN-1,patterns.length-1)];
+      msg.textContent='Hör zu …';listening=false;
+      await new Promise(r=>setTimeout(r,900));
+      const t0=performance.now();
+      for(const p of pat){setTimeout(beat,p)}
+      await new Promise(r=>setTimeout(r,pat[pat.length-1]+600));
+      msg.textContent='Jetzt du. Klopf mit.';
+      expect=pat;taps=[];listening=true;
+      const start=performance.now();
+      const check=setInterval(()=>{
+        if(performance.now()-start>pat[pat.length-1]+1800){
+          clearInterval(check);listening=false;
+          let hit=0;
+          expect.forEach(pt=>{if(taps.some(tp=>Math.abs(tp-pt)<tol))hit++});
+          score+=hit;
+          msg.textContent=hit===expect.length?'Genau richtig. ✨':hit>0?'Fast. Weiter geht’s.':'Macht nichts. Nochmal.';
+          Sound.freude();
+          setTimeout(playRound,1100);
+        }
+      },120);
+      area.onpointerdown=()=>{if(!listening)return;
+        taps.push(performance.now()-start);beat();};
+    };
+    playRound();
+  },
+};
+/* ============================================================
+   KAMPF & FREUNDESCODE
+   ============================================================ */
+const B36='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const ELIDX=['glut','tau','moos','funke'];
+const FORMIDX=[null,'wehr','flink','traum','herz'];
+function b36(n,len){n=clamp(Math.round(n),0,Math.pow(36,len)-1);let s='';
+  do{s=B36[n%36]+s;n=Math.floor(n/36)}while(n>0);return s.padStart(len,'0')}
+function encodeCode(st){
+  let d='G1'+b36(ELIDX.indexOf(st.element),1)+b36(st.stage,1)+b36(Math.max(0,FORMIDX.indexOf(st.form)),1)
+    +b36(st.stats.kraft,2)+b36(st.stats.tempo,2)+b36(st.stats.klugheit,2)+b36(st.stats.herz,2);
+  let sum=0;for(const c of d)sum+=B36.indexOf(c)>=0?B36.indexOf(c):0;
+  d+=B36[sum%36];
+  const nm=(st.name||'').toUpperCase().replace(/[^A-ZÄÖÜ]/g,'').slice(0,8);
+  return d+(nm?'-'+nm:'');
+}
+function decodeCode(raw){
+  const s=(raw||'').trim().toUpperCase();
+  const m=s.match(/^G1([0-9A-Z]{12})(?:-([A-ZÄÖÜ]{1,8}))?$/);
+  if(!m)return null;
+  const d='G1'+m[1];
+  let sum=0;for(const c of d.slice(0,-1))sum+=B36.indexOf(c);
+  if(B36[sum%36]!==d[d.length-1])return null;
+  const q=m[1].slice(0,11); // letztes Zeichen ist die Prüfsumme
+  const v=(i,l)=>parseInt(q.slice(i,i+l),36);
+  const st={element:ELIDX[v(0,1)]||'glut',stage:clamp(v(1,1),1,3),form:FORMIDX[v(2,1)]||null,
+    stats:{kraft:v(3,2),tempo:v(5,2),klugheit:v(7,2),herz:v(9,2)},name:m[2]||'Fremdes Wesen'};
+  if(st.stage<2)st.form=null;
+  return st;
+}
+
+function elemMult(a,b){ if(KONTER[a]===b)return 1.4; if(KONTER[b]===a)return 0.7; return 1; }
+
+const Battle={
+  st:null,
+  /* Abend-Wanderwesen */
+  openWander(){
+    if(S.beats<=0){UI.ruheStatus();return}
+    const g=rnd(DATA.welt.gegner);
+    const eff=effStats(S);
+    const power=(eff.kraft+eff.tempo*0.5)*(0.8+Math.random()*0.35)+4;
+    this.setup({name:g.name,element:g.element,emoji:g.emoji,power,
+      intro:g.auftritt,sieg:g.sieg,niederlage:g.niederlage,cost:true});
+  },
+  openCode(code){
+    const o=decodeCode(code);
+    if(!o){UI.toast('Diesen Code kann ich nicht lesen. Stimmt jedes Zeichen?');return}
+    const power=(o.stats.kraft+o.stats.tempo*0.5)*0.85+4;
+    this.setup({name:o.name,element:o.element,svg:o,power,
+      intro:o.name+' ist zum Kämpfen gekommen.',sieg:'Ihr verbeugt euch voreinander. Das war ein gutes Spiel.',
+      niederlage:'Das war ein starker Freund. Nächstes Mal!',cost:false});
+    UI.overlay('ov-menu',false);
+  },
+  openSibling(pid){
+    const o=loadProfile(pid);if(!o)return;
+    const eo=effStats(o);
+    this.setup({name:o.name,element:o.element,svg:o,power:(eo.kraft+eo.tempo*0.5)*0.9+4,
+      intro:o.name+' will mit dir spielen und kämpfen.',sieg:'Ihr kugelt lachend durcheinander. Unentschieden im Herzen.',
+      niederlage:o.name+' hilft dir wieder hoch. So macht man das.',cost:false});
+    UI.overlay('ov-menu',false);
+  },
+  setup(o){
+    this.st={enemy:o,phase:'intro',myHp:100,enHp:100,round:0,maxRounds:5,cursor:0,dir:1,zone:null,await:false};
+    $('#battletitle').textContent='Ein Wanderwesen';
+    $('#battlemsg').textContent=o.intro;
+    const me=$('.fighter.me'),en=$('.fighter.enemy');
+    me.querySelector('.fsvg').innerHTML=svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'hell',glowOp:1});
+    me.querySelector('.fname').innerHTML=S.name+` <span class="elem" style="background:${ELEMENTS[S.element].farbe};--eg:${ELEMENTS[S.element].glow}"></span>`;
+    const enE=ELEMENTS[o.element];
+    if(o.svg){en.querySelector('.femoji').style.display='none';
+      if(!en.querySelector('.fsvg')){const d=el('div','fsvg');en.prepend(d)}
+      en.querySelector('.fsvg').innerHTML=svgWesen({element:o.svg.element,stage:o.svg.stage,form:o.svg.form,glow:'ruhig',glowOp:.9});
+      en.querySelector('.fsvg').style.display='block';
+    } else {
+      if(en.querySelector('.fsvg'))en.querySelector('.fsvg').style.display='none';
+      en.querySelector('.femoji').style.display='block';
+      en.querySelector('.femoji').textContent=o.emoji;
+    }
+    en.querySelector('.fname').innerHTML=o.name+` <span class="elem" style="background:${enE.farbe};--eg:${enE.glow}"></span>`;
+    this.hp();
+    $('#timingwrap').style.visibility='hidden';
+    const bb=$('#battlebtns');bb.innerHTML='';
+    const fight=el('button','bigbtn','Kämpfen ⚔️');
+    fight.onclick=()=>{ if(o.cost&&!spendBeat())return; S.counters.kaempfe++;S.care.gekaempft=true;saveNow();UI.renderActions();this.startRound() };
+    const flee=el('button','bigbtn ghost','Lieber nicht');
+    flee.onclick=()=>{UI.overlay('ov-battle',false)};
+    bb.appendChild(fight);bb.appendChild(flee);
+    UI.overlay('ov-battle');
+  },
+  hp(){
+    const me=$('.fighter.me .hpfill'),en=$('.fighter.enemy .hpfill');
+    me.style.width=this.st.myHp+'%';en.style.width=this.st.enHp+'%';
+    me.classList.toggle('low',this.st.myHp<35);en.classList.toggle('low',this.st.enHp<35);
+  },
+  startRound(){
+    const st=this.st;st.phase='timing';st.round++;
+    $('#battlebtns').innerHTML='';
+    $('#battlemsg').textContent='Runde '+st.round+' — tipp im richtigen Moment!';
+    $('#timingwrap').style.visibility='visible';
+    // grüne Zone: Breite nach Tempo
+    const zoneW=18+10*clamp(effStats(S).tempo/60,0,1);
+    const zoneX=15+Math.random()*(70-zoneW);
+    st.zone={x:zoneX,w:zoneW};
+    const z=$('#timingzone');z.style.left=zoneX+'%';z.style.width=zoneW+'%';z.classList.remove('gold');
+    st.cursor=0;st.dir=1;st.await=true;
+    const wrap=$('#timingwrap');
+    let last=performance.now();
+    const speed=0.10+0.02*st.round;
+    const loop=(t)=>{
+      if(!st.await)return;
+      const dt=t-last;last=t;
+      st.cursor+=st.dir*speed*dt;
+      if(st.cursor>=97){st.cursor=97;st.dir=-1}
+      if(st.cursor<=0){st.cursor=0;st.dir=1}
+      $('#timingcursor').style.left=st.cursor+'%';
+      st.raf=requestAnimationFrame(loop);
+    };
+    st.raf=requestAnimationFrame(loop);
+    wrap.onpointerdown=()=>{ if(!st.await)return; st.await=false;cancelAnimationFrame(st.raf);this.resolveRound() };
+    // auch ohne Tipp geht es weiter (der Zeiger pendelt max 6s)
+    st.timeout=setTimeout(()=>{if(st.await){st.await=false;cancelAnimationFrame(st.raf);this.resolveRound(true)}},6000);
+  },
+  resolveRound(auto){
+    const st=this.st;clearTimeout(st.timeout);
+    const c=st.cursor,z=st.zone;
+    const inZone=!auto&&c>=z.x&&c<=z.x+z.w;
+    const center=inZone&&Math.abs(c-(z.x+z.w/2))<z.w*0.18;
+    const quality=auto?0.55:inZone?(center?1.3:1):0.6;
+    if(inZone){$('#timingzone').classList.add('gold');Sound.treffer();vibr(25)}
+    const eff=effStats(S),en=st.enemy;
+    const myDmg=(12+eff.kraft*0.5)*quality*elemMult(S.element,en.element);
+    const enDmg=(8+en.power*0.35)*(0.75+Math.random()*0.4)*elemMult(en.element,S.element);
+    const meF=$('.fighter.me'),enF=$('.fighter.enemy');
+    meF.classList.add('attack');
+    setTimeout(()=>{meF.classList.remove('attack');enF.classList.add('hit');
+      st.enHp=clamp(st.enHp-myDmg,0,100);this.hp();
+      setTimeout(()=>enF.classList.remove('hit'),420);
+    },240);
+    $('#battlemsg').textContent=center?'Mitten ins Grüne! Voller Treffer!':inZone?'Getroffen!':'Knapp daneben — ein bisschen Schaden trotzdem.';
+    setTimeout(()=>{
+      if(st.enHp<=0){this.finish(true);return}
+      enF.classList.add('attack');
+      setTimeout(()=>{enF.classList.remove('attack');meF.classList.add('hit');
+        st.myHp=clamp(st.myHp-enDmg,0,100);this.hp();
+        setTimeout(()=>meF.classList.remove('hit'),420);
+        setTimeout(()=>{
+          if(st.myHp<=0){this.finish(false)}
+          else if(st.round>=st.maxRounds){this.finish(st.myHp>=st.enHp)}
+          else this.startRound();
+        },600);
+      },240);
+    },1100);
+  },
+  finish(won){
+    const st=this.st;st.phase='done';
+    $('#timingwrap').style.visibility='hidden';
+    const bb=$('#battlebtns');bb.innerHTML='';
+    if(won){
+      S.counters.siege++;
+      const g=2+Math.round(Math.random()*2);S.stats.kraft+=g;
+      S.needs.laune=clamp(S.needs.laune+8,10,100);
+      $('#battlemsg').textContent=st.enemy.sieg+' '+rnd(DATA.welt.microcopy.kampf_sieg);
+      const me=$('.fighter.me');me.classList.add('attack');Sound.freude();vibr([30,50,30]);
+      if(S.stage>=2)$('#battlemsg').textContent+=' (💪 +'+g+' Kraft)';
+    } else {
+      S.needs.laune=clamp(S.needs.laune-10,10,100);
+      $('#battlemsg').textContent=st.enemy.niederlage+' '+rnd(DATA.welt.microcopy.kampf_trost).replace('{name}',S.name);
+      Sound.tief();
+    }
+    S.needs.sauber=clamp(S.needs.sauber-12,10,100);
+    saveNow();
+    const ok=el('button','bigbtn',won?'Juhu!':'Trösten 💛');
+    ok.onclick=()=>{UI.overlay('ov-battle',false);Creature.render();UI.refreshHome();
+      if(!won){Creature.nuzzle();UI.toast('Streichel '+S.name+' ein bisschen.')}};
+    bb.appendChild(ok);
+  },
+};
+/* ============================================================
+   EVOLUTION — der kausale Reveal
+   ============================================================ */
+const Evo={
+  pickForm(){
+    const c=S.counters,s=S.stats;
+    const maxC=Math.max(1,c.kaempfe,c.spiele,c.traeume,c.streicheln);
+    const maxS=Math.max(1,s.kraft,s.tempo,s.klugheit,s.herz);
+    const score={
+      wehr:2*c.kaempfe/maxC+s.kraft/maxS,
+      flink:2*c.spiele/maxC+s.tempo/maxS,
+      traum:2*c.traeume/maxC+s.klugheit/maxS,
+      herz:2*c.streicheln/maxC+s.herz/maxS,
+    };
+    return Object.entries(score).sort((a,b)=>b[1]-a[1])[0][0];
+  },
+  domCount(form){
+    const c=S.counters;
+    return {wehr:c.kaempfe,flink:c.spiele,traum:c.traeume,herz:c.streicheln}[form]||0;
+  },
+  ready(){
+    if(!S||S.stage>=3)return false;
+    if(windowOf(nowMs())!=='morgen')return false;
+    return S.counters.fenster>=(S.stage===1?STUFE2_FENSTER:STUFE3_FENSTER);
+  },
+  run(done){
+    const newStage=S.stage+1;
+    const form=newStage===2?this.pickForm():S.form;
+    const variant=newStage===3?((S.element==='glut'||S.element==='funke')?'hell':'still'):null;
+    const rs=DATA.traeume.rueckschau.find(r=>r.form===form&&r.stufe===newStage);
+    const text=(rs?rs.text:'Etwas hat sich verändert.')
+      .replace(/\{name\}/g,S.name).replace(/\{n\}/g,String(Math.max(2,this.domCount(form))));
+    const oldOpts={element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'hell',glowOp:1};
+    const newOpts={element:S.element,stage:newStage,form,variant,glow:'hell',glowOp:1};
+    const ov=$('#ov-evo'),tx=$('#evotext'),st=$('#evostage'),cp=$('#evocompare'),btn=$('#evonext');
+    tx.textContent='';tx.classList.remove('hidden');
+    st.classList.add('hidden');st.classList.remove('morph');
+    cp.classList.add('hidden');cp.innerHTML='';
+    UI.overlay('ov-evo');
+    let phase=0;
+    // Schreibmaschinen-Text
+    let i=0;btn.style.visibility='hidden';
+    const type=()=>{ if(i<=text.length){tx.textContent=text.slice(0,i);i+=2;setTimeout(type,34)} else btn.style.visibility='visible'; };
+    setTimeout(type,600);
+    btn.onclick=()=>{
+      if(phase===0){
+        phase=1;tx.classList.add('hidden');btn.style.visibility='hidden';
+        st.classList.remove('hidden');
+        st.querySelector('.eold').innerHTML=svgWesen(oldOpts);
+        st.querySelector('.enew').innerHTML=svgWesen(newOpts);
+        Sound.freude();
+        setTimeout(()=>{st.classList.add('morph');vibr([40,80,40,80,120]);},700);
+        setTimeout(()=>{btn.style.visibility='visible';btn.textContent='Weiter'},3400);
+      } else if(phase===1){
+        phase=2;st.classList.add('hidden');
+        cp.classList.remove('hidden');
+        cp.innerHTML=`<div class="half">${svgWesen(oldOpts)}<div style="color:#cfd8f2;font-size:.85em">vorher</div></div>
+          <div class="arrow">→</div>
+          <div class="half">${svgWesen(newOpts)}<div style="color:#fff;font-weight:800">${FORMNAME(form,newStage)}</div></div>`;
+        btn.textContent='Hallo, '+S.name;
+      } else {
+        // Zustand festschreiben
+        S.stage=newStage;S.form=form;S.variant=variant;
+        S.chronicle.push({t:nowMs(),stage:newStage,form,text});
+        if(newStage===2&&!S.seen.stage2){S.seen.stage2=true;
+          setTimeout(()=>UI.toast('Neu: Kämpfe am Abend, Spiele, Werte und der Freundescode unter „Mehr“.',4200),1200)}
+        if(newStage===3&&!S.seen.stage3){S.seen.stage3=true;
+          setTimeout(()=>UI.toast('Neu: Statistik in „Mehr“.',3200),1200)}
+        saveNow();
+        UI.overlay('ov-evo',false);
+        Creature.render();Creature.hop();UI.refreshHome();
+        btn.textContent='Weiter';
+        if(done)done();
+      }
+    };
+  },
+};
+/* ============================================================
+   START, RITUAL, HILFE, MEHR-MENÜ, TREFFEN
+   ============================================================ */
+const Start={
+  render(){
+    UI.applyPalette(windowOf(nowMs()));
+    const pc=$('#profilecards');pc.innerHTML='';
+    ['p1','p2'].forEach(pid=>{
+      const st=loadProfile(pid);
+      const card=el('div','pcard'+(st?'':' empty'));
+      if(st){
+        const sleeping=windowOf(nowMs())==='nacht'&&(!st.task||st.task.type==='traum');
+        card.innerHTML=`<div class="mini">${svgWesen({element:st.element,stage:st.stage,form:st.form,variant:st.variant,
+          glow:st.needs.laune>=70?'hell':'ruhig',glowOp:.5+.5*st.needs.laune/100,sleeping,mood:st.needs.laune<32?'sad':'happy'})}</div>
+          <div class="pname">${st.name}</div>
+          <div class="pstat">${st.task&&st.task.type!=='traum'?st.name+' ist unterwegs':sleeping?st.name+' schläft':st.name+' wartet auf dich'}</div>`;
+        card.onclick=()=>Boot.enter(pid);
+      } else {
+        card.innerHTML=`<div class="mini">${svgKnospe('#8fa8d8','pc')}</div>
+          <div class="pname">Hier wohnt noch keiner</div><div class="pstat">Tippen zum Anfangen</div>`;
+        card.onclick=()=>Ritual.start(pid);
+      }
+      pc.appendChild(card);
+    });
+    const ex=$('#startextra');ex.innerHTML='';
+    const s1=loadProfile('p1'),s2=loadProfile('p2');
+    const bothHome=s1&&s2&&!s1.task&&!s2.task;
+    if(bothHome&&meta.treffenWindow!==windowId(nowMs())&&windowOf(nowMs())!=='nacht'){
+      const b=el('button','pillbtn','<span class="em">💞</span>Zusammen spielen');
+      b.onclick=()=>Treffen.open();ex.appendChild(b);
+    }
+    const bk=el('button','pillbtn','<span class="em">🗝️</span>Sichern');
+    bk.onclick=()=>Menu.open('sichern',true);ex.appendChild(bk);
+    UI.show('start');
+  },
+};
+
+/* ---------- Entstehungsritual ---------- */
+const Ritual={
+  pid:null,taps:0,element:null,
+  start(pid){
+    this.pid=pid;this.taps=0;this.element=null;
+    $('#knospe').innerHTML=svgKnospe('#8fa8d8','rit');
+    $('#sparks').innerHTML='';
+    $('#ritualhint').textContent='Da liegt etwas im Dunkeln. Tipp es an.';
+    UI.show('ritual');
+    const k=$('#knospe');
+    k.onpointerdown=()=>this.tapKnospe();
+  },
+  tapKnospe(){
+    if(this.taps>=4)return;
+    this.taps++;
+    const k=$('#knospe');
+    k.classList.remove('shake');void k.offsetWidth;k.classList.add('shake');
+    Sound.tief();vibr(20);
+    const g=k.querySelector('.glim');
+    if(g)g.style.transform='scale('+(1+this.taps*0.3)+')';
+    if(this.taps===2)$('#ritualhint').textContent='Es regt sich. Weiter.';
+    if(this.taps>=4){
+      $('#ritualhint').textContent='Vier Funken kommen. Wisch einen in die Knospe.';
+      setTimeout(()=>this.spawnSparks(),500);
+    }
+  },
+  spawnSparks(){
+    const wrap=$('#sparks');wrap.innerHTML='';
+    const pos=[[14,22],[70,16],[10,58],[74,54]];
+    Object.keys(ELEMENTS).forEach((elId,i)=>{
+      const E=ELEMENTS[elId];
+      const s=el('div','spark');
+      s.style.setProperty('--sc',E.farbe);s.style.setProperty('--sg',E.glow);
+      s.style.left=pos[i][0]+'%';s.style.top=pos[i][1]+'%';
+      s.style.animationDelay=(i*0.6)+'s';
+      s.dataset.el=elId;
+      s.addEventListener('pointerdown',ev=>this.dragSpark(ev,s,elId));
+      wrap.appendChild(s);
+    });
+  },
+  dragSpark(ev,s,elId){
+    ev.preventDefault();
+    s.style.animation='none';s.style.zIndex=10;
+    const move=e=>{s.style.left=(e.clientX-32)+'px';s.style.top=(e.clientY-32)+'px'};
+    const up=e=>{
+      document.removeEventListener('pointermove',move);
+      document.removeEventListener('pointerup',up);
+      const k=$('#knospe').getBoundingClientRect();
+      const inside=e.clientX>k.left-30&&e.clientX<k.right+30&&e.clientY>k.top-30&&e.clientY<k.bottom+30;
+      if(inside)this.chose(elId);
+      else{s.style.left='';s.style.top='';s.style.zIndex='';s.style.animation='';
+        // Positionen wiederherstellen
+        this.spawnSparks();}
+    };
+    document.addEventListener('pointermove',move);
+    document.addEventListener('pointerup',up);
+  },
+  chose(elId){
+    this.element=elId;
+    $('#sparks').innerHTML='';
+    const k=$('#knospe');
+    k.innerHTML=svgKnospe(ELEMENTS[elId].farbe,'rit2');
+    const g=k.querySelector('.glim');
+    if(g){g.style.transform='scale(2.2)';g.classList.remove('glim-ruhig');g.classList.add('glim-hell')}
+    Sound.freude();vibr([30,60,30]);
+    $('#ritualhint').textContent='Da drin leuchtet es jetzt.';
+    setTimeout(()=>{
+      $('#nameinput').value='';
+      UI.overlay('ov-name');
+      setTimeout(()=>{try{$('#nameinput').focus()}catch(e){}},300);
+    },1400);
+  },
+  finish(name){
+    const st=newState(name,this.element);
+    st.pref=rnd(DATA.welt.futter.filter(f=>!f.selten)).id;
+    save(this.pid,st);
+    meta.profiles[this.pid]=name;saveMeta();
+    UI.overlay('ov-name',false);
+    Boot.enter(this.pid,true);
+  },
+};
+
+/* ---------- Hilfe ---------- */
+const Help={
+  open(tab){
+    const tabs=$('#helptabs');tabs.innerHTML='';
+    const showText=S&&S.stage>=2;
+    tab=tab||(showText?'text':'bild');
+    if(!showText)tab='bild';
+    const mkTab=(id,svg)=>{
+      const b=el('button','htab'+(tab===id?' sel':''));b.innerHTML=svg;
+      b.onclick=()=>this.open(id);tabs.appendChild(b);
+    };
+    tabs.style.display=showText?'flex':'none';
+    mkTab('bild','<svg viewBox="0 0 40 40"><circle cx="20" cy="24" r="10" fill="#4a4560"/><circle cx="20" cy="15" r="7" fill="#4a4560"/></svg>');
+    if(showText)mkTab('text','<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="13" fill="#4a4560"/><circle cx="20" cy="10" r="9" fill="#4a4560"/></svg>');
+    const body=$('#helpbody');body.innerHTML='';
+    if(tab==='bild')this.bild(body);else this.text(body);
+    UI.overlay('ov-help');
+  },
+  demo(id){
+    const elmt=S?S.element:'glut';
+    const mini=g=>svgWesen({element:elmt,stage:1,glow:g||'ruhig',glowOp:1});
+    switch(id){
+      case 'streicheln':return mini('hell')+'<div class="hand stroke" style="left:50%;top:36%">🖐️</div>';
+      case 'fuettern':return mini()+'<div class="hand lift" style="left:48%;top:40%">🫐</div>';
+      case 'waschen':return mini()+'<div class="hand circle" style="left:50%;top:38%">🧽</div>';
+      case 'losschicken':return mini()+'<div class="hand pull" style="left:40%;top:42%">🖐️</div><div style="position:absolute;right:6px;top:44%;font-size:26px">🥾</div>';
+      case 'herzen':return '<div style="display:flex;gap:14px;justify-content:center;align-items:center;height:100%">'+
+        [1,1,0].map(f=>`<svg viewBox="0 0 24 24" width="44" height="44"><path d="M12 20.6C7.2 16.9 3 13.3 3 9.3 3 6.4 5.3 4.4 7.9 4.4c1.6 0 3.1.8 4.1 2.2 1-1.4 2.5-2.2 4.1-2.2 2.6 0 4.9 2 4.9 4.9 0 4-4.2 7.6-9 11.3Z" fill="${f?'#e8756d':'none'}" stroke="#e8756d" stroke-width="1.6"/></svg>`).join('')+'</div>';
+      case 'licht':return '<div class="glowrow">'+
+        [['hell','hell'],['flackern','flackernd'],['langsam','langsam'],['trueb','trüb'],['ruhig','ruhig']]
+        .map(([g,w])=>`<div class="gr">${svgWesen({element:elmt,stage:1,glow:g,glowOp:g==='hell'?1:.7})}<div>${w}</div></div>`).join('')+'</div>';
+      case 'treffen':return '<div style="display:flex;justify-content:center;gap:0;height:100%;align-items:center">'+
+        `<div style="width:80px">${svgWesen({element:'glut',stage:1,glow:'hell',glowOp:1})}</div>`+
+        '<div style="font-size:26px">💛</div>'+
+        `<div style="width:80px">${svgWesen({element:'tau',stage:1,glow:'hell',glowOp:1})}</div></div>`;
+    }
+    return mini();
+  },
+  bild(body){
+    DATA.welt.bildhilfe.forEach(h=>{
+      const c=el('div','helpcard');
+      c.innerHTML=`<div class="demo">${this.demo(h.id)}</div><h3>${h.titel}</h3><p>${h.satz}</p>`;
+      body.appendChild(c);
+    });
+  },
+  text(body){
+    DATA.welt.texthilfe.forEach(h=>{
+      const d=el('details','hsec');
+      d.innerHTML=`<summary>${h.titel}</summary><div class="htxt">${h.text}</div>`;
+      body.appendChild(d);
+    });
+  },
+};
+
+/* ---------- Mehr-Menü ---------- */
+const Menu={
+  open(view,fromStart){
+    this.fromStart=!!fromStart;
+    const t=$('#menutitle'),b=$('#menubody');b.innerHTML='';
+    const back=()=>{const bb=el('button','bigbtn ghost','← Zurück');bb.onclick=()=>this.open(null,this.fromStart);b.appendChild(bb)};
+    if(!view){
+      t.textContent='Mehr';
+      const items=[];
+      if(S){items.push(['werte','📊 Werte'],['chronik','📖 Chronik'],['code','🤝 Freundescode']);
+        if(S.stage>=3)items.push(['statistik','🧮 Statistik']);}
+      items.push(['sichern','🗝️ Sichern & Laden']);
+      items.forEach(([id,label])=>{const bb=el('button','bigbtn ghost',label);bb.onclick=()=>this.open(id,this.fromStart);b.appendChild(bb)});
+    }
+    else if(view==='werte'){
+      t.textContent='Werte';
+      const eff=effStats(S);
+      const maxV=Math.max(30,...Object.values(S.stats));
+      Object.keys(STATNAMES).forEach(k=>{
+        const r=el('div','statrow');
+        r.innerHTML=`<div class="sname">${STATEM[k]} ${STATNAMES[k]}</div>
+          <div class="sbar"><div class="sfill" style="width:${Math.round(100*S.stats[k]/maxV)}%"></div></div>
+          <div class="sval">${Math.round(S.stats[k])}</div>`;
+        b.appendChild(r);
+      });
+      const n=S.needs;
+      const ni=el('div','needicons');
+      ni.innerHTML=`<div class="ni">🍽️<small>${Math.round(n.satt)}</small></div>
+        <div class="ni">😴<small>${Math.round(n.ausgeruht)}</small></div>
+        <div class="ni">🙂<small>${Math.round(n.laune)}</small></div>
+        <div class="ni">🫧<small>${Math.round(n.sauber)}</small></div>`;
+      b.appendChild(el('div','', '<div style="font-weight:800;margin:14px 0 4px">Gerade wichtig</div>'));
+      b.appendChild(ni);
+      b.appendChild(el('p','','<small>Hunger, Müdigkeit, Laune und Schmutz machen die Werte im Kampf schwächer. Nichts geht je verloren.</small>'));
+      back();
+    }
+    else if(view==='chronik'){
+      t.textContent='Chronik';
+      if(!S.chronicle.length&&!S.log.length)b.appendChild(el('p','','Noch ist alles neu. Die Chronik füllt sich mit der Zeit.'));
+      [...S.chronicle].reverse().forEach(c=>{
+        const d=new Date(c.t);
+        b.appendChild(el('div','chronentry',`<div class="cd">${d.toLocaleDateString('de-DE')} · ${FORMNAME(c.form,c.stage)}</div>${c.text}`));
+      });
+      S.log.filter(r=>r.typ==='traum').slice(0,6).forEach(r=>{
+        b.appendChild(el('div','chronentry',`<div class="cd">Traum ${r.icons.join(' ')}</div>${r.text}`));
+      });
+      back();
+    }
+    else if(view==='code'){
+      t.textContent='Freundescode';
+      b.appendChild(el('p','','Zeig diesen Code einem Freund. Er tippt ihn bei sich ein und kann gegen dein Wesen kämpfen.'));
+      const code=encodeCode(S);
+      b.appendChild(el('div','','<div id="codeshow">'+code+'</div>'));
+      const cp=el('button','bigbtn ghost','Code kopieren');
+      cp.onclick=()=>{try{navigator.clipboard.writeText(code);UI.toast('Kopiert.')}catch(e){UI.toast('Halte den Code gedrückt und kopiere ihn.')}};
+      b.appendChild(cp);
+      b.appendChild(el('p','','<br><b>Code von einem Freund?</b>'));
+      const inp=el('input','');inp.id='codein';inp.placeholder='G1…';
+      b.appendChild(inp);
+      const go=el('button','bigbtn','Gegen den Freund kämpfen');
+      go.onclick=()=>Battle.openCode(inp.value);
+      b.appendChild(go);
+      const other=P==='p1'?'p2':'p1';
+      const os=loadProfile(other);
+      if(os){const sib=el('button','bigbtn ghost','⚔️ Gegen '+os.name+' kämpfen');
+        sib.onclick=()=>Battle.openSibling(other);b.appendChild(sib)}
+      back();
+    }
+    else if(view==='statistik'){
+      t.textContent='Statistik';
+      const c=S.counters;
+      const d=new Date(S.born);
+      b.innerHTML+=`<div class="chronentry">Geboren am ${d.toLocaleDateString('de-DE')}<br>
+        Erlebte Tageszeiten: <b>${c.fenster}</b><br>Kämpfe: <b>${c.kaempfe}</b> (davon gewonnen: ${c.siege})<br>
+        Traumreisen: <b>${c.traeume}</b><br>Spiele gespielt: <b>${c.spiele}</b><br>
+        Mahlzeiten: <b>${c.fuetterungen}</b><br>Gestreichelt: <b>${c.streicheln}</b>× ausgiebig<br>
+        Gebadet: <b>${c.gewaschen}</b>×</div>`;
+      back();
+    }
+    else if(view==='sichern'){
+      t.textContent='Sichern & Laden';
+      b.appendChild(el('p','','Damit nichts verloren geht: Kopiere dir diesen Text irgendwohin (Notiz, Nachricht an dich selbst). Mit „Laden“ holst du alles zurück — auch auf einem neuen Gerät.'));
+      const ta=el('textarea','');ta.style.cssText='width:100%;height:90px;font-size:11px;border-radius:12px;border:2px solid #d8d2c4;padding:8px;background:#fffdf6;color:#33313d';
+      const dump={meta,p1:loadProfile('p1'),p2:loadProfile('p2')};
+      ta.value=JSON.stringify(dump);
+      ta.onclick=()=>ta.select();
+      b.appendChild(ta);
+      const cp=el('button','bigbtn ghost','Alles kopieren');
+      cp.onclick=()=>{try{navigator.clipboard.writeText(ta.value);UI.toast('Kopiert. Füg es irgendwo Sicherem ein.')}catch(e){ta.select();UI.toast('Markiert — jetzt kopieren.')}};
+      b.appendChild(cp);
+      b.appendChild(el('p','','<br><b>Sicherung laden</b> (ersetzt den aktuellen Stand):'));
+      const ta2=el('textarea','');ta2.placeholder='Hier die gesicherte Zeile einfügen …';
+      ta2.style.cssText=ta.style.cssText;
+      b.appendChild(ta2);
+      const ld=el('button','bigbtn','Laden');
+      ld.onclick=()=>{
+        try{
+          const d=JSON.parse(ta2.value);
+          if(!d||typeof d!=='object'||!('meta' in d))throw 0;
+          if(d.p1)store.set('glimm.p1',d.p1);
+          if(d.p2)store.set('glimm.p2',d.p2);
+          if(d.meta)store.set('glimm.meta',d.meta);
+          location.reload();
+        }catch(e){UI.toast('Das sieht nicht wie eine Sicherung aus.')}
+      };
+      b.appendChild(ld);
+      back();
+    }
+    UI.overlay('ov-menu');
+  },
+};
+
+/* ---------- Treffen: beide Glimmlinge spielen zusammen ---------- */
+const Treffen={
+  open(){
+    const s1=loadProfile('p1'),s2=loadProfile('p2');
+    if(!s1||!s2)return;
+    const st=$('#treffenstage');
+    st.innerHTML=`<div class="tw" style="left:-10%">${svgWesen({element:s1.element,stage:s1.stage,form:s1.form,variant:s1.variant,glow:'hell',glowOp:1})}</div>
+      <div class="tw" style="right:-10%">${svgWesen({element:s2.element,stage:s2.stage,form:s2.form,variant:s2.variant,glow:'hell',glowOp:1})}</div>`;
+    const mc=rnd(DATA.welt.microcopy.treffen).replace('{a}',s1.name).replace('{b}',s2.name);
+    $('#treffenmsg').textContent='';
+    UI.overlay('ov-treffen');
+    const [a,bEl]=st.querySelectorAll('.tw');
+    requestAnimationFrame(()=>{a.style.left='8%';bEl.style.right='8%'});
+    setTimeout(()=>{
+      $('#treffenmsg').textContent=mc;
+      Sound.freude();vibr([20,40,20,40]);
+      const r=st.getBoundingClientRect();
+      for(let i=0;i<7;i++)setTimeout(()=>UI.pop(r.left+r.width/2+(Math.random()*80-40),r.top+60,'💛'),i*220);
+      [s1,s2].forEach((s,i)=>{
+        s.needs.laune=clamp(s.needs.laune+10,10,100);
+        s.stats.herz+=1;
+        save(i===0?'p1':'p2',s);
+      });
+      if(S)S=loadProfile(P)||S;
+      meta.treffenWindow=windowId(nowMs());saveMeta();
+    },2300);
+  },
+};
+/* ============================================================
+   BOOT: Verdrahtung, Zeittakt, Debug
+   ============================================================ */
+const Boot={
+  catchupProfile(pid){
+    const st=loadProfile(pid);if(!st)return;
+    const oldWid=st.windowId;
+    const t=nowMs();
+    if(t>=st.lastSeen){
+      const events=offlineCatchup(st);
+      if(windowOf(t)==='morgen'&&/-nacht$/.test(oldWid)&&oldWid!==st.windowId)st.wakePending=true;
+      events.forEach(ev=>{
+        if(ev.typ==='bericht'){
+          const prev=S;S=st;
+          const rep=Actions.completeTask(ev.task);
+          S=prev;
+          st.pendingReport=rep;
+          if(ev.task.type==='traum'&&windowOf(t)==='morgen')st.wakePending=true;
+        }
+      });
+    } else { st.lastSeen=t; }
+    save(pid,st);
+  },
+  enter(pid,fresh){
+    this.catchupProfile(pid);
+    P=pid;S=loadProfile(pid);
+    if(!S){Start.render();return}
+    meta.lastActive=pid;saveMeta();
+    UI.show('home');
+    Creature.mount();
+    this.updateSoundBtn();
+    UI.refreshHome();
+    if(fresh){
+      // Schlüpfen
+      const w=$('#wesen');w.style.transform='scale(0)';w.style.transition='transform 1.1s cubic-bezier(.3,1.4,.5,1)';
+      const r=w.getBoundingClientRect();
+      setTimeout(()=>{w.style.transform='';UI.sparkleAt(r.left+r.width/2,r.top+r.height/2,ELEMENTS[S.element].farbe);
+        Sound.freude();vibr([40,80,40]);},150);
+      setTimeout(()=>{w.style.transition='';},1400);
+      setTimeout(()=>{
+        if(!S.seen.hilfe){S.seen.hilfe=true;saveNow();Help.open('bild');}
+      },2600);
+      return;
+    }
+    const proceed=()=>{
+      if(S.wakePending){UI.status('Pssst. '+S.name+' schläft noch. Tipp es wach.',true);return}
+      if(S.pendingReport){const rep=S.pendingReport;setTimeout(()=>Actions.showReport(rep),1200)}
+    };
+    if(Evo.ready())setTimeout(()=>Evo.run(proceed),900);
+    else proceed();
+  },
+  tick(){
+    if(!S||UI.screen!=='home')return;
+    const t=nowMs();
+    if(t>S.lastSeen)applyDecay(S,S.lastSeen,Math.min(t,S.lastSeen+14*36e5));
+    const wid=windowId(t);
+    if(wid!==S.windowId){
+      const wasNight=/-nacht$/.test(S.windowId);
+      S.windowId=wid;S.beats=beatsMax(windowOf(t));
+      S.care={fensterId:wid,beatSpent:false,pet:false,wash:0,geweckt:false,gekaempft:false,gespielt:false};
+      if(windowOf(t)==='morgen'&&wasNight)S.wakePending=true;
+      Creature.render();UI.refreshHome();
+      UI.toast(windowOf(t)==='morgen'?'Ein neuer Morgen.':windowOf(t)==='mittag'?'Mittagszeit.':windowOf(t)==='abend'?'Der Abend kommt.':'Nacht wird es.',2400);
+    }
+    if(S.task&&t>=S.task.end){
+      const task=S.task;
+      const rep=Actions.completeTask(task);
+      if(task.type==='traum'&&windowOf(t)==='morgen'){
+        S.pendingReport=rep;S.wakePending=true;
+        Creature.render();UI.refreshHome();
+        UI.status('Pssst. '+S.name+' träumt noch. Tipp es wach.',true);
+      } else {
+        Away.arrive();
+        setTimeout(()=>Actions.showReport(rep),1150);
+      }
+    }
+    if(S.task)Away.refresh();
+    Creature.refreshGlow();
+    saveNow();
+  },
+  updateSoundBtn(){
+    const on=S&&S.settings.sound;
+    $('#soundbtn').innerHTML=on
+      ?'<svg viewBox="0 0 24 24" fill="none"><path class="st" d="M4 9.5v5h3.5L12 19V5L7.5 9.5H4Z" stroke-width="2" stroke-linejoin="round"/><path class="st" d="M15.5 9c1.4 1.6 1.4 4.4 0 6M18 6.8c2.5 2.9 2.5 7.5 0 10.4" stroke-width="2" stroke-linecap="round"/></svg>'
+      :'<svg viewBox="0 0 24 24" fill="none" opacity=".55"><path class="st" d="M4 9.5v5h3.5L12 19V5L7.5 9.5H4Z" stroke-width="2" stroke-linejoin="round"/><path class="st" d="M15.5 9.8 20 14.2M20 9.8l-4.5 4.4" stroke-width="2" stroke-linecap="round"/></svg>';
+  },
+  wire(){
+    $('#homebtn').onclick=()=>{saveNow();S=null;P=null;Start.render()};
+    $('#helpbtn').onclick=()=>Help.open();
+    $('#soundbtn').onclick=()=>{S.settings.sound=!S.settings.sound;this.updateSoundBtn();saveNow();
+      if(S.settings.sound)Sound.stimme()};
+    $('#reportok').onclick=$('#reportclose').onclick=()=>{try{speechSynthesis.cancel()}catch(e){};UI.overlay('ov-report',false)};
+    $('#readbtn').onclick=()=>Actions.readAloud();
+    $('#sendok').onclick=()=>Actions.confirmSend();
+    $('#sendclose').onclick=()=>UI.overlay('ov-send',false);
+    $('#gameclose').onclick=()=>{cancelAnimationFrame(Games.raf);UI.overlay('ov-game',false);UI.refreshHome()};
+    $('#helpclose').onclick=()=>UI.overlay('ov-help',false);
+    $('#menuclose').onclick=()=>UI.overlay('ov-menu',false);
+    $('#treffenok').onclick=()=>{UI.overlay('ov-treffen',false);Start.render()};
+    $('#nameok').onclick=()=>{
+      const n=$('#nameinput').value.trim().slice(0,12);
+      if(!n){$('#nameinput').placeholder='Erst ein Name …';return}
+      Ritual.finish(n);
+    };
+    $('#dicebtn').onclick=()=>{$('#nameinput').value=rnd(DATA.traeume.namen)};
+    $('#actionrow').addEventListener('click',e=>{
+      const b=e.target.closest('.pillbtn');if(!b)return;
+      if(b.id==='act-send')Actions.openSend();
+      if(b.id==='act-spiel')Games.open();
+      if(b.id==='act-kampf')Battle.openWander();
+      if(b.id==='act-traum')Actions.startTraum();
+      if(b.id==='act-mehr')Menu.open();
+    });
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden)saveNow();
+      else{this.catchupVisible()}
+    });
+    window.addEventListener('pagehide',()=>saveNow());
+  },
+  catchupVisible(){
+    if(S&&P){
+      // längere Abwesenheit bei offener Seite: wie Neustart behandeln
+      save(P,S);
+      this.catchupProfile(P);
+      S=loadProfile(P);
+      Creature.render();UI.refreshHome();
+      if(S.wakePending)UI.status('Pssst. '+S.name+' schläft. Tipp es wach.',true);
+      else if(S.pendingReport){const rep=S.pendingReport;setTimeout(()=>Actions.showReport(rep),800)}
+      if(Evo.ready())setTimeout(()=>Evo.run(),600);
+    } else Start.render();
+  },
+  start(){
+    UI.buildSkyDeco();
+    this.wire();
+    Gestures.init();
+    ['p1','p2'].forEach(p=>this.catchupProfile(p));
+    if(store.volatile)setTimeout(()=>UI.toast('Hinweis: Hier kann nichts dauerhaft gespeichert werden. Am Handy „Zum Startbildschirm hinzufügen“ nutzen.',5000),1500);
+    Start.render();
+    setInterval(()=>this.tick(),15000);
+    setInterval(()=>Creature.tick(),500);
+  },
+};
+
+/* ---------- Debug-API (nur mit #debug) ---------- */
+if(DEBUG.on){
+  window.G={
+    get S(){return S}, get meta(){return meta}, store,
+    off(h){DEBUG.offset+=h*36e5;Boot.tick();if(S){Creature.render();UI.refreshHome()}},
+    setOff(ms){DEBUG.offset=ms;},
+    beats(n){S.beats=n;UI.renderHearts();UI.renderActions()},
+    need(k,v){S.needs[k]=v;Creature.render();},
+    stat(k,v){S.stats[k]=v},
+    counters(o){Object.assign(S.counters,o)},
+    fenster(n){S.counters.fenster=n},
+    finishTask(){if(S&&S.task){S.task.end=nowMs()-1;Boot.tick()}},
+    evo(){Evo.run()},
+    enter(p){Boot.enter(p)}, home(){Start.render()},
+    tick(){Boot.tick()},
+    reset(){try{['glimm.meta','glimm.p1','glimm.p2'].forEach(k=>localStorage.removeItem(k))}catch(e){};location.reload()},
+    mkProfile(pid,name,elmt){const st=newState(name||'Testi',elmt||'glut');st.pref='sonnenbeere';save(pid||'p1',st);meta.profiles[pid||'p1']=st.name;saveMeta();Start.render()},
+  };
+}
+
+document.addEventListener('DOMContentLoaded',()=>Boot.start());
+</script>
+</body>
+</html>
