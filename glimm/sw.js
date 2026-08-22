@@ -1,6 +1,6 @@
 /* GLIMM Service Worker: Netz zuerst, Cache als Fallback — so startet die
    installierte App auch offline und bekommt Updates, sobald Netz da ist. */
-const CACHE='glimm-v1';
+const CACHE='glimm-v2';
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])).then(()=>self.skipWaiting()));
 });

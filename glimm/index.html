@@ -170,7 +170,8 @@ svg{display:block}
 #dragGhost{position:absolute;z-index:60;pointer-events:none;font-size:38px;display:none;
   filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
 #actionrow{position:absolute;left:0;right:0;bottom:calc(96px + env(safe-area-inset-bottom));
-  display:flex;justify-content:center;gap:10px;z-index:29;padding:0 16px;flex-wrap:wrap}
+  display:flex;justify-content:center;gap:10px;z-index:29;padding:0 16px;flex-wrap:wrap;pointer-events:none}
+#actionrow .pillbtn{pointer-events:auto}
 .pillbtn{background:var(--chrome);backdrop-filter:blur(6px);border-radius:999px;
   min-height:52px;padding:10px 18px;font-weight:700;color:var(--ink);
   box-shadow:0 2px 10px var(--soft);display:flex;align-items:center;gap:8px;font-size:.98em;
@@ -375,6 +376,112 @@ details.hsec .htxt{padding:0 16px 14px;font-size:.95em;line-height:1.55}
   .hand,.ffly,.star{animation-duration:8s !important}
   #wesen.happy-hop,.fighter.attack,.fighter.hit{animation:none !important}
 }
+
+/* ---------- Zauberkessel ---------- */
+#kesselwrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+#kessel{width:220px;height:200px;cursor:pointer;touch-action:none}
+#kessel svg{width:100%;height:100%;overflow:visible}
+#kessel.wobble{animation:kwobble .5s ease}
+@keyframes kwobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) scale(1.02)}75%{transform:rotate(2deg)}}
+#kesselslots{display:flex;gap:10px;min-height:56px}
+#kesselslots .potslot{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#8f9ac2}
+#kesselslots .potslot.filled{background:rgba(255,255,255,.16);border-style:solid}
+#kesselzutaten{position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom));
+  display:none;gap:6px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+#kesselzutaten.on{display:flex}
+#kesselzutaten::-webkit-scrollbar{display:none}
+#kesselzutaten .fooditem{background:rgba(255,255,255,.1)}
+#kesselzutaten .fooditem small{color:#cfd8f2}
+#kesselzutaten .fooditem.used{opacity:.3;pointer-events:none}
+.kbubble{position:absolute;border-radius:50%;pointer-events:none;animation:kbub 1.6s ease-out forwards}
+@keyframes kbub{0%{opacity:.9;transform:translateY(0) scale(.5)}100%{opacity:0;transform:translateY(-60px) scale(1.3)}}
+/* ---------- Sternschnuppe ---------- */
+#shootstar{position:absolute;z-index:26;width:56px;height:56px;display:none;cursor:pointer;touch-action:manipulation}
+#shootstar.on{display:block;animation:ssfloat 2.8s ease-in-out infinite alternate}
+@keyframes ssfloat{from{transform:translateY(0) rotate(-6deg)}to{transform:translateY(-14px) rotate(6deg)}}
+#shootstar .core{width:22px;height:22px;margin:17px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff8dc,#ffd95e);
+  box-shadow:0 0 18px 8px rgba(255,217,94,.75);animation:twinkle 1.4s ease-in-out infinite}
+/* ---------- v2: Schwung & Funkel ---------- */
+#schwungwrap{display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--chrome);
+  border-radius:16px;padding:8px 14px;backdrop-filter:blur(6px);box-shadow:0 2px 10px var(--soft);transition:background 2s ease}
+#schwungbar{display:flex;gap:3px}
+.sw-seg{width:13px;height:14px;border-radius:5px;background:rgba(120,120,140,.25);transition:background .4s}
+.sw-seg.full{background:linear-gradient(180deg,#ffe9a0,#f4b95a);box-shadow:0 0 6px rgba(244,185,90,.55)}
+.sw-seg.drain{animation:swdrain .5s ease}
+@keyframes swdrain{0%{transform:scale(1.4)}100%{transform:scale(1)}}
+#schwungnum{font-size:11px;font-weight:800;color:var(--ink);opacity:.7;min-height:12px;line-height:1}
+#funkelpill{position:absolute;top:calc(74px + env(safe-area-inset-top));right:12px;z-index:28;
+  background:var(--chrome);border-radius:999px;padding:6px 12px;font-weight:800;font-size:.9em;
+  color:var(--ink);backdrop-filter:blur(6px);box-shadow:0 2px 10px var(--soft);display:flex;align-items:center;gap:5px}
+#funkelpill .fk{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff8dc,#f4c95a);
+  box-shadow:0 0 8px 2px rgba(244,201,90,.7);animation:twinkle 2.6s ease-in-out infinite}
+/* ---------- v2: Seitenknöpfe ---------- */
+#sidechips{position:absolute;left:12px;bottom:calc(112px + env(safe-area-inset-bottom));z-index:30;
+  display:flex;flex-direction:column;gap:10px}
+/* ---------- v2: Tagesfund ---------- */
+#tagesfund{position:absolute;right:14%;bottom:calc(180px + env(safe-area-inset-bottom));z-index:24;
+  width:64px;height:64px;display:none;cursor:pointer;touch-action:manipulation}
+#tagesfund.on{display:block;animation:tfglow 2.4s ease-in-out infinite}
+@keyframes tfglow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,233,160,.7))}50%{filter:drop-shadow(0 0 16px rgba(255,233,160,1))}}
+#tagesfund svg{width:100%;height:100%}
+/* ---------- v2: Höhle ---------- */
+#scr-cave{z-index:18}
+#cavebg{position:absolute;inset:0;transition:background 1.5s ease}
+#cavefloor{position:absolute;left:0;right:0;bottom:0;height:30%;border-radius:50% 50% 0 0 / 26% 26% 0 0;transition:background 1.5s}
+#caveitems{position:absolute;inset:0}
+.caveobj{position:absolute;font-size:44px;transform:translate(-50%,-50%);touch-action:none;cursor:grab;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));user-select:none;transition:font-size .3s}
+.caveobj.dragging{font-size:52px;z-index:10}
+#cavetrash{position:absolute;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));width:60px;height:60px;
+  border-radius:50%;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;
+  font-size:26px;opacity:.55;z-index:9}
+#cavetrash.hot{opacity:1;background:rgba(200,90,80,.5)}
+#cavename{position:absolute;left:0;right:0;top:calc(76px + env(safe-area-inset-top));text-align:center;
+  color:#e8ecf7;font-weight:800;letter-spacing:.06em;opacity:.8;pointer-events:none}
+#cavehint{position:absolute;left:0;right:0;bottom:calc(88px + env(safe-area-inset-bottom));text-align:center;
+  color:#cfd6ea;font-size:.85em;opacity:.7;pointer-events:none;padding:0 30px}
+.cavechip{position:absolute;z-index:12}
+/* ---------- v2: Kochen ---------- */
+#potzone{display:flex;justify-content:center;align-items:flex-end;gap:8px;min-height:110px;margin:6px 0}
+#potslots{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.potslot{width:58px;height:58px;border-radius:16px;background:#efe9da;border:2px dashed #cfc5ae;
+  display:flex;align-items:center;justify-content:center;font-size:30px}
+.potslot.filled{border-style:solid;background:#fff7e6}
+#potfig{font-size:64px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.2))}
+#potfig.cooking{animation:potshake 1.6s ease-in-out infinite}
+@keyframes potshake{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg)}70%{transform:rotate(2deg)}}
+#potsteam{text-align:center;min-height:1.5em;font-size:.95em;font-weight:600}
+#cookzutaten{display:flex;gap:6px;overflow-x:auto;padding:8px 2px;scrollbar-width:none}
+#cookzutaten::-webkit-scrollbar{display:none}
+/* ---------- v2: Rezeptbuch ---------- */
+.rezeptrow{display:flex;align-items:center;gap:10px;background:#f7f2e6;border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.rezeptrow .rem{font-size:30px;flex:0 0 40px;text-align:center}
+.rezeptrow .rname{font-weight:800}
+.rezeptrow .rsub{font-size:.82em;opacity:.7}
+.rezeptrow.unknown{opacity:.6}
+.rezeptrow.unknown .rem{filter:grayscale(1);opacity:.5}
+/* ---------- v2: Formenkarte ---------- */
+#formtree{display:flex;flex-direction:column-reverse;gap:14px;padding:6px 0}
+.formrow{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.formcell{width:72px;text-align:center}
+.formcell .fsil{width:64px;height:64px;margin:0 auto}
+.formcell.locked .fsil svg{filter:brightness(0) opacity(.45)}
+.formcell.reached .fsil{animation:formglow 3s ease-in-out infinite}
+@keyframes formglow{0%,100%{filter:drop-shadow(0 0 4px rgba(255,233,160,.5))}50%{filter:drop-shadow(0 0 12px rgba(255,233,160,.9))}}
+.formcell .fname{font-size:.68em;font-weight:800;margin-top:2px}
+.formcell .fhint{font-size:.62em;opacity:.65;line-height:1.25;margin-top:2px}
+/* ---------- v2: Shop ---------- */
+.shoprow{display:flex;align-items:center;gap:10px;background:#f7f2e6;border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.shoprow .sem{font-size:28px;flex:0 0 38px;text-align:center}
+.shoprow .sinfo{flex:1}
+.shoprow .sname{font-weight:800}
+.shoprow .ssub{font-size:.8em;opacity:.7}
+.shopbuy{background:var(--accent);color:#fff;border-radius:12px;padding:8px 12px;font-weight:800;min-height:44px;white-space:nowrap}
+.shopbuy:disabled{opacity:.4}
+.shopbuy.owned{background:#cfc5ae}
+.drawerempty{font-size:.85em;font-weight:600;color:var(--ink);opacity:.75;padding:14px 10px;max-width:230px}
+.fooditem.dish{background:rgba(255,236,180,.55)}
+.t-nacht .fooditem.dish{background:rgba(255,236,180,.18)}
 </style>
 </head>
 <body>
@@ -403,9 +510,13 @@ details.hsec .htxt{padding:0 16px 14px;font-size:.95em;line-height:1.55}
     <button class="chip" id="ritualback" aria-label="Zurück" style="position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;z-index:5">
       <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke="#cfd8f2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <div id="knospe"></div>
-    <div id="sparks"></div>
+    <div id="kesselwrap">
+      <div id="kesselslots"></div>
+      <div id="kessel"></div>
+    </div>
+    <div id="kesselzutaten"></div>
     <div id="ritualhint"></div>
+    <button class="bigbtn hidden" id="stirbtn" style="position:absolute;bottom:26%;left:50%;transform:translateX(-50%);max-width:220px">🥄 Umrühren</button>
   </div>
 
   <!-- ======= Hauptbildschirm ======= -->
@@ -418,8 +529,35 @@ details.hsec .htxt{padding:0 16px 14px;font-size:.95em;line-height:1.55}
       </div>
     </div>
     <div id="statusline"><span></span></div>
+    <div id="funkelpill"><span class="fk"></span><span id="funkelnum"></span></div>
+    <div id="sidechips">
+      <button class="chip" id="cavebtn" aria-label="Höhle">
+        <svg viewBox="0 0 24 24" fill="none"><path class="st" d="M3 20c0-7 3.5-13 9-13s9 6 9 13" stroke-width="2.2" stroke-linecap="round"/><path class="st" d="M9 20c0-3.8 1.2-6.5 3-6.5s3 2.7 3 6.5" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="chip" id="formmapbtn" aria-label="Formenkarte">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="19" r="2.2" class="st" stroke-width="2"/><circle cx="6.5" cy="11" r="2.2" class="st" stroke-width="2"/><circle cx="17.5" cy="11" r="2.2" class="st" stroke-width="2"/><circle cx="12" cy="4" r="2.2" class="st" stroke-width="2"/><path class="st" d="M12 17l-4-4m4 4 4-4M7.5 9.5 11 5.5m5.5 4L13 5.5" stroke-width="1.8"/></svg>
+      </button>
+    </div>
+    <div id="tagesfund"></div>
+    <div id="shootstar"><div class="core"></div></div>
     <div id="actionrow"></div>
     <div id="drawer"></div>
+  </div>
+
+  <!-- ======= Höhle ======= -->
+  <div id="scr-cave" class="screen">
+    <div id="cavebg"></div>
+    <div id="cavefloor"></div>
+    <div id="cavename"></div>
+    <div id="caveitems"></div>
+    <div id="cavetrash">🕳️</div>
+    <div id="cavehint"></div>
+    <button class="chip cavechip" id="caveup" style="left:12px;top:calc(10px + env(safe-area-inset-top))" aria-label="Nach draußen">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 14l6-6 6 6" stroke="#e8ecf7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="chip cavechip" id="caveshop" style="right:12px;top:calc(10px + env(safe-area-inset-top))" aria-label="Sachen holen">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#e8ecf7" stroke-width="2.6" stroke-linecap="round"/></svg>
+    </button>
   </div>
 
   <!-- Chrome (nur im Home sichtbar) -->
@@ -427,7 +565,7 @@ details.hsec .htxt{padding:0 16px 14px;font-size:.95em;line-height:1.55}
     <button class="chip" id="homebtn" aria-label="Zurück zum Start">
       <svg viewBox="0 0 24 24" fill="none"><path class="st" d="M3 11.5 12 4l9 7.5M5.5 10v9h13v-9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <div id="hearts"></div>
+    <div id="schwungwrap"><div id="schwungbar"></div><div id="schwungnum"></div></div>
     <div style="display:flex;gap:8px">
       <button class="chip" id="soundbtn" aria-label="Ton"></button>
       <button class="chip" id="helpbtn" aria-label="Hilfe">
@@ -504,6 +642,35 @@ details.hsec .htxt{padding:0 16px 14px;font-size:.95em;line-height:1.55}
     <button class="closex" id="menuclose">✕</button>
     <h2 id="menutitle"></h2>
     <div id="menubody"></div>
+  </div></div>
+
+  <div id="ov-cook" class="overlay"><div class="card">
+    <button class="closex" id="cookclose">✕</button>
+    <h2 id="cooktitle">Kochen</h2>
+    <div id="potzone"><div><div id="potslots"></div><div id="potfig">🍲</div></div></div>
+    <div id="potsteam"></div>
+    <div id="cookzutaten"></div>
+    <button class="bigbtn" id="cookfire">🔥 Feuer an</button>
+    <button class="bigbtn ghost" id="cookbook">📖 Rezeptbuch</button>
+  </div></div>
+
+  <div id="ov-rezepte" class="overlay"><div class="card">
+    <button class="closex" id="rezepteclose">✕</button>
+    <h2>Rezeptbuch</h2>
+    <div id="rezeptliste"></div>
+  </div></div>
+
+  <div id="ov-formmap" class="overlay"><div class="card">
+    <button class="closex" id="formmapclose">✕</button>
+    <h2>Die Formenkarte</h2>
+    <div id="formtree"></div>
+  </div></div>
+
+  <div id="ov-shop" class="overlay"><div class="card">
+    <button class="closex" id="shopclose">✕</button>
+    <h2 id="shoptitle">Sachen für die Höhle</h2>
+    <div id="shopfunkel" style="font-weight:800;margin-bottom:10px"></div>
+    <div id="shopliste"></div>
   </div></div>
 
   <div id="ov-treffen" class="overlay"><div class="card">
@@ -1764,12 +1931,12 @@ const DATA={
  }
 };
 
-/* ---------- Statische Spieldaten ---------- */
+/* ---------- Statische Spieldaten (v2) ---------- */
 const TASKS={
-  streifzug:{name:'Streifzug',em:'🥾',dauerMin:30,fenster:['morgen','mittag','abend'],desc:'eine halbe Stunde'},
-  sammelgang:{name:'Sammelgang',em:'🧺',dauerMin:180,fenster:['morgen','mittag'],desc:'drei Stunden'},
-  wanderung:{name:'Wanderung',em:'🗺️',dauerMin:360,fenster:['mittag','abend'],desc:'sechs Stunden'},
-  traum:{name:'Traumreise',em:'🌙',dauerMin:0,fenster:['nacht'],desc:'bis zum Morgen'},
+  streifzug:{name:'Streifzug',em:'🥾',dauerMin:15,schwung:2,fenster:['morgen','mittag','abend'],desc:'15 Minuten'},
+  sammelgang:{name:'Sammelgang',em:'🧺',dauerMin:120,schwung:3,fenster:['morgen','mittag','abend'],desc:'zwei Stunden'},
+  wanderung:{name:'Wanderung',em:'🗺️',dauerMin:300,schwung:4,fenster:['mittag'],desc:'fünf Stunden'},
+  traum:{name:'Traumreise',em:'🌙',dauerMin:0,schwung:4,fenster:['nacht'],desc:'bis zum Morgen'},
 };
 const FOCUS={
   essen:{name:'Such was zu essen',em:'🫐'},
@@ -1779,34 +1946,66 @@ const FOCUS={
 };
 const STATNAMES={kraft:'Kraft',tempo:'Tempo',klugheit:'Klugheit',herz:'Herz'};
 const STATEM={kraft:'💪',tempo:'🌀',klugheit:'🌟',herz:'💛'};
-const FORMNAME=(form,stufe)=>{
-  const f=DATA.traeume.formnamen.find(x=>x.form===form&&x.stufe===stufe);
-  return f?f.name:'Glimmling';
+/* Grammatik der Zutaten für die Fundsätze */
+const ZUTAT_GRAM={
+  sonnenbeere:{art:'die',pl:'Sonnenbeeren'},moosknolle:{art:'die',pl:'Moosknollen'},
+  nachtpilz:{art:'der',pl:'Nachtpilze'},bachnuss:{art:'die',pl:'Bachnüsse'},
+  wildhonig:{art:'der',pl:null},salzkraut:{art:'das',pl:null},
+  glimmwurzel:{art:'die',pl:'Glimmwurzeln'},regenblatt:{art:'das',pl:'Regenblätter'},
+  funkensame:{art:'der',pl:'Funkensamen'},frostbeere:{art:'die',pl:'Frostbeeren'},
+  rindenzucker:{art:'der',pl:null},sternstaub:{art:'der',pl:null},
+  aschenkorn:{art:'das',pl:'Aschenkörner'},tauperle:{art:'die',pl:'Tauperlen'},
 };
-
-/* Grammatik der Futterarten (Artikel + Plural) */
-const FUTTER_GRAM={
-  sonnenbeere:{art:'die',pl:'Sonnenbeeren'},
-  moosknolle:{art:'die',pl:'Moosknollen'},
-  taublatt:{art:'das',pl:'Taublätter'},
-  huepfkirsche:{art:'die',pl:'Hüpfkirschen'},
-  sternzwieback:{art:'der',pl:'Sternzwiebäcke'},
-  honigwoelkchen:{art:'das',pl:'Honigwölkchen'},
-  flimmerpilz:{art:'der',pl:'Flimmerpilze'},
-  funkennuss:{art:'die',pl:'Funkennüsse'},
-};
-function fundSatz(f,n){
-  const g=FUTTER_GRAM[f.id]||{art:'die',pl:f.name+'n'};
-  if(n===1){
+function fundSatz(z,n){
+  const g=ZUTAT_GRAM[z.id]||{art:'die',pl:z.name+'n'};
+  if(n===1||!g.pl){
+    if(!g.pl&&n>1)return 'Ich hab etwas '+z.name+' mitgebracht. Es glitzert noch.';
     const ein={die:'eine',der:'einen',das:'ein'}[g.art];
     const pron={die:'Die',der:'Der',das:'Das'}[g.art];
-    return 'Ich hab dir '+ein+' '+f.name+' mitgebracht. '+pron+' ist für dich.';
+    return 'Ich hab dir '+ein+' '+z.name+' mitgebracht. '+pron+' ist für dich.';
   }
   const zahl=['','eins','zwei','drei','vier','fünf'][n]||n;
   return rnd(DATA.berichte.fundsaetze).satz.replace('{n}',zahl).replace('{fund}',g.pl);
 }
+/* Formnamen aus den v2-Inhalten */
+function formNameOf(st){
+  if(st.stage<=1)return 'Knospe';
+  if(st.stage===2){const f=DATA2.formen.knirps.find(x=>x.variant===st.knirps);return f?f.name:'Knirps'}
+  if(st.stage===3){const f=DATA2.formen.gestalt.find(x=>x.variant===st.form);return f?f.name:'Gestalt'}
+  const f=DATA2.formen.wesen.find(x=>x.variant===st.form+'-'+st.variant);return f?f.name:'Wesen';
+}
+
+/* Der Zauberkessel: welche Zutat zieht zu welchem Element */
+const ZUTAT_ELEMENT={
+  sonnenbeere:'glut',aschenkorn:'glut',wildhonig:'glut',rindenzucker:'glut',
+  tauperle:'tau',frostbeere:'tau',bachnuss:'tau',
+  moosknolle:'moos',salzkraut:'moos',regenblatt:'moos',glimmwurzel:'moos',
+  sternstaub:'funke',funkensame:'funke',nachtpilz:'funke',
+};
+const LOOK_BODIES=[
+  ['#4a4560','#585270'],['#3f4a5c','#4d5a70'],['#54455a','#64536c'],['#455a52','#526a62'],
+  ['#5a4a45','#6a5a54'],['#473f5f','#565070'],['#3d4457','#4a5468'],['#514939','#63594a'],
+];
+function hashStr(str){let h=5381;for(const c of str)h=((h<<5)+h+c.charCodeAt(0))|0;return Math.abs(h)}
+/* Gleiche Mischung ergibt immer denselben Glimm — das lässt sich weitererzählen. */
+function brewLook(zutaten){
+  const key=[...zutaten].sort().join('+');
+  const h=hashStr(key);
+  const counts={glut:0,tau:0,moos:0,funke:0};
+  zutaten.forEach(z=>counts[ZUTAT_ELEMENT[z]||'moos']++);
+  const max=Math.max(...Object.values(counts));
+  const cand=Object.keys(counts).filter(k=>counts[k]===max);
+  const element=cand[h%cand.length];
+  return {element,look:{
+    body:h%LOOK_BODIES.length,
+    mark:['keins','flecken','wirbel','stern'][Math.floor(h/7)%4],
+    ohr:Math.floor(h/13)%3, // 0 normal, 1 rund, 2 spitz
+  }};
+}
+/* v2-Inhalte (Kochen, Höhle, Formen) */
+const DATA2={"zutaten": [{"id": "sonnenbeere", "name": "Sonnenbeere", "emoji": "🍓", "satt": 14, "stat": "herz", "statplus": 1, "tier": "haeufig"}, {"id": "moosknolle", "name": "Moosknolle", "emoji": "🥔", "satt": 18, "stat": "kraft", "statplus": 1, "tier": "haeufig"}, {"id": "nachtpilz", "name": "Nachtpilz", "emoji": "🍄", "satt": 15, "stat": "klugheit", "statplus": 1, "tier": "haeufig"}, {"id": "bachnuss", "name": "Bachnuss", "emoji": "🌰", "satt": 16, "stat": "kraft", "statplus": 1, "tier": "haeufig"}, {"id": "wildhonig", "name": "Wildhonig", "emoji": "🍯", "satt": 20, "stat": "herz", "statplus": 2, "tier": "selten"}, {"id": "salzkraut", "name": "Salzkraut", "emoji": "🌿", "satt": 12, "stat": "tempo", "statplus": 1, "tier": "haeufig"}, {"id": "glimmwurzel", "name": "Glimmwurzel", "emoji": "🥕", "satt": 19, "stat": "kraft", "statplus": 2, "tier": "selten"}, {"id": "regenblatt", "name": "Regenblatt", "emoji": "🍃", "satt": 10, "stat": "tempo", "statplus": 1, "tier": "haeufig"}, {"id": "funkensame", "name": "Funkensame", "emoji": "🌻", "satt": 13, "stat": "tempo", "statplus": 2, "tier": "selten"}, {"id": "frostbeere", "name": "Frostbeere", "emoji": "🫐", "satt": 12, "stat": "klugheit", "statplus": 2, "tier": "selten"}, {"id": "rindenzucker", "name": "Rindenzucker", "emoji": "🍬", "satt": 17, "stat": "herz", "statplus": 1, "tier": "haeufig"}, {"id": "sternstaub", "name": "Sternstaub", "emoji": "✨", "satt": 22, "stat": "klugheit", "statplus": 3, "tier": "rar"}, {"id": "aschenkorn", "name": "Aschenkorn", "emoji": "🌾", "satt": 15, "stat": "kraft", "statplus": 1, "tier": "haeufig"}, {"id": "tauperle", "name": "Tauperle", "emoji": "💧", "satt": 21, "stat": "herz", "statplus": 3, "tier": "rar"}], "rezepte": [{"id": "sonnensuppe", "name": "Sonnensuppe", "emoji": "🍲", "zutaten": ["salzkraut", "sonnenbeere"], "kochzeit": 10, "satt": 28, "laune": 8, "stat": "herz", "statplus": 1, "effekt": "keiner", "flavor": "Duftet wie ein Mittag, der nicht enden will."}, {"id": "nachtkuchen", "name": "Nachtkuchen", "emoji": "🍰", "zutaten": ["nachtpilz", "rindenzucker"], "kochzeit": 25, "satt": 34, "laune": 10, "stat": "klugheit", "statplus": 2, "effekt": "traum", "flavor": "Dunkel und weich, mit einem Schimmer obenauf."}, {"id": "moosbrei", "name": "Moosbrei", "emoji": "🍚", "zutaten": ["moosknolle", "regenblatt"], "kochzeit": 10, "satt": 27, "laune": 6, "stat": "kraft", "statplus": 1, "effekt": "keiner", "flavor": "Grün und warm, riecht nach Wald nach dem Regen."}, {"id": "bachnussbrot", "name": "Bachnussbrot", "emoji": "🍞", "zutaten": ["aschenkorn", "bachnuss"], "kochzeit": 10, "satt": 33, "laune": 7, "stat": "kraft", "statplus": 2, "effekt": "keiner", "flavor": "Die Kruste knackt leise, als hätte sie ein Geheimnis."}, {"id": "honigmus", "name": "Honigmus", "emoji": "🍮", "zutaten": ["sonnenbeere", "wildhonig"], "kochzeit": 10, "satt": 30, "laune": 12, "stat": "herz", "statplus": 2, "effekt": "keiner", "flavor": "So golden, dass der Löffel ein bisschen leuchtet."}, {"id": "glutwurzeltopf", "name": "Glutwurzeltopf", "emoji": "🥘", "zutaten": ["glimmwurzel", "moosknolle"], "kochzeit": 25, "satt": 38, "laune": 8, "stat": "kraft", "statplus": 3, "effekt": "kampf", "flavor": "Dampft rötlich und macht die Backen warm."}, {"id": "funkenknacker", "name": "Funkenknacker", "emoji": "🍿", "zutaten": ["bachnuss", "funkensame"], "kochzeit": 25, "satt": 31, "laune": 11, "stat": "tempo", "statplus": 2, "effekt": "schwung", "flavor": "Knistert im Mund wie ein winziges Feuerwerk."}, {"id": "frostkompott", "name": "Frostkompott", "emoji": "🍧", "zutaten": ["frostbeere", "rindenzucker"], "kochzeit": 10, "satt": 26, "laune": 9, "stat": "klugheit", "statplus": 1, "effekt": "keiner", "flavor": "Kühl und süß, wie ein Wintermorgen zum Löffeln."}, {"id": "blattroellchen", "name": "Blattröllchen", "emoji": "🌯", "zutaten": ["regenblatt", "salzkraut"], "kochzeit": 10, "satt": 25, "laune": 6, "stat": null, "statplus": 0, "effekt": "keiner", "flavor": "Ordentlich gerollt, außen glänzt noch ein Tropfen."}, {"id": "aschenfladen", "name": "Aschenfladen", "emoji": "🥞", "zutaten": ["aschenkorn", "moosknolle"], "kochzeit": 10, "satt": 32, "laune": 6, "stat": null, "statplus": 0, "effekt": "keiner", "flavor": "Schlicht und warm, riecht nach Lagerfeuerabend."}, {"id": "taulicht-trunk", "name": "Taulicht-Trunk", "emoji": "🫖", "zutaten": ["regenblatt", "tauperle"], "kochzeit": 40, "satt": 29, "laune": 13, "stat": "herz", "statplus": 3, "effekt": "schutz", "flavor": "Klar wie Morgenluft, mit einem Licht am Tassengrund."}, {"id": "sternzuckerchen", "name": "Sternzuckerchen", "emoji": "🍭", "zutaten": ["rindenzucker", "sternstaub"], "kochzeit": 40, "satt": 30, "laune": 15, "stat": "klugheit", "statplus": 4, "effekt": "traum", "flavor": "Kleine Kugeln, die im Dunkeln weiterfunkeln."}, {"id": "waldeintopf", "name": "Waldeintopf", "emoji": "🍛", "zutaten": ["moosknolle", "nachtpilz", "salzkraut"], "kochzeit": 25, "satt": 40, "laune": 8, "stat": "kraft", "statplus": 2, "effekt": "keiner", "flavor": "Riecht nach allem, was der Wald hergeben wollte."}, {"id": "beerenkuchen", "name": "Beerenkuchen", "emoji": "🎂", "zutaten": ["frostbeere", "rindenzucker", "sonnenbeere"], "kochzeit": 25, "satt": 39, "laune": 12, "stat": "herz", "statplus": 2, "effekt": "keiner", "flavor": "Rot und blau gefleckt, wie ein Abendhimmel zum Essen."}, {"id": "kraftknollenbraten", "name": "Kraftknollenbraten", "emoji": "🍖", "zutaten": ["bachnuss", "glimmwurzel", "moosknolle"], "kochzeit": 40, "satt": 48, "laune": 9, "stat": "kraft", "statplus": 5, "effekt": "kampf", "flavor": "Dampft so kräftig, dass der Topfdeckel klappert."}, {"id": "traumpilzsuppe", "name": "Traumpilzsuppe", "emoji": "🍜", "zutaten": ["nachtpilz", "tauperle", "wildhonig"], "kochzeit": 40, "satt": 42, "laune": 14, "stat": "klugheit", "statplus": 4, "effekt": "traum", "flavor": "Auf der Oberfläche schwimmen kleine Lichter im Kreis."}, {"id": "funkenbrei", "name": "Funkenbrei", "emoji": "🥧", "zutaten": ["aschenkorn", "funkensame", "sonnenbeere"], "kochzeit": 25, "satt": 36, "laune": 10, "stat": "tempo", "statplus": 3, "effekt": "schwung", "flavor": "Prickelt beim ersten Löffel bis in die Ohrenspitzen."}, {"id": "schutzkraut-sud", "name": "Schutzkraut-Sud", "emoji": "🍵", "zutaten": ["glimmwurzel", "regenblatt", "salzkraut"], "kochzeit": 25, "satt": 33, "laune": 7, "stat": "tempo", "statplus": 2, "effekt": "schutz", "flavor": "Herb und grün, legt sich wie eine warme Decke um."}, {"id": "honignussecken", "name": "Honignussecken", "emoji": "🍪", "zutaten": ["bachnuss", "rindenzucker", "wildhonig"], "kochzeit": 25, "satt": 41, "laune": 13, "stat": "herz", "statplus": 3, "effekt": "keiner", "flavor": "Kleben ein bisschen an den Fingern, das gehört so."}, {"id": "sternennachtsuppe", "name": "Sternennachtsuppe", "emoji": "🥟", "zutaten": ["frostbeere", "nachtpilz", "sternstaub"], "kochzeit": 40, "satt": 37, "laune": 12, "stat": "klugheit", "statplus": 3, "effekt": "schutz", "flavor": "Dunkelblau im Teller, mit Sternen, die langsam sinken."}, {"id": "glutfunkenpfanne", "name": "Glutfunkenpfanne", "emoji": "🍳", "zutaten": ["aschenkorn", "funkensame", "glimmwurzel"], "kochzeit": 25, "satt": 38, "laune": 9, "stat": "kraft", "statplus": 3, "effekt": "kampf", "flavor": "Zischt in der Pfanne und riecht nach Mut."}, {"id": "morgenmus", "name": "Morgenmus", "emoji": "🍨", "zutaten": ["regenblatt", "sonnenbeere", "wildhonig"], "kochzeit": 10, "satt": 34, "laune": 11, "stat": "herz", "statplus": 2, "effekt": "keiner", "flavor": "Hellrosa und weich, wie der Anfang eines guten Tages."}, {"id": "bachblattsuppe", "name": "Bachblattsuppe", "emoji": "🥗", "zutaten": ["bachnuss", "regenblatt", "salzkraut"], "kochzeit": 10, "satt": 30, "laune": 7, "stat": "tempo", "statplus": 1, "effekt": "keiner", "flavor": "Schmeckt wie ein Bach klingt, nur wärmer."}, {"id": "zuckerkorn-kekse", "name": "Zuckerkorn-Kekse", "emoji": "🥠", "zutaten": ["aschenkorn", "frostbeere", "rindenzucker"], "kochzeit": 10, "satt": 35, "laune": 12, "stat": "herz", "statplus": 1, "effekt": "keiner", "flavor": "Jeder Keks ist anders krumm, und genau richtig."}], "matsch": {"name": "Wundermatsch", "emoji": "🥣", "saetze": ["Das ist Matsch geworden. Aber es ist unser Matsch.", "Schmeckt wie eine Überraschung, die noch übt.", "Der Topf sagt, beim nächsten Mal wird es ein Rezept. Vielleicht."]}, "formen": {"knirps": [{"variant": "wach", "name": "Zwirbelknirps", "hinweis": "Wird gesehen an Wesen, die schon vor dem Aufwachen zappeln."}, {"variant": "ruhig", "name": "Muldenknirps", "hinweis": "Wird gesehen an Wesen, die dem Mond beim Wandern zusehen."}], "gestalt": [{"variant": "wehr", "name": "Trutzling", "hinweis": "Wird gesehen an Wesen, die sich vor nichts wegducken."}, {"variant": "flink", "name": "Huschling", "hinweis": "Wird gesehen an Wesen, die überall zuerst ankommen."}, {"variant": "traum", "name": "Schlummerling", "hinweis": "Wird gesehen an Wesen, die mit offenen Augen woanders sind."}, {"variant": "herz", "name": "Herzfunkel", "hinweis": "Wird gesehen an Wesen, die alles gern haben, sogar Steine."}], "wesen": [{"variant": "wehr-sanft", "name": "Lindenwacht", "hinweis": "Wird gesehen an Wesen, die stark wurden, ohne laut zu werden."}, {"variant": "wehr-wild", "name": "Felsenbrumm", "hinweis": "Wird gesehen an Wesen, die durch Wind und Wetter groß geworden sind."}, {"variant": "flink-sanft", "name": "Federhusch", "hinweis": "Wird gesehen an Wesen, die leise rennen, damit niemand aufwacht."}, {"variant": "flink-wild", "name": "Sturmfeger", "hinweis": "Wird gesehen an Wesen, die mit dem Wind um die Wette gewachsen sind."}, {"variant": "traum-sanft", "name": "Wolkenlauscher", "hinweis": "Wird gesehen an Wesen, die in weichen Nächten weit gereist sind."}, {"variant": "traum-wild", "name": "Nachtstromer", "hinweis": "Wird gesehen an Wesen, die auch in rauen Nächten träumen."}, {"variant": "herz-sanft", "name": "Glimmherz", "hinweis": "Wird gesehen an Wesen, die von viel Wärme rundum warm wurden."}, {"variant": "herz-wild", "name": "Brombeerherz", "hinweis": "Wird gesehen an Wesen, die kratzig aussehen und trotzdem am wärmsten sind."}]}, "rueckschau": [{"stufe": 2, "variant": "wach", "text": "Du hast mit mir Fangen gespielt, gleich am ersten Tag. Ich bin dreimal umgefallen und einmal geflogen, glaube ich."}, {"stufe": 2, "variant": "ruhig", "text": "Du hast mit mir am Höhlenrand gesessen, ganz ohne Eile. Mein Licht war dabei so ruhig wie ein Teich."}, {"stufe": 3, "variant": "wehr", "text": "Du hast mich {name} genannt, und ich habe den Namen gleich gemocht. Wir haben {n} Mal trainiert, bis meine Arme gebrummt haben. Einmal habe ich einen Stein weggerollt, der größer war als ich. Du hast zugesehen, das hat geholfen."}, {"stufe": 3, "variant": "flink", "text": "Du hast mich {name} gerufen, quer über die Lichtung. Wir sind {n} Mal um die Höhle getobt. Ich war so schnell, dass mein Licht kaum hinterherkam. Es flackert jetzt gern."}, {"stufe": 3, "variant": "traum", "text": "Du hast mich {name} genannt, das klingt wie ein Wort aus einem Traum. Du hast mich {n} Mal schlafen geschickt. Ich habe von Orten geträumt, die es nicht gibt. Einen davon suche ich noch."}, {"stufe": 3, "variant": "herz", "text": "Du hast mir den Namen {name} gegeben und mich oft gestreichelt, {n} Mal bestimmt. Mein Licht ist davon größer geworden. Es reicht jetzt bis in die Zehen."}, {"stufe": 4, "variant": "wehr-sanft", "text": "Ich heiße {name}, und du hast mich stark gemacht, ohne dass es je wehgetan hat. {n} Mal hast du mich gefüttert, immer bevor ich fragen musste. Ich stehe jetzt fest wie der Moosfelsen. Aber ich brumme nur leise."}, {"stufe": 4, "variant": "wehr-wild", "text": "Du hast mich {name} genannt und mich in den Regen gelassen. {n} Kämpfe haben wir bestanden, du und ich. Mein Fell ist zerzaust und mein Licht brennt hell. So mag ich es."}, {"stufe": 4, "variant": "flink-sanft", "text": "{name} passt zu mir, sagst du, und ich glaube dir. Wir haben {n} Mal getobt, immer bis kurz vor dem Umfallen. Danach hast du mich jedes Mal gewaschen. Ich glänze jetzt beim Rennen."}, {"stufe": 4, "variant": "flink-wild", "text": "Ich bin {name}, der Schnellste, den du kennst. {n} Abende sind wir draußen geblieben, länger als klug war. Der Wind kennt mich inzwischen mit Namen. Er verliert trotzdem."}, {"stufe": 4, "variant": "traum-sanft", "text": "Du hast mich {name} genannt, ganz leise, damit der Name weich bleibt. {n} Traumreisen hast du mir bereitet, mit Nest und Licht. Ich bringe dir manchmal etwas mit. Du merkst es am Morgen."}, {"stufe": 4, "variant": "traum-wild", "text": "{name} nennst du mich, und nachts bin ich noch mehr davon. Ich bin {n} Mal in raue Träume gestiegen und zurückgekommen. Meine Träume sind struppig und mögen mich. Du hast mir das Zurückkommen beigebracht."}, {"stufe": 4, "variant": "herz-sanft", "text": "Ich heiße {name}, und mein Licht ist rund wie Brot. Du hast mich {n} Mal gestreichelt, ich habe ungefähr mitgezählt. Wenn du kommst, wird die Höhle heller. Das machst du, nicht die Laterne."}, {"stufe": 4, "variant": "herz-wild", "text": "Du hast mich {name} genannt und nie versucht, mich zu kämmen. {n} Mal haben wir zusammen gegessen, oft mit den Fingern. Mein Herz ist groß und ein bisschen struppig. Es passt genau zu dir."}], "objekte": [{"id": "nest", "name": "Weiches Nest", "emoji": "🪺", "preis": 30, "wirkung": "Schlaf im Nest füllt nebenbei ein wenig Schwung nach."}, {"id": "laterne", "name": "Mooslaterne", "emoji": "🏮", "preis": 70, "wirkung": "Ihr Licht hält abends den Verfall ein wenig auf."}, {"id": "kochtopf", "name": "Kochtopf", "emoji": "🫕", "preis": 0, "wirkung": "Hier werden aus Zutaten Gerichte, an guten Tagen sogar neue."}, {"id": "regal", "name": "Wurzelregal", "emoji": "🗄️", "preis": 60, "wirkung": "Gesammelte Zutaten bleiben hier länger frisch."}, {"id": "trainingsstein", "name": "Trainingsstein", "emoji": "🪨", "preis": 90, "wirkung": "Training bringt hier ab und zu einen Punkt Kraft extra."}, {"id": "kletterast", "name": "Kletterast", "emoji": "🌳", "preis": 80, "wirkung": "Wer hier klettert, gewinnt ab und zu einen Punkt Tempo."}, {"id": "wasserschale", "name": "Wasserschale", "emoji": "🫧", "preis": 60, "wirkung": "Waschen geht hier schneller, und sauber bleibt länger sauber."}, {"id": "traumfaenger", "name": "Traumfänger", "emoji": "🌙", "preis": 100, "wirkung": "Traumreisen werden unter ihm tiefer und bringen mehr mit."}, {"id": "freundesbild", "name": "Freundesbild", "emoji": "🖼️", "preis": 40, "wirkung": "Ein gemaltes Bild von euch beiden; es macht die Wand freundlich."}, {"id": "teppich", "name": "Flechtteppich", "emoji": "🧶", "preis": 35, "wirkung": "Weich unter den Füßen, und die Höhle klingt leiser."}, {"id": "vorhang", "name": "Blättervorhang", "emoji": "🪟", "preis": 30, "wirkung": "Er macht aus hellen Tagen eine gemütliche Dämmerung."}, {"id": "windspiel", "name": "Windspiel", "emoji": "🎐", "preis": 45, "wirkung": "Es klingelt leise, wenn draußen der Abend anfängt."}, {"id": "steinhaufen", "name": "Steinhaufen", "emoji": "⛰️", "preis": 25, "wirkung": "Ein ordentlicher Haufen Lieblingssteine; jeder hat seinen Platz."}, {"id": "beetkiste", "name": "Beetkiste", "emoji": "🪴", "preis": 110, "wirkung": "Jeden Morgen wächst hier eine häufige Zutat nach."}, {"id": "wimpel", "name": "Stoffwimpel", "emoji": "🚩", "preis": 25, "wirkung": "Ein kleiner Wimpel, der die Höhle nach Zuhause aussehen lässt."}, {"id": "muschel", "name": "Horchmuschel", "emoji": "🐚", "preis": 30, "wirkung": "Wer hineinhorcht, hört ein sehr weit entferntes Meer."}, {"id": "federball", "name": "Federball", "emoji": "🪶", "preis": 60, "wirkung": "Toben mit ihm hebt die Laune ein Stück höher."}, {"id": "spiegel", "name": "Tropfenspiegel", "emoji": "🪞", "preis": 50, "wirkung": "Der Glimmling winkt sich selbst zu, jeden Tag aufs Neue."}, {"id": "glasklinge", "name": "Glasklinge", "emoji": "🗡️", "preis": 150, "wirkung": "Im Kampf trifft der erste Schlag ein wenig fester."}, {"id": "sternscherbe", "name": "Sternscherbe", "emoji": "🌠", "preis": 150, "wirkung": "Nachts sammelt sie Funkel, die morgens im Nest liegen."}], "hoehlen": [{"id": "erdmulde", "name": "Erdmulde", "preis": 0, "satz": "Eine warme Mulde in der Erde, gerade groß genug für den Anfang."}, {"id": "moosgrotte", "name": "Moosgrotte", "preis": 150, "satz": "Das Moos an den Wänden leuchtet nachts ein bisschen mit."}, {"id": "kristallkammer", "name": "Kristallkammer", "preis": 400, "satz": "Die Wände werfen das Brustlicht hundertfach zurück."}, {"id": "wurzelhoehle", "name": "Wurzelhöhle", "preis": 400, "satz": "Zwischen den Wurzeln findet sich öfter mal eine Zutat."}, {"id": "sternenspalte", "name": "Sternenspalte", "preis": 900, "satz": "Durch den Spalt in der Decke ist immer ein Stück Nachthimmel zu sehen."}], "microcopy2": {"tagesfund": ["Schau, {fund}. Lag einfach da.", "Ich habe {fund} gefunden. Fast wäre ich draufgetreten.", "{fund}. Der Wind hat es wohl vergessen.", "Da war {fund}, unter einem Blatt versteckt.", "{fund} für uns. Der Wald ist heute freundlich."], "toben": ["Nochmal! Nochmal!", "Meine Ohren fliegen mit.", "Fang mich, fang mich.", "Höher geht bestimmt auch.", "Ich wackle vor Freude."], "training": ["Ich bin stärker als gestern, ein kleines bisschen.", "Meine Arme brummen, aber auf die gute Art.", "Ich habe geübt, bis mein Licht gewackelt hat.", "Der Stein war schwer, aber ich war sturer."], "rezept_neu": ["Ein neues Gericht: {rezept}. Das merken wir uns.", "{rezept}. Das gab es noch nie, glaube ich.", "Der Topf kannte {rezept} auch noch nicht."], "favorit": ["Das riecht ein bisschen wie mein Lieblingsessen.", "Ganz nah dran. Mein Bauch wird schon aufgeregt.", "Das ist es. Genau das. Mein Licht macht Kreise."], "kochen_laeuft": ["Der Topf blubbert. Noch {zeit}.", "Es duftet schon. In {zeit} ist es so weit.", "Noch {zeit}, sagt der Topf, und blubbert weiter."], "schwung_leer": ["Mein Schwung ist gerade aufgebraucht. Kochen geht trotzdem immer.", "Ich muss kurz verschnaufen. Toben und Kuscheln kosten nichts.", "Der Schwung kommt von allein zurück. Bis dahin richten wir die Höhle."], "formenkarte_intro": ["Hier siehst du, was aus mir werden kann. Wie, das bleibt unser Rätsel."]}, "bildhilfe2": [{"id": "streicheln", "titel": "So streichelst du.", "satz": "Fahr mit dem Finger sanft über deinen Glimmling."}, {"id": "fuettern", "titel": "So fütterst du.", "satz": "Zieh das Essen zu seinem Mund."}, {"id": "waschen", "titel": "So wäschst du.", "satz": "Rubbel mit dem Schwamm, bis es glänzt."}, {"id": "toben", "titel": "So tobt ihr.", "satz": "Zieh deinen Glimmling durch die Gegend, er springt hinterher."}, {"id": "kochen", "titel": "So kochst du.", "satz": "Topf antippen, Zutaten hineinziehen, Feuer an."}, {"id": "hoehle", "titel": "So findest du heim.", "satz": "Wisch nach unten, da wohnt er."}, {"id": "losschicken", "titel": "So schickst du los.", "satz": "Zieh deinen Glimmling zum Rand, dann wandert er los."}, {"id": "schwung", "titel": "Das ist Schwung.", "satz": "Die Leiste füllt sich von allein wieder."}, {"id": "licht", "titel": "Das ist sein Licht.", "satz": "Je besser es ihm geht, desto heller leuchtet es."}], "texthilfe2": [{"id": "schwung", "titel": "Schwung", "text": "Schwung ist die kleine Leiste unter deinem Glimmling. Sie füllt sich von allein wieder, ein Punkt alle sechs Minuten. Nur Aktionen, die Fortschritt bringen, kosten Schwung. Alles andere ist frei: Streicheln, Kochen, Toben, die Höhle umräumen. Wenn der Schwung leer ist, ist also trotzdem nie Pause."}, {"id": "werte", "titel": "Die vier Werte", "text": "Dein Glimmling hat vier Werte: Kraft, Tempo, Klugheit und Herz. Essen und Training lassen sie langsam wachsen. Kraft hilft im Kampf, Tempo beim Timing, Klugheit auf Traumreisen. Herz macht alles ein bisschen wärmer und die Laune stabiler. Kein Wert ist wichtiger als die anderen; zusammen ergeben sie deinen Glimmling."}, {"id": "kochen", "titel": "Kochen", "text": "Zum Kochen ziehst du zwei oder drei Zutaten in den Topf. Bekannte Rezepte gelingen immer. Unbekannte Kombinationen können ein neues Rezept werden, oder Matsch. Matsch ist nie umsonst: Er macht satt, und du weißt danach mehr als vorher. Manche Gerichte haben besondere Wirkungen, die eine Weile anhalten."}, {"id": "hoehle", "titel": "Die Höhle", "text": "Die Höhle ist das Zuhause deines Glimmlings. Objekte, die du dort aufstellst, wirken von allein, ohne dass du etwas drücken musst. Bezahlt wird mit Funkeln. Funkel kommen aus allem Möglichen: Toben, Kämpfen, Aufgaben, Traumreisen. Einen schnelleren Weg gibt es nicht, und das ist Absicht."}, {"id": "formenkarte", "titel": "Die Formenkarte", "text": "Auf der Formenkarte siehst du alle fünfzehn Formen, die ein Glimmling annehmen kann. Welche deiner wird, hängt davon ab, wie ihr zusammen lebt. Das Spiel verrät nicht, welche Handlung wohin führt. Die Hinweise auf den Karten sind absichtlich vage. Keine Form ist besser als eine andere; jede hat ihren eigenen Glanz."}, {"id": "elemente", "titel": "Die Elemente", "text": "Jedes Wanderwesen gehört zu einem Element: Glut, Moos, Funke oder Tau. Sie kontern sich im Kreis: Glut schlägt Moos, Moos schlägt Funke, Funke schlägt Tau, und Tau schlägt wieder Glut. Merk dir den Kreis, dann weißt du vor jedem Kampf, wie schwer er wird. Gegen das richtige Element treffen deine Schläge deutlich stärker."}, {"id": "kampf", "titel": "Der Kampf", "text": "Im Kampf zählt Timing, nicht Hektik. Ein Balken wandert hin und her; tippst du in der grünen Zone, sitzt der Schlag. Je genauer du triffst, desto stärker wird er. An einem Abend können mehrere Wanderwesen vorbeikommen. Verlieren ist nicht schlimm: Dein Glimmling ruht sich aus und probiert es wieder."}, {"id": "aufgaben", "titel": "Aufgaben", "text": "Jeden Tag warten ein paar kleine Aufgaben auf euch. Sie bringen Funkel und manchmal eine Zutat. Erledigt werden sie meist nebenbei, beim ganz normalen Spielen. Wer eine auslässt, verpasst nichts für immer. Morgen kommen neue."}, {"id": "freundescode", "titel": "Der Freundescode", "text": "Jeder Glimmling hat einen eigenen Freundescode. Zeig deinen Code einer Freundin oder kopiere ihn und schick ihn ihr. Fügt sie ihn bei sich ein, seid ihr verbunden. Dann können eure Glimmlinge freundschaftlich gegeneinander kämpfen. Verlieren tut dabei niemandem weh."}]};
 /* ============================================================
-   KERN: Zeit, Speicher, Zustand, Offline-Berechnung
+   KERN: Zeit, Speicher, Zustand v2 (Schwung, Funkel, Höhle), Verfall
    ============================================================ */
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
@@ -1819,12 +2018,6 @@ const DEBUG={on:location.hash.indexOf('debug')>=0,offset:0};
 
 /* ---------- Zeit ---------- */
 const nowMs=()=>Date.now()+DEBUG.offset;
-const WINDOWS=[
-  {id:'morgen',von:6,bis:11,label:'Morgen'},
-  {id:'mittag',von:11,bis:17,label:'Mittag'},
-  {id:'abend',von:17,bis:22,label:'Abend'},
-  {id:'nacht',von:22,bis:6,label:'Nacht'},
-];
 function windowOf(t){
   const h=new Date(t).getHours();
   if(h>=6&&h<11)return 'morgen';
@@ -1851,7 +2044,6 @@ function nextMorningMs(t){
   if(e.getTime()<=t)e.setDate(e.getDate()+1);
   return e.getTime();
 }
-const beatsMax=w=>w==='nacht'?1:3;
 const fmtTime=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 
 /* ---------- Speicher (mit In-Memory-Rückfallebene) ---------- */
@@ -1865,7 +2057,7 @@ const store=(()=>{
   };
 })();
 
-/* ---------- Zustand ---------- */
+/* ---------- Konstanten ---------- */
 const ELEMENTS={
   glut:{name:'Glut',farbe:'#ffb35c',glow:'rgba(255,179,92,.8)',em:'🔥'},
   tau:{name:'Tau',farbe:'#5fe0d0',glow:'rgba(95,224,208,.8)',em:'💧'},
@@ -1873,98 +2065,123 @@ const ELEMENTS={
   funke:{name:'Funke',farbe:'#c9a0ff',glow:'rgba(201,160,255,.8)',em:'✨'},
 };
 const KONTER={glut:'moos',moos:'funke',funke:'tau',tau:'glut'}; // schlägt
-const STUFE2_FENSTER=8, STUFE3_FENSTER=30;
+const SCHWUNG_MAX=10, SCHWUNG_TICK=3*6e4; // +1 alle 3 Minuten — es soll gezockt werden
 
-function newState(name,element){
+/* Stufen: 1 Knospe, 2 Knirps, 3 Gestalt, 4 Wesen */
+const EVO_KNIRPS_STUNDEN=5, EVO_KNIRPS_AKTIONEN=8, EVO_GESTALT_TAGE=2, EVO_WESEN_TAGE=8;
+
+function newState(name,element,look,rezeptur){
   const t=nowMs();
-  return {v:1,name,element,stage:1,form:null,variant:null,born:t,lastSeen:t,
-    windowId:windowId(t),beats:beatsMax(windowOf(t)),
+  return {v:2,name,element,look:look||null,rezeptur:rezeptur||[],stage:1,knirps:null,form:null,variant:null,born:t,lastSeen:t,
+    windowId:windowId(t),
+    schwung:SCHWUNG_MAX,schwungStamp:t,funkel:0,
     needs:{satt:80,ausgeruht:80,laune:85,sauber:90},
     stats:{kraft:5,tempo:5,klugheit:5,herz:5},
-    counters:{kaempfe:0,siege:0,traeume:0,streicheln:0,spiele:0,fuetterungen:0,gewaschen:0,fenster:0},
-    pref:null, task:null, inventory:{}, seenRare:[],
+    counters:{kaempfe:0,siege:0,traeume:0,streicheln:0,spiele:0,fuetterungen:0,gewaschen:0,fenster:0,gekocht:0,getobt:0,trainiert:0},
+    pref:null, favourite:null, task:null, pot:null,
+    inventory:{sonnenbeere:3,moosknolle:2,wildhonig:1}, dishes:{}, recipes:[],
+    cave:{id:'erdmulde',owned:['erdmulde'],ownedItems:['kochtopf'],items:[{id:'kochtopf',x:0.72,y:0.74}]},
+    beetStamp:t,
+    dailyFind:{windowId:'',taken:true,typ:null,item:null},
+    buffs:{kampf:0,traum:0,schutzUntil:0},
+    seenRare:[], formsSeen:['knospe'],
     log:[], chronicle:[], highs:{beeren:0,echo:0,rhythmus:0},
-    care:{fensterId:'',beatSpent:false,pet:false,wash:0,geweckt:false,gekaempft:false,gespielt:false},
-    seen:{hilfe:false,stage2:false,stage3:false,futterHint:false,sendHint:false},
+    care:{fensterId:'',pet:false,wash:0,geweckt:false},
+    seen:{hilfe:false,formenkarte:false,stufe2:false,stufe3:false,futterHint:false,caveHint:false},
     settings:{sound:false},
   };
 }
+
 function normalizeState(raw){
   if(!raw||typeof raw!=='object'||typeof raw.name!=='string'||!raw.name||!ELEMENTS[raw.element])return null;
+  if(raw.v!==2)return null; // neues Spiel, neues Glück: alte Stände zählen nicht mehr
   const d=newState(raw.name,raw.element);
   const out=Object.assign({},d,raw);
-  ['needs','stats','counters','care','seen','settings','inventory','highs'].forEach(k=>{
+  ['needs','stats','counters','care','seen','settings','inventory','dishes','highs','buffs','dailyFind'].forEach(k=>{
     out[k]=Object.assign({},d[k],(raw[k]&&typeof raw[k]==='object')?raw[k]:{});
   });
-  ['log','chronicle','seenRare'].forEach(k=>{if(!Array.isArray(out[k]))out[k]=[]});
+  ['log','chronicle','seenRare','recipes','formsSeen'].forEach(k=>{if(!Array.isArray(out[k]))out[k]=d[k]});
+  out.cave=(raw.cave&&typeof raw.cave==='object'&&Array.isArray(raw.cave.items))?raw.cave:d.cave;
   Object.keys(d.needs).forEach(k=>{const v=Number(out.needs[k]);out.needs[k]=isFinite(v)?clamp(v,10,100):d.needs[k]});
   Object.keys(d.stats).forEach(k=>{const v=Number(out.stats[k]);out.stats[k]=isFinite(v)?v:d.stats[k]});
   if(out.task&&(typeof out.task!=='object'||!isFinite(out.task.end)))out.task=null;
+  if(out.pot&&(typeof out.pot!=='object'||!isFinite(out.pot.end)))out.pot=null;
   if(!isFinite(out.lastSeen))out.lastSeen=nowMs();
-  if(![1,2,3].includes(out.stage))out.stage=1;
+  if(!isFinite(out.schwung))out.schwung=SCHWUNG_MAX;
+  if(!isFinite(out.schwungStamp))out.schwungStamp=nowMs();
+  if(!isFinite(out.funkel))out.funkel=0;
+  if(![1,2,3,4].includes(out.stage))out.stage=1;
   return out;
 }
+
 let meta=store.get('glimm.meta')||{v:1,profiles:{p1:null,p2:null},lastActive:null,treffenWindow:''};
 if(typeof meta!=='object'||!meta)meta={v:1,profiles:{p1:null,p2:null},lastActive:null,treffenWindow:''};
-let P=null;       // aktives Profil-Id ('p1'|'p2')
-let S=null;       // aktiver Zustand
+let P=null, S=null;
 function save(pid,state){ if(!pid||!state)return; store.set('glimm.'+pid,state); }
 function saveMeta(){ store.set('glimm.meta',meta); }
 function saveNow(){ if(P&&S)save(P,S); saveMeta(); }
 function loadProfile(pid){ return normalizeState(store.get('glimm.'+pid)); }
 
+/* ---------- Höhlen-/Objekt-Wirkungen ---------- */
+const hatObjekt=(st,id)=>st.cave.items.some(o=>o.id===id);
+function caveMods(st){
+  return {
+    launeMul:(hatObjekt(st,'laterne')?0.8:1)*(st.cave.id==='moosgrotte'?0.8:1),
+    sauberMul:hatObjekt(st,'wasserschale')?0.8:1,
+    nachtRegenPlus:hatObjekt(st,'nest')?3:0,
+    kochMul:st.cave.id==='wurzelhoehle'?0.8:1,
+    klugMul:st.cave.id==='kristallkammer'?1.15:1,
+    traumMul:(st.cave.id==='sternenspalte'?1.25:1)*(hatObjekt(st,'traumfaenger')?1.2:1),
+    trainMul:hatObjekt(st,'trainingsstein')?1.1:1,
+    tempoMul:hatObjekt(st,'kletterast')?1.1:1,
+  };
+}
+
 /* ---------- Bedürfnisverfall ---------- */
 function applyDecay(st,fromMs,toMs){
-  let dt=(toMs-fromMs)/36e5; // Stunden
+  let dt=(toMs-fromMs)/36e5;
   if(dt<=0)return;
   dt=Math.min(dt,14); // Verfallsdeckel
-  const n=st.needs;
-  // stückweise, damit Nacht-Regeneration, Task-Ende & Laune-Kopplung stimmen
+  const n=st.needs,mods=caveMods(st);
   let t=fromMs; const step=36e5/4; let rest=dt*36e5;
   while(rest>0){
-    const d=Math.min(step,rest)/36e5;
+    const d0=Math.min(step,rest)/36e5;
     const w=windowOf(t);
     const activeTask=st.task&&t<st.task.end;
     const taskMul=activeTask&&st.task.type!=='traum'?1.5:1;
+    const schutz=t<st.buffs.schutzUntil?0.5:1; // Schutzgericht: Verfall halbiert
+    const d=d0*schutz;
     n.satt=clamp(n.satt-4*d*taskMul,10,100);
-    if(w==='nacht'&&(!activeTask||st.task.type==='traum')) n.ausgeruht=clamp(n.ausgeruht+8*d,10,100);
+    if(w==='nacht'&&(!activeTask||st.task.type==='traum')) n.ausgeruht=clamp(n.ausgeruht+(8+mods.nachtRegenPlus)*d0,10,100);
     else n.ausgeruht=clamp(n.ausgeruht-3*d*taskMul,10,100);
     const lmul=(n.satt<30||n.ausgeruht<30)?2:1;
-    n.laune=clamp(n.laune-2*d*lmul,10,100);
-    n.sauber=clamp(n.sauber-2*d,10,100);
+    n.laune=clamp(n.laune-2*d*lmul*mods.launeMul,10,100);
+    n.sauber=clamp(n.sauber-2*d*mods.sauberMul,10,100);
     t+=Math.min(step,rest);rest-=step;
   }
 }
 
-/* ---------- Offline-Berechnung beim Öffnen eines Profils ---------- */
-function offlineCatchup(st){
-  const t=nowMs(); const events=[];
-  if(t<st.lastSeen){ // Uhr zurückgestellt: nichts gutschreiben, aber normalisieren
-    st.lastSeen=t;
-    const widBack=windowId(t);
-    if(st.windowId!==widBack){st.windowId=widBack;st.care.fensterId=widBack;} // kein Beats-Refill
-    if(st.task){
-      const T=TASKS[st.task.type];
-      const cap=st.task.type==='traum'?nextMorningMs(t):t+(T?T.dauerMin:30)*6e4;
-      if(st.task.end>cap)st.task.end=cap;
-    }
-    return events;
+/* ---------- Schwung ---------- */
+function refreshSchwung(st,t){
+  t=t||nowMs();
+  if(st.schwung>=SCHWUNG_MAX){st.schwungStamp=t;return}
+  const n=Math.floor((t-st.schwungStamp)/SCHWUNG_TICK);
+  if(n>0){
+    st.schwung=Math.min(SCHWUNG_MAX,st.schwung+n);
+    st.schwungStamp=st.schwung>=SCHWUNG_MAX?t:st.schwungStamp+n*SCHWUNG_TICK;
   }
-  const from=Math.max(st.lastSeen,t-14*36e5);
-  applyDecay(st,from,t);
-  // Aufgabe fertig?
-  if(st.task&&t>=st.task.end){ events.push({typ:'bericht',task:st.task}); }
-  // Fensterwechsel
-  const wid=windowId(t);
-  if(wid!==st.windowId){
-    st.windowId=wid;
-    st.beats=beatsMax(windowOf(t));
-    st.care={fensterId:wid,beatSpent:false,pet:false,wash:0,geweckt:false,gekaempft:false,gespielt:false};
-  }
-  if(st.care.fensterId!==wid){st.care.fensterId=wid;}
-  st.lastSeen=t;
-  return events;
 }
+function spendSchwung(n){
+  refreshSchwung(S);
+  if(S.schwung<n)return false;
+  if(S.schwung>=SCHWUNG_MAX)S.schwungStamp=nowMs(); // Regeneration startet jetzt
+  S.schwung-=n;
+  UI.renderSchwung(true);
+  saveNow();
+  return true;
+}
+function schwungPlus(n){refreshSchwung(S);S.schwung=Math.min(SCHWUNG_MAX,S.schwung+n);UI.renderSchwung();}
+function funkelPlus(st,n){st.funkel=Math.max(0,Math.round(st.funkel+n));if(st===S)UI.renderFunkel();}
 
 /* ---------- Effektive Werte ---------- */
 function effStats(st){
@@ -1977,14 +2194,41 @@ function effStats(st){
   };
 }
 
-/* ---------- Herzschlag ausgeben ---------- */
-function spendBeat(){
-  if(S.beats<=0)return false;
-  S.beats--;
-  if(!S.care.beatSpent){S.care.beatSpent=true;S.counters.fenster++;}
-  UI.renderHearts(true);
-  saveNow();
-  return true;
+/* ---------- Offline-Berechnung ---------- */
+function offlineCatchup(st){
+  const t=nowMs(); const events=[];
+  if(t<st.lastSeen){ // Uhr zurückgestellt: nichts gutschreiben, aber normalisieren
+    st.lastSeen=t;st.schwungStamp=Math.min(st.schwungStamp,t);
+    const widBack=windowId(t);
+    if(st.windowId!==widBack){st.windowId=widBack;st.care.fensterId=widBack;}
+    if(st.task){
+      const T=TASKS[st.task.type];
+      const cap=st.task.type==='traum'?nextMorningMs(t):t+(T?T.dauerMin:20)*6e4;
+      if(st.task.end>cap)st.task.end=cap;
+    }
+    if(st.pot&&st.pot.end>t+40*6e4)st.pot.end=t+40*6e4;
+    return events;
+  }
+  const from=Math.max(st.lastSeen,t-14*36e5);
+  applyDecay(st,from,t);
+  refreshSchwung(st,t);
+  if(st.task&&t>=st.task.end)events.push({typ:'bericht',task:st.task});
+  if(st.pot&&t>=st.pot.end)events.push({typ:'gekocht'});
+  // Beetkiste: alle 8 Stunden eine Zutat, höchstens 3 aufgelaufen
+  if(hatObjekt(st,'beetkiste')){
+    const n=Math.min(3,Math.floor((t-st.beetStamp)/(8*36e5)));
+    if(n>0){events.push({typ:'beet',n});st.beetStamp=t;}
+  } else st.beetStamp=t;
+  const wid=windowId(t);
+  if(wid!==st.windowId){
+    st.windowId=wid;
+    st.care={fensterId:wid,pet:false,wash:0,geweckt:false};
+  }
+  if(st.dailyFind.windowId!==wid){ // neuer Tagesfund liegt bereit
+    st.dailyFind={windowId:wid,taken:false,typ:null,item:null};
+  }
+  st.lastSeen=t;
+  return events;
 }
 
 /* ---------- Ton ---------- */
@@ -2011,6 +2255,8 @@ const Sound=(()=>{
     tief(){blip(220,0.25,'sine',0.1)},
     trommel(){blip(180,0.12,'triangle',0.16)},
     treffer(){blip(660,0.08,'square',0.05);blip(990,0.1,'sine',0.08,0.07)},
+    fanfare(){blip(520,0.12);blip(660,0.12,'sine',0.11,0.12);blip(780,0.12,'sine',0.11,0.24);blip(1040,0.22,'sine',0.1,0.36)},
+    blubb(){blip(180,0.1,'sine',0.07);blip(220,0.08,'sine',0.06,0.12)},
   };
 })();
 const vibr=p=>{try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}};
@@ -2019,14 +2265,14 @@ const vibr=p=>{try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}};
    ============================================================ */
 let __uid=0;
 function svgWesen(opts){
-  const o=Object.assign({element:'glut',stage:1,form:null,variant:null,mood:'happy',glow:'ruhig',glowOp:1,dirty:false,sleeping:false},opts);
+  const o=Object.assign({element:'glut',stage:1,knirps:null,form:null,variant:null,look:null,mood:'happy',glow:'ruhig',glowOp:1,dirty:false,sleeping:false},opts);
   const uid='w'+(++__uid);
   const E=ELEMENTS[o.element]||ELEMENTS.glut;
-  const bodyC=o.variant==='still'?'#413c55':'#4a4560';
-  const bellyC=o.variant==='hell'?'#615a7d':'#585270';
+  const lookPair=o.look?LOOK_BODIES[o.look.body%LOOK_BODIES.length]:['#4a4560','#585270'];
+  const bodyC=lookPair[0], bellyC=lookPair[1];
   const inkC='#2b2836', eyeC='#f6efdd';
-  const formCls=o.form?' w-'+o.form:'', stageCls=' w-s'+o.stage;
-  const glowR=o.form==='herz'?40:30;
+  const formCls=(o.form?' w-'+o.form:'')+(o.stage===2&&o.knirps?' w-k-'+o.knirps:'')+(o.look?' w-o'+o.look.ohr:'')+(o.variant?' w-v-'+o.variant:''), stageCls=' w-s'+o.stage;
+  const glowR=o.form==='herz'?40:(o.variant==='sanft'?34:30);
   const horn=o.form==='wehr'?`
     <g class="horns" fill="#c9a06a" stroke="#a9855a" stroke-width="1.5">
       <path d="M84,34 Q88,18 96,32 Q92,40 86,40 Z"/>
@@ -2078,6 +2324,8 @@ function svgWesen(opts){
       <circle cx="181" cy="97" r="7" fill="${E.farbe}"/>
     </g>
     <path class="bodyp" d="M100,86 C138,86 158,112 158,138 C158,166 132,180 100,180 C68,180 42,166 42,138 C42,112 62,86 100,86 Z" fill="url(#${uid}-bd)"/>
+    ${o.look&&o.look.mark==='flecken'?`<g fill="${bellyC}" opacity=".65"><ellipse cx="68" cy="128" rx="8" ry="6"/><ellipse cx="136" cy="146" rx="7" ry="5"/><ellipse cx="120" cy="118" rx="5" ry="4"/></g>`:''}
+    ${o.look&&o.look.mark==='wirbel'?`<path d="M120,150 Q140,142 136,126 Q133,116 122,120" fill="none" stroke="${bellyC}" stroke-width="5" stroke-linecap="round" opacity=".7"/>`:''}
     ${wehrPlates}
     <g class="glim glim-${o.glow}" style="opacity:${o.glowOp}">
       <circle cx="100" cy="130" r="${glowR}" fill="url(#${uid}-gl)"/>
@@ -2096,6 +2344,7 @@ function svgWesen(opts){
       ${horn}
       <circle cx="100" cy="76" r="45" fill="url(#${uid}-bd)"/>
       <g class="dirt"><ellipse cx="120" cy="58" rx="8" ry="5" opacity=".5" fill="#6b5a44"/></g>
+      ${o.look&&o.look.mark==='stern'?`<path d="M100 44l2.2 4.8 5 .6-3.7 3.5.9 5-4.4-2.5-4.4 2.5.9-5-3.7-3.5 5-.6Z" fill="${E.farbe}" opacity=".85"/>`:''}
       ${eyes}
       ${mouth}
       <circle cx="72" cy="90" r="6.5" fill="${E.farbe}" opacity="${blushOp}"/>
@@ -2109,8 +2358,19 @@ function svgWesen(opts){
 const formCss=document.createElement('style');
 formCss.textContent=`
 .wsvg .sizeg{transform-origin:100px 180px}
-.wsvg.w-s1 .sizeg{transform:scale(.8)}
-.wsvg.w-s3 .sizeg{transform:scale(1.06)}
+.wsvg.w-s1 .sizeg{transform:scale(.66)}
+.wsvg.w-s2 .sizeg{transform:scale(.82)}
+.wsvg.w-s4 .sizeg{transform:scale(1.08)}
+.wsvg.w-k-wach .earL{transform:scale(1,1.3) rotate(6deg)}
+.wsvg.w-k-wach .earR{transform:scale(1,1.3) rotate(-6deg)}
+.wsvg.w-k-ruhig .earL{transform:rotate(-16deg)}
+.wsvg.w-k-ruhig .earR{transform:rotate(16deg)}
+.wsvg.w-k-ruhig .bodyp{transform:scale(1.06,.97);transform-origin:100px 135px}
+.wsvg.w-o1 .earL,.wsvg.w-o1 .earR{transform:scale(1.12,.78)}
+.wsvg.w-o2 .earL{transform:scale(.82,1.28) rotate(-4deg)}
+.wsvg.w-o2 .earR{transform:scale(.82,1.28) rotate(4deg)}
+.wsvg.w-v-wild{filter:saturate(1.12) brightness(.95)}
+.wsvg.w-v-sanft{filter:brightness(1.06)}
 .wsvg.w-flink .earL{transform:scale(1,1.45) translateY(-6px)}
 .wsvg.w-flink .earR{transform:scale(1,1.45) translateY(-6px)}
 .wsvg.w-flink .bodyp{transform:scaleX(.9);transform-origin:100px 130px}
@@ -2146,7 +2406,7 @@ const Creature={
   render(){
     if(!S)return;
     const g=this.glowState();
-    this.elmt.innerHTML=svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,
+    this.elmt.innerHTML=svgWesen({element:S.element,stage:S.stage,knirps:S.knirps,form:S.form,variant:S.variant,look:S.look,
       mood:this.mood(),glow:g.cls,glowOp:g.op,dirty:S.needs.sauber<35,sleeping:this.isSleeping()});
     this.elmt.classList.toggle('sleeping',this.isSleeping());
     this.elmt.classList.toggle('sad',this.mood()==='sad');
@@ -2155,9 +2415,7 @@ const Creature={
   mood(){ return (S.needs.laune<32)?'sad':'happy'; },
   isSleeping(){
     if(S.wakePending)return true;
-    const w=windowOf(nowMs());
-    if(w==='nacht')return (S.task&&S.task.type==='traum')||S.beats<=0;
-    return false;
+    return windowOf(nowMs())==='nacht'&&!!S.task&&S.task.type==='traum';
   },
   glowState(){
     const n=S.needs;
@@ -2218,7 +2476,7 @@ const Creature={
   },
 };
 /* ============================================================
-   SZENE & UI: Paletten, Herzen, Statuszeile, Futterleiste
+   SZENE & UI: Paletten, Schwung, Funkel, Tagesfund, Leisten
    ============================================================ */
 const UI={
   screen:'start',
@@ -2242,7 +2500,6 @@ const UI={
     orb.style.left=pos.left;orb.style.top=pos.top;
     orb.style.width=w==='nacht'?'58px':'74px';orb.style.height=orb.style.width;
   },
-
   buildSkyDeco(){
     const st=$('#stars');st.innerHTML='';
     for(let i=0;i<46;i++){const s=el('div','star');
@@ -2255,17 +2512,22 @@ const UI={
       f.style.animationDelay=(Math.random()*8)+'s';f.style.animationDuration=(7+Math.random()*6)+'s';ff.appendChild(f)}
   },
 
-  renderHearts(spent){
-    const w=windowOf(nowMs()),max=beatsMax(w),h=$('#hearts');
-    const HP='M12 20.6C7.2 16.9 3 13.3 3 9.3 3 6.4 5.3 4.4 7.9 4.4c1.6 0 3.1.8 4.1 2.2 1-1.4 2.5-2.2 4.1-2.2 2.6 0 4.9 2 4.9 4.9 0 4-4.2 7.6-9 11.3Z';
-    if(h.childElementCount!==max){h.innerHTML='';
-      for(let i=0;i<max;i++){const s=el('div','hbeat');
-        s.innerHTML=`<svg viewBox="0 0 24 24"><path d="${HP}"/></svg>`;h.appendChild(s)}}
-    [...h.children].forEach((c,i)=>{
-      const off=i>=S.beats;
-      if(spent&&!c.classList.contains('off')&&off){c.classList.add('spend');setTimeout(()=>c.classList.remove('spend'),600)}
-      c.classList.toggle('off',off);
+  /* Schwung: Leiste ohne Ziffern; Zahl erst ab Knirps */
+  renderSchwung(spent){
+    if(!S)return;
+    refreshSchwung(S);
+    const bar=$('#schwungbar');
+    if(bar.childElementCount!==SCHWUNG_MAX){bar.innerHTML='';
+      for(let i=0;i<SCHWUNG_MAX;i++)bar.appendChild(el('div','sw-seg'))}
+    [...bar.children].forEach((c,i)=>{
+      c.classList.toggle('full',i<S.schwung);
+      if(spent&&i===S.schwung){c.classList.remove('drain');void c.offsetWidth;c.classList.add('drain')}
     });
+    $('#schwungnum').textContent=S.stage>=2?S.schwung:'';
+  },
+  renderFunkel(){
+    if(!S)return;
+    $('#funkelnum').textContent=S.stage>=2?S.funkel:'';
   },
 
   status(msg,stay){
@@ -2280,6 +2542,9 @@ const UI={
     let s=opts.length?rnd(opts).satz:'{name} ruht sich aus.';
     s=s.replace('{name}',S.name).replace('{zeit}',fmtTime(windowEndMs(nowMs())));
     this.status(s,true);
+  },
+  schwungLeerHint(){
+    this.toast(rnd(DATA2.microcopy2.schwung_leer),3600);
   },
 
   toast(msg,ms){
@@ -2298,18 +2563,29 @@ const UI={
       $('#app').appendChild(s);setTimeout(()=>s.remove(),820)}
   },
 
+  /* Futterleiste: Zutaten (gezählt) und gekochte Gerichte */
   renderDrawer(){
     const d=$('#drawer');d.innerHTML='';
-    if(S.task||Creature.isSleeping()){d.style.display='none';return}
+    if(!S||S.task||Creature.isSleeping()){d.style.display='none';return}
     d.style.display='flex';
-    const inv=S.inventory;
-    DATA.welt.futter.forEach(f=>{
-      if(f.selten&&(inv[f.id]||0)<=0)return; // seltenes Futter nur mit Vorrat
-      const fi=el('div','fooditem');fi.dataset.food=f.id;
-      fi.innerHTML=`<span>${f.emoji}</span><small>${f.name}</small>`+
-        (f.selten?`<span class="cnt">${inv[f.id]}</span>`:'');
+    let any=false;
+    DATA2.rezepte.forEach(r=>{
+      const c=S.dishes[r.id]||0;if(c<=0)return;any=true;
+      const fi=el('div','fooditem dish');fi.dataset.dish=r.id;
+      fi.innerHTML=`<span>${r.emoji}</span><small>${r.name}</small><span class="cnt">${c}</span>`;
       d.appendChild(fi);
     });
+    if((S.dishes.matsch||0)>0){any=true;
+      const fi=el('div','fooditem dish');fi.dataset.dish='matsch';
+      fi.innerHTML=`<span>${DATA2.matsch.emoji}</span><small>${DATA2.matsch.name}</small><span class="cnt">${S.dishes.matsch}</span>`;
+      d.appendChild(fi);}
+    DATA2.zutaten.forEach(z=>{
+      const c=S.inventory[z.id]||0;if(c<=0)return;any=true;
+      const fi=el('div','fooditem');fi.dataset.food=z.id;
+      fi.innerHTML=`<span>${z.emoji}</span><small>${z.name}</small><span class="cnt">${c}</span>`;
+      d.appendChild(fi);
+    });
+    if(!any){d.appendChild(el('div','drawerempty','Der Vorrat ist leer. Schick '+S.name+' los oder schau nach dem Tagesfund.'))}
   },
 
   renderActions(){
@@ -2318,29 +2594,36 @@ const UI={
     const w=windowOf(nowMs());
     const mk=(id,em,label)=>{const b=el('button','pillbtn');b.id=id;
       b.innerHTML=`<span class="em">${em}</span>${label}`;row.appendChild(b);return b};
-    if(Creature.isSleeping())return; // nachts erst wecken? nein: nachts schläft es oder Traumreise
-    if(S.beats>0){
-      if(w==='nacht'){ mk('act-traum','🌙','Traumreise'); }
-      else{
-        mk('act-send','🥾','Losschicken');
-        if(w==='mittag') mk('act-spiel','🎈','Spielen');
-        if(w==='abend'&&S.stage>=2&&!S.care.gekaempft) mk('act-kampf','⚔️','Kampf');
-      }
-    }
-    if(S.stage>=2) mk('act-mehr','☰','Mehr');
+    if(Creature.isSleeping())return;
+    if(w==='nacht')mk('act-traum','🌙','Traumreise');
+    else mk('act-send','🥾','Losschicken');
+    mk('act-spiel','🎈','Spielen');
+    if(w==='mittag')mk('act-training','🪨','Training');
+    const wanderDa=w==='abend'||(w==='mittag'&&hashStr(S.windowId+S.name)%10<5);
+    if(wanderDa&&S.stage>=2)mk('act-kampf','⚔️','Kampf');
+    if(S.stage>=2)mk('act-mehr','☰','Mehr');
+  },
+
+  /* Tagesfund: liegt vor der Höhle, einmal pro Fenster */
+  renderTagesfund(){
+    const tf=$('#tagesfund');
+    const show=S&&!S.dailyFind.taken&&UI.screen==='home';
+    tf.classList.toggle('on',!!show);
   },
 
   refreshHome(){
     const w=windowOf(nowMs());
     this.applyPalette(w);
-    this.renderHearts();
+    this.renderSchwung();
+    this.renderFunkel();
     this.renderDrawer();
     this.renderActions();
+    this.renderTagesfund();
+    Cave.renderHomeProps();
     Away.refresh();
     if(S.task){ /* Statuszeile macht Away */ }
     else if(S.wakePending){ this.status('Pssst. '+S.name+' schläft noch. Tipp es wach.',true); }
     else if(Creature.isSleeping()){ this.status(S.name+' schläft. Wacht um 6 Uhr auf.',true); }
-    else if(S.beats<=0){ this.ruheStatus(); }
     else this.status('');
   },
 };
@@ -2364,11 +2647,22 @@ const Gestures={
     $('#wesen').addEventListener('pointerdown',e=>this.down(e));
     $('#drawer').addEventListener('pointerdown',e=>{
       const fi=e.target.closest('.fooditem');if(!fi)return;
-      this.foodDrag={id:fi.dataset.food,elmt:fi,x:e.clientX,y:e.clientY,active:false,moved:false};
+      this.foodDrag={kind:fi.dataset.dish?'dish':'zutat',id:fi.dataset.dish||fi.dataset.food,elmt:fi,x:e.clientX,y:e.clientY,active:false,moved:false};
     });
     $('#awaywalker').addEventListener('pointerdown',e=>{
       UI.pop(e.clientX,e.clientY,'💛');Sound.stimme();vibr(15);
     });
+    // Wisch nach unten neben dem Wesen: rein in die Höhle
+    let sw=null;
+    $('#stage').addEventListener('pointerdown',e=>{
+      if(e.target.closest('#wesen')||UI.anyOverlay()||UI.screen!=='home')return;
+      sw={y0:e.clientY,t0:Date.now()};
+    });
+    document.addEventListener('pointermove',e=>{
+      if(!sw)return;
+      if(e.clientY-sw.y0>130&&Date.now()-sw.t0<700){sw=null;Cave.open()}
+    },{passive:true});
+    document.addEventListener('pointerup',()=>{sw=null});
   },
   ghostAt(x,y){const g=$('#dragGhost');g.style.left=(x-19-UI.appLeft())+'px';g.style.top=(y-24)+'px'},
   down(e){
@@ -2437,7 +2731,7 @@ const Gestures={
       if(fd.active){
         const r=$('#wesen').getBoundingClientRect();
         const over=e.clientX>r.left-20&&e.clientX<r.right+20&&e.clientY>r.top-20&&e.clientY<r.bottom+30;
-        if(over&&!$('#wesen').classList.contains('away'))Actions.feed(fd.id);
+        if(over&&!$('#wesen').classList.contains('away'))Actions.feed(fd.kind,fd.id);
       } else if(!fd.moved){ /* nur angetippt: kleiner Hinweis */
         if(!S.seen.futterHint){S.seen.futterHint=true;saveNow();UI.toast('Zieh das Futter zu '+S.name+' hoch.')}
       }
@@ -2447,8 +2741,15 @@ const Gestures={
     const w=$('#wesen');
     const disp=Math.hypot(e.clientX-s.x0,e.clientY-s.y0);
     if(s.mode==='drag'){
-      w.style.setProperty('--dx','0px');w.style.setProperty('--dy','0px');
-      if(Math.abs(e.clientX-s.x0)>130)Actions.openSend();
+      const appW=$('#app').clientWidth, ax=e.clientX-UI.appLeft();
+      if(ax<40||ax>appW-40){
+        w.style.setProperty('--dx','0px');w.style.setProperty('--dy','0px');
+        Actions.openSend();
+      } else if(disp>55){
+        Actions.toben(e.clientX-s.x0,e.clientY-s.y0); // hüpft hinterher und wieder zurück
+      } else {
+        w.style.setProperty('--dx','0px');w.style.setProperty('--dy','0px');
+      }
       return;
     }
     if(s.mode==='pet'){Actions.petEnd(s.petTicks);return}
@@ -2456,7 +2757,7 @@ const Gestures={
   },
 };
 /* ============================================================
-   AKTIONEN: Füttern, Streicheln, Waschen, Wecken, Losschicken, Berichte
+   AKTIONEN v2: Pflege (frei), Toben, Training, Aufgaben, Berichte
    ============================================================ */
 const Actions={
   /* ---------- Antippen ---------- */
@@ -2468,9 +2769,7 @@ const Actions={
   },
   wakeTapCount:0,
   wakeTap(x,y){
-    if(windowOf(nowMs())==='nacht'&&!S.wakePending){ // nachts schlafen lassen
-      UI.pop(x,y-20,'💤');Sound.tief();return;
-    }
+    if(windowOf(nowMs())==='nacht'&&!S.wakePending){UI.pop(x,y-20,'💤');Sound.tief();return}
     this.wakeTapCount++;
     if(this.wakeTapCount===1){
       Creature.nuzzle();UI.pop(x,y-20,'💤');Sound.tief();
@@ -2479,37 +2778,57 @@ const Actions={
       this.wakeTapCount=0;
       S.care.geweckt=true;S.wakePending=false;
       Creature.render();Creature.hop();Sound.freude();vibr([20,40,20]);
-      const ws=rnd(DATA.traeume.wecksaetze).satz;
-      UI.toast('„'+ws+'“',3200);
+      UI.toast('„'+rnd(DATA.traeume.wecksaetze).satz+'“',3200);
       saveNow();UI.refreshHome();
       if(S.pendingReport)setTimeout(()=>this.showReport(S.pendingReport),1600);
     }
   },
 
-  /* ---------- Füttern ---------- */
-  feed(foodId){
-    const f=DATA.welt.futter.find(x=>x.id===foodId);if(!f)return;
+  /* ---------- Füttern: Zutaten und Gerichte, immer frei ---------- */
+  feed(kind,id){
     if(Creature.isSleeping()){UI.toast(S.name+' schläft gerade.');return}
     if(S.needs.satt>=95){UI.toast(DATA.welt.microcopy.lehnt_ab.replace('{name}',S.name));Creature.nuzzle();return}
-    if(S.beats<=0){UI.ruheStatus();UI.toast('Keine Herzschläge mehr. '+rnd(DATA.welt.microcopy.abschied).replace('{name}',S.name),3200);return}
-    if(f.selten&&(S.inventory[f.id]||0)<=0)return;
-    spendBeat();
-    if(f.selten){S.inventory[f.id]=Math.max(0,(S.inventory[f.id]||0)-1)}
-    const isPref=S.pref===f.id;
-    S.needs.satt=clamp(S.needs.satt+f.satt,10,100);
-    S.needs.laune=clamp(S.needs.laune+(isPref?10:4),10,100);
-    S.stats[f.stat]+=f.statplus*(isPref?1.5:1);
+    let em,satt,laune=4,stat=null,statplus=0,fav=0,effekt=null;
+    if(kind==='zutat'){
+      const z=zutDef(id);if(!z||(S.inventory[id]||0)<=0)return;
+      S.inventory[id]--;em=z.emoji;satt=z.satt;stat=z.stat;statplus=z.statplus;
+    } else {
+      if(id==='matsch'){
+        if((S.dishes.matsch||0)<=0)return;
+        S.dishes.matsch--;em=DATA2.matsch.emoji;satt=18;laune=8;
+      } else {
+        const r=rezDef(id);if(!r||(S.dishes[id]||0)<=0)return;
+        S.dishes[id]--;em=r.emoji;satt=r.satt;laune=r.laune;stat=r.stat;statplus=r.statplus;effekt=r.effekt;
+        // Nähe zum Lieblingsgericht: geteilte Zutaten
+        const favR=rezDef(S.favourite);
+        if(favR){
+          if(id===S.favourite)fav=3;
+          else{const gem=r.zutaten.filter(z=>favR.zutaten.includes(z)).length;fav=gem>=2?2:gem>=1?1:0}
+        }
+      }
+    }
+    S.needs.satt=clamp(S.needs.satt+satt,10,100);
+    S.needs.laune=clamp(S.needs.laune+laune+(fav===3?18:fav*3),10,100);
+    if(stat)S.stats[stat]+=statplus;
     S.counters.fuetterungen++;
+    if(effekt==='schwung')schwungPlus(3);
+    if(effekt==='kampf')S.buffs.kampf=1;
+    if(effekt==='traum')S.buffs.traum=1;
+    if(effekt==='schutz')S.buffs.schutzUntil=nowMs()+36e5;
     const r=$('#wesen').getBoundingClientRect();
-    UI.pop(r.left+r.width/2,r.top+r.height*0.45,f.emoji);
+    UI.pop(r.left+r.width/2,r.top+r.height*0.45,em);
     setTimeout(()=>{Creature.hop();Sound.mampf();vibr(18);
       UI.sparkleAt(r.left+r.width/2,r.top+r.height*0.5,ELEMENTS[S.element].farbe);
-      if(isPref){UI.toast(DATA.welt.microcopy.vorliebe.replace('{name}',S.name));UI.pop(r.left+r.width/2,r.top+r.height*0.3,'💖')}
+      if(fav>0){UI.toast('„'+DATA2.microcopy2.favorit[fav-1]+'“',3600);
+        if(fav===3){Sound.fanfare();vibr([30,50,30,50,80]);
+          for(let i=0;i<6;i++)setTimeout(()=>UI.pop(r.left+r.width/2+(Math.random()*100-50),r.top+r.height*0.3,'💖'),i*160)}}
+      else if(effekt&&effekt!=='keiner'){
+        UI.toast({kampf:'Da ist Kampfgeist drin.',traum:'Heute Nacht wird tief geträumt.',schwung:'Der Schwung ist gleich wieder da.',schutz:'Das hält lange vor.'}[effekt]||'',2600)}
     },350);
-    Creature.refreshGlow();UI.renderDrawer();UI.renderActions();saveNow();
+    Creature.refreshGlow();UI.renderDrawer();saveNow();
   },
 
-  /* ---------- Streicheln ---------- */
+  /* ---------- Streicheln / Waschen (frei) ---------- */
   petTick(x,y,n){
     S.needs.laune=clamp(S.needs.laune+0.7,10,100);
     UI.pop(x,y-10,['💛','✨','💛','🩷'][n%4]);
@@ -2524,8 +2843,6 @@ const Actions={
     }
     saveNow();
   },
-
-  /* ---------- Waschen ---------- */
   wash(x,y){
     const dirty=S.needs.sauber<80;
     S.needs.sauber=clamp(S.needs.sauber+40,10,100);
@@ -2536,19 +2853,58 @@ const Actions={
     saveNow();
   },
 
+  /* ---------- Toben: reines Spielzeug, kein Limit ---------- */
+  toben(dx,dy){
+    const w=$('#wesen');
+    w.style.transition='transform .35s cubic-bezier(.3,1.5,.5,1)';
+    w.style.setProperty('--dx',clamp(dx,-140,140)+'px');
+    w.style.setProperty('--dy',clamp(dy*0.5,-60,40)+'px');
+    Creature.hop();Sound.stimme();vibr([10,20,10]);
+    S.counters.getobt=Math.min(500,S.counters.getobt+1);
+    S.needs.laune=clamp(S.needs.laune+0.4,10,100);
+    if(Math.random()<0.3){
+      const r=w.getBoundingClientRect();
+      UI.pop(r.left+r.width/2,r.top+20,'✨');
+      if(Math.random()<0.4)UI.toast('„'+rnd(DATA2.microcopy2.toben)+'“',1800);
+    }
+    clearTimeout(this._tobT);
+    this._tobT=setTimeout(()=>{
+      w.style.setProperty('--dx','0px');w.style.setProperty('--dy','0px');
+      setTimeout(()=>{w.style.transition=''},400);
+    },700);
+    Creature.refreshGlow();saveNow();
+  },
+
+  /* ---------- Training (Mittag, 2 Schwung) ---------- */
+  training(){
+    refreshSchwung(S);
+    if(S.schwung<2){UI.schwungLeerHint();return}
+    spendSchwung(2);
+    const mods=caveMods(S);
+    const k=Math.round((2+Math.random()*2)*mods.trainMul);
+    S.stats.kraft+=k;S.stats.tempo+=1;
+    S.counters.trainiert++;
+    const r=$('#wesen').getBoundingClientRect();
+    UI.pop(r.left+r.width/2,r.top+r.height*0.3,'🪨');
+    Creature.hop();setTimeout(()=>Creature.hop(),400);setTimeout(()=>Creature.hop(),800);
+    Sound.trommel();vibr([25,40,25]);
+    setTimeout(()=>{UI.toast('„'+rnd(DATA2.microcopy2.training)+'“'+(S.stage>=2?' (💪 +'+k+')':''),3200);Sound.freude()},1000);
+    saveNow();
+  },
+
   /* ---------- Losschicken ---------- */
   sendSel:{task:null,focus:null},
   openSend(){
-    if(S.beats<=0){UI.ruheStatus();UI.toast('Keine Herzschläge mehr übrig.');return}
     if(S.task)return;
     const w=windowOf(nowMs());
     const avail=Object.entries(TASKS).filter(([id,t])=>t.fenster.includes(w));
     if(!avail.length)return;
+    refreshSchwung(S);
     this.sendSel={task:avail[0][0],focus:'erkunden'};
     const tr=$('#taskrow');tr.innerHTML='';
     avail.forEach(([id,t])=>{
       const b=el('button','taskbtn'+(id===this.sendSel.task?' sel':''));
-      b.innerHTML=`<span class="em">${t.em}</span>${t.name}<small>${t.desc}</small>`;
+      b.innerHTML=`<span class="em">${t.em}</span>${t.name}<small>${t.desc} · ${'⚡'.repeat(t.schwung>3?3:t.schwung)}${t.schwung>3?'+':''}</small>`;
       b.onclick=()=>{this.sendSel.task=id;[...tr.children].forEach(c=>c.classList.remove('sel'));b.classList.add('sel')};
       tr.appendChild(b);
     });
@@ -2560,13 +2916,13 @@ const Actions={
       b.onclick=()=>{this.sendSel.focus=id;[...fg.children].forEach(c=>c.classList.remove('sel'));b.classList.add('sel')};
       fg.appendChild(b);
     });
-    $('#sendtitle').textContent=windowOf(nowMs())==='nacht'?'Traumreise':'Wohin soll '+S.name+'?';
+    $('#sendtitle').textContent=w==='nacht'?'Traumreise':'Wohin soll '+S.name+'?';
     UI.overlay('ov-send');
   },
   confirmSend(){
     const {task,focus}=this.sendSel;if(!task)return;
     const t=TASKS[task];const now=nowMs();
-    if(!spendBeat())return;
+    if(!spendSchwung(t.schwung)){UI.overlay('ov-send',false);UI.schwungLeerHint();return}
     const end=task==='traum'?nextMorningMs(now):now+t.dauerMin*6e4;
     S.task={type:task,focus,start:now,end};
     if(task==='traum'){S.counters.traeume++;Creature.render();
@@ -2576,10 +2932,11 @@ const Actions={
     UI.refreshHome();saveNow();
   },
   startTraum(){
-    this.sendSel={task:'traum',focus:'erkunden'};
-    if(S.beats<=0){UI.ruheStatus();return}
+    refreshSchwung(S);
+    if(S.schwung<TASKS.traum.schwung){UI.schwungLeerHint();return}
+    this.sendSel={task:'traum',focus:'traum'};
+    spendSchwung(TASKS.traum.schwung);
     const now=nowMs();
-    if(!spendBeat())return;
     S.task={type:'traum',focus:'traum',start:now,end:nextMorningMs(now)};
     S.counters.traeume++;
     Creature.render();UI.refreshHome();saveNow();
@@ -2589,34 +2946,49 @@ const Actions={
   /* ---------- Aufgabe fertig → Bericht ---------- */
   completeTask(task){
     const isTraum=task.type==='traum';
-    const lenF={streifzug:1,sammelgang:2.5,wanderung:4,traum:4}[task.type]||1;
-    const gains={},loot={};
-    const add=(k,v)=>{gains[k]=(gains[k]||0)+v};
+    const lenF={streifzug:1,sammelgang:2.2,wanderung:3.6,traum:3.6}[task.type]||1;
+    const mods=caveMods(S);
+    const gains={},loot={};let extra=null;
+    const add=(k,v)=>{if(v>0)gains[k]=(gains[k]||0)+v};
+    let funkel=0;
     if(isTraum){
-      add('klugheit',Math.round(3+Math.random()*2));
+      let klug=(3+Math.random()*2)*mods.traumMul*mods.klugMul;
+      if(S.buffs.traum){klug*=1.5;S.buffs.traum=0;}
+      add('klugheit',Math.round(klug));
+      funkel=8+Math.round(Math.random()*6);
     } else {
-      if(task.focus==='training'){add('kraft',Math.round(lenF*(1+Math.random())));add('tempo',Math.round(lenF*0.6))}
-      if(task.focus==='erkunden'){add('klugheit',Math.round(lenF*(0.8+Math.random()*0.7)))}
+      if(task.focus==='training'){add('kraft',Math.round(lenF*(1+Math.random())*mods.trainMul));add('tempo',Math.round(lenF*0.6))}
+      if(task.focus==='erkunden'){add('klugheit',Math.round(lenF*(0.8+Math.random()*0.7)*mods.klugMul))}
       if(task.focus==='ruhe'){S.needs.ausgeruht=clamp(S.needs.ausgeruht+10+lenF*5,10,100);S.needs.laune=clamp(S.needs.laune+8,10,100);add('herz',Math.round(lenF*0.5))}
       if(task.focus==='essen'){S.needs.satt=clamp(S.needs.satt+8,10,100)}
-      const nLoot=task.focus==='essen'?2+Math.round(Math.random()*2):(Math.random()<0.7?1:0);
-      const rareOk=(task.type==='wanderung'||task.focus==='erkunden');
+      const nLoot=(task.focus==='essen'?2:1)+Math.round(Math.random()*lenF);
       for(let i=0;i<nLoot;i++){
-        const pool=DATA.welt.futter.filter(f=>f.selten?(rareOk&&Math.random()<0.35):true);
-        const f=rnd(pool.length?pool:DATA.welt.futter);
-        loot[f.id]=(loot[f.id]||0)+1;
+        let pool=DATA2.zutaten.filter(z=>z.tier==='haeufig');
+        if(task.type==='wanderung'&&Math.random()<0.3)pool=DATA2.zutaten.filter(z=>z.tier==='rar');
+        else if(task.type!=='streifzug'&&Math.random()<0.35)pool=DATA2.zutaten.filter(z=>z.tier==='selten');
+        const z=rnd(pool);
+        loot[z.id]=(loot[z.id]||0)+1;
       }
       Object.entries(loot).forEach(([id,n])=>{S.inventory[id]=(S.inventory[id]||0)+n});
+      funkel={streifzug:4,sammelgang:9,wanderung:18}[task.type]+Math.round(Math.random()*lenF*3);
+      // Wanderung: Chance auf ein Höhlenobjekt
+      if(task.type==='wanderung'&&Math.random()<0.2){
+        const kaufbar=DATA2.objekte.filter(o=>o.preis>0&&!S.cave.ownedItems.includes(o.id));
+        if(kaufbar.length){const o=rnd(kaufbar);S.cave.ownedItems.push(o.id);
+          S.cave.items.push({id:o.id,x:0.2+Math.random()*0.6,y:0.4+Math.random()*0.35});
+          extra=o;}
+      }
     }
+    funkelPlus(S,funkel);
     Object.entries(gains).forEach(([k,v])=>{S.stats[k]+=v});
-    const rep=this.buildReport(task,gains,loot,isTraum);
+    const rep=this.buildReport(task,gains,loot,isTraum,funkel,extra);
     S.log.unshift(rep);S.log=S.log.slice(0,20);
     S.task=null;
     return rep;
   },
-  buildReport(task,gains,loot,isTraum){
+  buildReport(task,gains,loot,isTraum,funkel,extra){
     const B=DATA.berichte,mc=DATA.welt.microcopy;
-    let text='',icons=[],title='';
+    let text='',icons=[],title='',ids=[];
     if(isTraum){
       title=rnd(mc.traum_titel);
       const frags=[];const pool=[...DATA.traeume.traumfragmente];
@@ -2633,18 +3005,18 @@ const Actions={
       const evPool=evs.length?evs:B.ereignisse.filter(e=>e.tageszeit.includes(wz));
       const ev1=rnd(evPool.length?evPool:B.ereignisse);
       let parts=[ort.satz,ev1.satz];icons=[ort.emoji,ev1.emoji];
-      let ids=[ort.id,ev1.id];
+      ids=[ort.id,ev1.id];
       if(task.type!=='streifzug'&&Math.random()<0.75){
         const p2=evPool.filter(e=>e.id!==ev1.id);
         if(p2.length){const ev2=rnd(p2);parts.push(ev2.satz);icons.push(ev2.emoji);ids.push(ev2.id)}
       }
       const lootIds=Object.keys(loot);
       if(lootIds.length){
-        const f=DATA.welt.futter.find(x=>x.id===lootIds[0]);
-        parts.push(fundSatz(f,loot[lootIds[0]]));
-        icons.push(f.emoji);
+        const z=zutDef(lootIds[0]);
+        parts.push(fundSatz(z,loot[lootIds[0]]));
+        icons.push(z.emoji);
       }
-      // seltenes Ereignis
+      if(extra){parts.push('Und dann hab ich noch was Großes gefunden: '+extra.name+'. Steht schon in der Höhle.');icons.push(extra.emoji)}
       const unseenRare=B.selten.filter(r=>!S.seenRare.includes(r.id));
       if(unseenRare.length&&(task.type==='wanderung'||task.focus==='erkunden')&&Math.random()<0.3){
         const r=rnd(unseenRare);S.seenRare.push(r.id);
@@ -2653,10 +3025,9 @@ const Actions={
       const schl=B.schluss.filter(s=>!s.fokus||!s.fokus.length||s.fokus.includes(task.focus));
       parts.push(rnd(schl.length?schl:B.schluss).satz);
       text=parts.join(' ');
-      var repIds=ids;
     }
     return {t:nowMs(),typ:isTraum?'traum':task.type,title,text,icons:icons.slice(0,4),
-      gains,loot,ids:repIds||[]};
+      gains,loot,funkel,ids:isTraum?[]:ids};
   },
   showReport(rep){
     if(S.pendingReport===rep)S.pendingReport=null;
@@ -2666,12 +3037,14 @@ const Actions={
     $('#reporticons').textContent=rep.icons.join(' ');
     $('#reporttext').textContent=rep.text;
     const ch=$('#reportchips');ch.innerHTML='';
-    Object.entries(rep.gains||{}).forEach(([k,v])=>{if(v>0)ch.appendChild(el('span','chip2',`${STATEM[k]} +${v} ${STATNAMES[k]}`))});
+    if(S.stage>=2){
+      Object.entries(rep.gains||{}).forEach(([k,v])=>{if(v>0)ch.appendChild(el('span','chip2',`${STATEM[k]} +${v} ${STATNAMES[k]}`))});
+      if(rep.funkel)ch.appendChild(el('span','chip2','✦ +'+rep.funkel+' Funkel'));
+    }
     Object.entries(rep.loot||{}).forEach(([id,n])=>{
-      const f=DATA.welt.futter.find(x=>x.id===id);
-      if(f)ch.appendChild(el('span','chip2',`${f.emoji} ${n}× ${f.name}`));
+      const z=zutDef(id);
+      if(z)ch.appendChild(el('span','chip2',`${z.emoji} ${n}× ${z.name}`));
     });
-    if(S.stage<2)ch.querySelectorAll('.chip2').forEach((c,i)=>{if(c.textContent.includes('+'))c.style.display='none'});
     $('#readbtn').style.display=('speechSynthesis' in window)?'block':'none';
     UI.overlay('ov-report');
     saveNow();UI.refreshHome();
@@ -2699,7 +3072,7 @@ const Away={
     const wk=$('#awaywalker');
     const wkey=P+':'+S.element+':'+S.stage+':'+(S.form||'');
     if(wk.dataset.built!==wkey){
-      wk.innerHTML=`<div class="walkbob">${svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'ruhig',glowOp:.85})}</div>`;
+      wk.innerHTML=`<div class="walkbob">${svgWesen({element:S.element,stage:S.stage,knirps:S.knirps,form:S.form,variant:S.variant,look:S.look,glow:'ruhig',glowOp:.85})}</div>`;
       wk.dataset.built=wkey;
     }
     wk.style.left=(5+prog*80)+'%';
@@ -2724,25 +3097,31 @@ const Away={
 
 /* ---------- Minispiele ---------- */
 const Games={
-  current:null,raf:0,gen:0,
+  current:null,raf:0,gen:0,rewarded:false,tier:0,
   abort(){this.gen++;cancelAnimationFrame(this.raf)},
+  tierOf(id){
+    const b=S.highs[id]||0;
+    const t={beeren:[12,16],echo:[5,8],rhythmus:[8,12]}[id];
+    return b>=t[1]?2:b>=t[0]?1:0;
+  },
   open(){
-    if(S.beats<=0){UI.ruheStatus();UI.toast('Keine Herzschläge mehr übrig.');return}
-    const list=S.stage>=2?['beeren','echo','rhythmus']:['beeren'];
-    if(list.length===1){this.start('beeren');return}
+    refreshSchwung(S);
     $('#gametitle').textContent='Was wollt ihr spielen?';
     const gb=$('#gamebody');gb.innerHTML='';$('#gamehud').innerHTML='';
     const names={beeren:['🫐','Beerenfang'],echo:['🪨','Echofolge'],rhythmus:['🥁','Rhythmusklopfen']};
-    list.forEach(id=>{
-      const b=el('button','bigbtn ghost',`${names[id][0]} ${names[id][1]} <small style="opacity:.6">Best: ${S.highs[id]||0}</small>`);
+    ['beeren','echo','rhythmus'].forEach(id=>{
+      const stufe=S.stage>=3?' '+'★'.repeat(this.tierOf(id)+1):'';
+      const b=el('button','bigbtn ghost',`${names[id][0]} ${names[id][1]}${stufe} <small style="opacity:.6">Best: ${S.highs[id]||0}</small>`);
       b.onclick=()=>this.start(id);gb.appendChild(b);
     });
+    if(S.schwung<2)gb.appendChild(el('p','','<small>Gerade kein Schwung — ihr spielt zum Spaß, die Bestleistung zählt trotzdem.</small>'));
     UI.overlay('ov-game');
   },
   start(id){
-    if(!spendBeat())return;
+    this.rewarded=spendSchwung(2);
     this.gen++;
-    S.counters.spiele++;S.care.gespielt=true;saveNow();
+    this.tier=this.tierOf(id);
+    S.counters.spiele++;saveNow();
     this.current=id;
     $('#gamebody').innerHTML='<div id="gamearea"></div>';
     $('#gamehud').innerHTML='';
@@ -2756,8 +3135,18 @@ const Games={
     cancelAnimationFrame(this.raf);
     const prevBest=S.highs[id]||0,isBest=score>prevBest;
     if(isBest)S.highs[id]=score;
-    const g=statGain.stat;
-    S.stats[g]+=statGain.v;
+    const mult=[1,1.5,2][this.tier];
+    let funkel=0,chips='';
+    if(this.rewarded){
+      const v=Math.max(1,Math.round(statGain.v*mult));
+      S.stats[statGain.stat]+=v;
+      funkel=Math.max(1,Math.round((1+score/4)*mult));
+      funkelPlus(S,funkel);
+      if(S.stage>=2)chips=`<div class="chip2" style="display:inline-block;margin-top:8px">${STATEM[statGain.stat]} +${v} ${STATNAMES[statGain.stat]}</div>
+        <div class="chip2" style="display:inline-block;margin-top:8px">✦ +${funkel}</div>`;
+    } else {
+      chips='<div style="opacity:.6;font-size:.85em;margin-top:8px">Zum Spaß gespielt — die Bestleistung zählt.</div>';
+    }
     S.needs.laune=clamp(S.needs.laune+7,10,100);
     saveNow();
     const zeroCase=score<=0;
@@ -2766,7 +3155,7 @@ const Games={
       <div>${zeroCase?'Das war ein Anfang. Gleich nochmal?':line}</div>
       <div class="rscore">${zeroCase?'✨':score}</div>
       <div class="rbest">${zeroCase?'':(isBest?'Neue Bestleistung! ✨':'Bestleistung: '+(S.highs[id]||0))}</div>
-      ${S.stage>=2?`<div class="chip2" style="display:inline-block;margin-top:8px">${STATEM[g]} +${statGain.v} ${STATNAMES[g]}</div>`:''}
+      ${chips}
     </div>`;
     $('#gamehud').innerHTML='';
     const ok=el('button','bigbtn','Schön');ok.onclick=()=>{UI.overlay('ov-game',false);UI.refreshHome()};
@@ -2779,10 +3168,10 @@ const Games={
     const gen=this.gen;
     $('#gametitle').textContent='Beerenfang';
     const area=$('#gamearea');
-    area.innerHTML=`<div id="gcatcher">${svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'hell',glowOp:1})}</div>`;
+    area.innerHTML=`<div id="gcatcher">${svgWesen({element:S.element,stage:S.stage,knirps:S.knirps,form:S.form,variant:S.variant,look:S.look,glow:'hell',glowOp:1})}</div>`;
     const cat=$('#gcatcher');
     let cx=area.clientWidth/2,target=cx,caught=0,missed=0,spawned=0,items=[],t0=performance.now(),last=t0;
-    const total=18, good=['🫐','🍓','🍇','🌰'],bad=['🍂','🪨'];
+    const total=[18,22,26][this.tier], speedT=1+this.tier*0.25, good=['🫐','🍓','🍇','🌰'],bad=['🍂','🪨'];
     const speedLerp=0.06+0.10*clamp(effStats(S).tempo/60,0,1);
     area.addEventListener('pointermove',e=>{const r=area.getBoundingClientRect();target=e.clientX-r.left},{passive:true});
     area.addEventListener('pointerdown',e=>{const r=area.getBoundingClientRect();target=e.clientX-r.left},{passive:true});
@@ -2799,7 +3188,7 @@ const Games={
         const d=el('div','falling',isGood?rnd(good):rnd(bad));
         d.dataset.good=isGood?'1':'';
         d.dataset.x=40+Math.random()*(area.clientWidth-80);
-        d.dataset.y=-30;d.dataset.v=1.9+Math.random()*1.4+spawned*0.05;
+        d.dataset.y=-30;d.dataset.v=(1.9+Math.random()*1.4+spawned*0.05)*speedT;
         d.style.transform=`translate(${d.dataset.x}px,-30px)`;
         area.appendChild(d);items.push(d);
       }
@@ -2837,7 +3226,8 @@ const Games={
       `<button class="simonstone" data-i="${i}" style="--stc:${st.c};--stg:${st.c}">${st.s}</button>`).join('')+'</div>';
     const btns=[...area.querySelectorAll('.simonstone')];
     const seq=[];let inputPos=0,playing=true,round=0;
-    const showMs=620+380*clamp(effStats(S).klugheit/60,0,1);
+    const maxR=[8,10,12][this.tier];
+    const showMs=(620+380*clamp(effStats(S).klugheit/60,0,1))*[1,.85,.72][this.tier];
     const tones=[392,494,587,740];
     const lit=(i,ms)=>{btns[i].classList.add('lit');
       if(S.settings.sound){Sound.plink()}
@@ -2857,7 +3247,7 @@ const Games={
       if(i===seq[inputPos]){inputPos++;
         if(inputPos>=seq.length){
           playing=true; // Doppeltipp bis zur nächsten Runde ignorieren
-          if(round>=8){this.end('echo',round,0,'Runden geschafft:',{stat:'klugheit',v:Math.max(1,Math.round(round/2)),em:'🪨'},gen);return}
+          if(round>=maxR){this.end('echo',round,0,'Runden geschafft:',{stat:'klugheit',v:Math.max(1,Math.round(round/2)),em:'🪨'},gen);return}
           $('#gamehud').textContent='Genau richtig.';
           setTimeout(next,700);
         }
@@ -2877,12 +3267,13 @@ const Games={
     const drum=$('#rhydrum'),msg=$('#rhymsg');
     const tol=300+220*clamp(effStats(S).herz/60,0,1);
     let score=0,roundN=0,expect=[],taps=[],listening=false;
-    const patterns=[[0,500,1000],[0,400,800,1200],[0,300,600,1200],[0,350,700,1050,1400]];
+    const maxRounds=4+this.tier;
+    const patterns=[[0,500,1000],[0,400,800,1200],[0,300,600,1200],[0,350,700,1050,1400],[0,300,600,900,1350],[0,250,500,1000,1250,1500]];
     const beat=()=>{if(gen!==Games.gen)return;drum.classList.remove('beat');void drum.offsetWidth;drum.classList.add('beat');Sound.trommel();vibr(20)};
     const playRound=async()=>{
       if(gen!==Games.gen)return;
       roundN++;
-      if(roundN>4){this.end('rhythmus',score,0,'Im Takt getroffen:',{stat:'herz',v:Math.max(1,Math.round(score/3)),em:'🥁'},gen);return}
+      if(roundN>maxRounds){this.end('rhythmus',score,0,'Im Takt getroffen:',{stat:'herz',v:Math.max(1,Math.round(score/3)),em:'🥁'},gen);return}
       const pat=patterns[Math.min(roundN-1,patterns.length-1)];
       msg.textContent='Hör zu …';listening=false;
       await new Promise(r=>setTimeout(r,900));
@@ -2956,7 +3347,8 @@ const Battle={
   st:null,
   /* Abend-Wanderwesen */
   openWander(){
-    if(S.beats<=0){UI.ruheStatus();return}
+    refreshSchwung(S);
+    if(S.schwung<3){UI.schwungLeerHint();return}
     const g=rnd(DATA.welt.gegner);
     const eff=effStats(S);
     const power=(eff.kraft+eff.tempo*0.5)*(0.8+Math.random()*0.35)+4;
@@ -2986,12 +3378,12 @@ const Battle={
     $('#battleclose').classList.add('hidden');
     $('#battlemsg').textContent=o.intro;
     const me=$('.fighter.me'),en=$('.fighter.enemy');
-    me.querySelector('.fsvg').innerHTML=svgWesen({element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'hell',glowOp:1});
+    me.querySelector('.fsvg').innerHTML=svgWesen({element:S.element,stage:S.stage,knirps:S.knirps,form:S.form,variant:S.variant,look:S.look,glow:'hell',glowOp:1});
     me.querySelector('.fname').innerHTML=S.name+` <span class="elem" style="background:${ELEMENTS[S.element].farbe};--eg:${ELEMENTS[S.element].glow}"></span>`;
     const enE=ELEMENTS[o.element];
     if(o.svg){en.querySelector('.femoji').style.display='none';
       if(!en.querySelector('.fsvg')){const d=el('div','fsvg');en.prepend(d)}
-      en.querySelector('.fsvg').innerHTML=svgWesen({element:o.svg.element,stage:o.svg.stage,form:o.svg.form,glow:'ruhig',glowOp:.9});
+      en.querySelector('.fsvg').innerHTML=svgWesen({element:o.svg.element,stage:o.svg.stage,knirps:o.svg.knirps,form:o.svg.form,variant:o.svg.variant,look:o.svg.look,glow:'ruhig',glowOp:.9});
       en.querySelector('.fsvg').style.display='block';
     } else {
       if(en.querySelector('.fsvg'))en.querySelector('.fsvg').style.display='none';
@@ -3002,8 +3394,13 @@ const Battle={
     this.hp();
     $('#timingwrap').style.visibility='hidden';
     const bb=$('#battlebtns');bb.innerHTML='';
-    const fight=el('button','bigbtn','Kämpfen ⚔️');
-    fight.onclick=()=>{ if(o.cost&&!spendBeat())return; S.counters.kaempfe++;S.care.gekaempft=true;saveNow();UI.renderActions();this.startRound() };
+    const fight=el('button','bigbtn','Kämpfen ⚔️'+(o.cost?' (3 ⚡)':''));
+    fight.onclick=()=>{
+      if(o.cost&&!spendSchwung(3)){UI.overlay('ov-battle',false);UI.schwungLeerHint();return}
+      this.st.boost=S.buffs.kampf?1.25:1;
+      if(S.buffs.kampf){S.buffs.kampf=0;$('#battlemsg').textContent='Das gute Essen wirkt noch nach.'}
+      S.counters.kaempfe++;saveNow();UI.renderActions();this.startRound();
+    };
     const flee=el('button','bigbtn ghost','Lieber nicht');
     flee.onclick=()=>{UI.overlay('ov-battle',false)};
     bb.appendChild(fight);bb.appendChild(flee);
@@ -3056,7 +3453,7 @@ const Battle={
     const quality=auto?0.55:inZone?(center?1.3:1):0.6;
     if(inZone){$('#timingzone').classList.add('gold');Sound.treffer();vibr(25)}
     const eff=effStats(S),en=st.enemy;
-    const myDmg=(12+eff.kraft*0.5)*quality*elemMult(S.element,en.element);
+    const myDmg=(12+eff.kraft*0.5)*quality*elemMult(S.element,en.element)*(st.boost||1);
     const enDmg=(8+en.power*0.35)*(0.75+Math.random()*0.4)*elemMult(en.element,S.element);
     const meF=$('.fighter.me'),enF=$('.fighter.enemy');
     meF.classList.add('attack');
@@ -3091,10 +3488,12 @@ const Battle={
     if(won){
       S.counters.siege++;
       const g=2+Math.round(Math.random()*2);S.stats.kraft+=g;
+      const fk=st.enemy.cost?8+Math.round(Math.random()*4):0;
+      if(fk)funkelPlus(S,fk);
       S.needs.laune=clamp(S.needs.laune+8,10,100);
       $('#battlemsg').textContent=st.enemy.sieg+' '+rnd(DATA.welt.microcopy.kampf_sieg);
       const me=$('.fighter.me');me.classList.add('attack');Sound.freude();vibr([30,50,30]);
-      if(S.stage>=2)$('#battlemsg').textContent+=' (💪 +'+g+' Kraft)';
+      if(S.stage>=2)$('#battlemsg').textContent+=' (💪 +'+g+(fk?' · ✦ +'+fk:'')+')';
     } else {
       S.needs.laune=clamp(S.needs.laune-10,10,100);
       $('#battlemsg').textContent=st.enemy.niederlage+' '+rnd(DATA.welt.microcopy.kampf_trost).replace('{name}',S.name);
@@ -3109,48 +3508,64 @@ const Battle={
   },
 };
 /* ============================================================
-   EVOLUTION — der kausale Reveal
+   EVOLUTION v2 — vier Stufen, der Knirps kommt früh
    ============================================================ */
 const Evo={
+  interactions(){const c=S.counters;
+    return c.fuetterungen+c.streicheln+c.gewaschen+c.spiele+Math.min(30,c.getobt)+c.gekocht+c.trainiert},
+  nextStage(){
+    if(!S)return 0;
+    const t=nowMs(),h=(t-S.born)/36e5,days=(t-S.born)/864e5;
+    if(S.stage===1)return (h>=EVO_KNIRPS_STUNDEN&&this.interactions()>=EVO_KNIRPS_AKTIONEN)?2:0;
+    if(S.stage===2)return (days>=EVO_GESTALT_TAGE&&windowOf(t)==='morgen')?3:0;
+    if(S.stage===3)return (days>=EVO_WESEN_TAGE&&windowOf(t)==='morgen')?4:0;
+    return 0;
+  },
+  ready(){return this.nextStage()>0},
+  pickKnirps(){
+    const c=S.counters;
+    return (Math.min(60,c.getobt)+c.spiele*2>=c.streicheln*2+c.gekocht*2)?'wach':'ruhig';
+  },
   pickForm(){
     const c=S.counters,s=S.stats;
-    const maxC=Math.max(1,c.kaempfe,c.spiele,c.traeume,c.streicheln);
+    const maxC=Math.max(1,c.kaempfe,c.spiele,c.traeume,c.streicheln+c.gekocht);
     const maxS=Math.max(1,s.kraft,s.tempo,s.klugheit,s.herz);
     const score={
       wehr:2*c.kaempfe/maxC+s.kraft/maxS,
       flink:2*c.spiele/maxC+s.tempo/maxS,
       traum:2*c.traeume/maxC+s.klugheit/maxS,
-      herz:2*c.streicheln/maxC+s.herz/maxS,
+      herz:2*(c.streicheln+c.gekocht)/maxC+s.herz/maxS,
     };
     return Object.entries(score).sort((a,b)=>b[1]-a[1])[0][0];
   },
-  domCount(form){
+  domCount(key){
     const c=S.counters;
-    return {wehr:c.kaempfe,flink:c.spiele,traum:c.traeume,herz:c.streicheln}[form]||0;
-  },
-  ready(){
-    if(!S||S.stage>=3)return false;
-    if(windowOf(nowMs())!=='morgen')return false;
-    return S.counters.fenster>=(S.stage===1?STUFE2_FENSTER:STUFE3_FENSTER);
+    return {wach:Math.min(99,c.getobt+c.spiele),ruhig:c.streicheln+c.gekocht,
+      wehr:c.kaempfe,flink:c.spiele,traum:c.traeume,herz:c.streicheln+c.gekocht}[key]||c.fenster;
   },
   run(done){
-    const newStage=S.stage+1;
-    const form=newStage===2?this.pickForm():S.form;
-    const variant=newStage===3?((S.element==='glut'||S.element==='funke')?'hell':'still'):null;
-    const rs=DATA.traeume.rueckschau.find(r=>r.form===form&&r.stufe===newStage);
+    const newStage=this.nextStage();
+    if(!newStage)return;
+    let knirps=S.knirps,form=S.form,variant=S.variant,variantKey,formsKey;
+    if(newStage===2){knirps=this.pickKnirps();variantKey=knirps;formsKey='knirps-'+knirps}
+    else if(newStage===3){form=this.pickForm();variantKey=form;formsKey='gestalt-'+form}
+    else{
+      const n=S.needs;
+      variant=((n.satt+n.ausgeruht+n.laune+n.sauber)/4>=60)?'sanft':'wild';
+      variantKey=form+'-'+variant;formsKey='wesen-'+form+'-'+variant;
+    }
+    const rs=DATA2.rueckschau.find(r=>r.stufe===newStage&&r.variant===variantKey);
     const text=(rs?rs.text:'Etwas hat sich verändert.')
-      .replace(/\{name\}/g,S.name).replace(/\{n\}/g,String(Math.max(2,this.domCount(form))));
-    const oldOpts={element:S.element,stage:S.stage,form:S.form,variant:S.variant,glow:'hell',glowOp:1};
-    const newOpts={element:S.element,stage:newStage,form,variant,glow:'hell',glowOp:1};
+      .replace(/\{name\}/g,S.name).replace(/\{n\}/g,String(Math.max(2,this.domCount(newStage===2?knirps:form))));
+    const oldOpts={element:S.element,stage:S.stage,knirps:S.knirps,form:S.form,variant:S.variant,look:S.look,glow:'hell',glowOp:1};
+    const newOpts={element:S.element,stage:newStage,knirps,form,variant,look:S.look,glow:'hell',glowOp:1};
     $$('.overlay').forEach(o=>o.classList.remove('on'));
-    const ov=$('#ov-evo'),tx=$('#evotext'),st=$('#evostage'),cp=$('#evocompare'),btn=$('#evonext');
+    const tx=$('#evotext'),st=$('#evostage'),cp=$('#evocompare'),btn=$('#evonext');
     tx.textContent='';tx.classList.remove('hidden');
     st.classList.add('hidden');st.classList.remove('morph');
     cp.classList.add('hidden');cp.innerHTML='';
     UI.overlay('ov-evo');
-    let phase=0;
-    // Schreibmaschinen-Text
-    let i=0;btn.style.visibility='hidden';
+    let phase=0,i=0;btn.style.visibility='hidden';
     const type=()=>{ if(i<=text.length){tx.textContent=text.slice(0,i);i+=2;setTimeout(type,34)} else btn.style.visibility='visible'; };
     setTimeout(type,600);
     btn.onclick=()=>{
@@ -3165,25 +3580,364 @@ const Evo={
       } else if(phase===1){
         phase=2;st.classList.add('hidden');
         cp.classList.remove('hidden');
+        const neuName=(()=>{const tmp={stage:newStage,knirps,form,variant};return formNameOf(tmp)})();
         cp.innerHTML=`<div class="half">${svgWesen(oldOpts)}<div style="color:#cfd8f2;font-size:.85em">vorher</div></div>
           <div class="arrow">→</div>
-          <div class="half">${svgWesen(newOpts)}<div style="color:#fff;font-weight:800">${FORMNAME(form,newStage)}</div></div>`;
+          <div class="half">${svgWesen(newOpts)}<div style="color:#fff;font-weight:800">${neuName}</div></div>`;
         btn.textContent='Hallo, '+S.name;
       } else {
-        // Zustand festschreiben
-        S.stage=newStage;S.form=form;S.variant=variant;
-        S.chronicle.push({t:nowMs(),stage:newStage,form,text});
-        if(newStage===2&&!S.seen.stage2){S.seen.stage2=true;
-          setTimeout(()=>UI.toast('Neu: Kämpfe am Abend, Spiele, Werte und der Freundescode unter „Mehr“.',4200),1200)}
-        if(newStage===3&&!S.seen.stage3){S.seen.stage3=true;
-          setTimeout(()=>UI.toast('Neu: Statistik in „Mehr“.',3200),1200)}
+        S.stage=newStage;S.knirps=knirps;S.form=form;S.variant=variant;
+        if(!S.formsSeen.includes(formsKey))S.formsSeen.push(formsKey);
+        S.chronicle.push({t:nowMs(),stage:newStage,key:formsKey,name:formNameOf(S),text});
+        if(newStage===2&&!S.seen.stufe2){S.seen.stufe2=true;
+          setTimeout(()=>UI.toast('Neu: Zahlen und Werte, Kämpfe am Abend unter „Mehr“.',4200),2600)}
+        if(newStage===3&&!S.seen.stufe3){S.seen.stufe3=true;
+          setTimeout(()=>UI.toast('Neu: Freundescode und Statistik unter „Mehr“.',4200),2600)}
         saveNow();
         UI.overlay('ov-evo',false);
         Creature.render();Creature.hop();UI.refreshHome();
         btn.textContent='Weiter';
+        setTimeout(()=>FormMap.open(),900); // die Karte zeigt das neue Feld
         if(done)done();
       }
     };
+  },
+};
+/* ============================================================
+   HÖHLE, KOCHEN, REZEPTBUCH, FORMENKARTE, LADEN, TAGESFUND
+   ============================================================ */
+const CAVE_LOOKS={
+  erdmulde:{bg:'radial-gradient(ellipse at 50% 20%,#4a3628,#241a12 75%)',floor:'#3a2c1e',ink:'#e8dcc8'},
+  moosgrotte:{bg:'radial-gradient(ellipse at 50% 20%,#2c4a30,#12240f 75%)',floor:'#24401f',ink:'#d8ecd0'},
+  kristallkammer:{bg:'radial-gradient(ellipse at 50% 20%,#3a3468,#181430 75%)',floor:'#2c2850',ink:'#e0dcf7'},
+  wurzelhoehle:{bg:'radial-gradient(ellipse at 50% 20%,#4a3020,#20140c 75%)',floor:'#38241a',ink:'#ecdcc8'},
+  sternenspalte:{bg:'radial-gradient(ellipse at 50% 8%,#24386a,#0a1226 70%)',floor:'#1a2848',ink:'#dce6fa'},
+};
+const objDef=id=>id==='matsch'?null:DATA2.objekte.find(o=>o.id===id);
+const rezDef=id=>DATA2.rezepte.find(r=>r.id===id);
+const zutDef=id=>DATA2.zutaten.find(z=>z.id===id);
+
+const Cave={
+  drag:null,
+  open(){
+    UI.show('cave');
+    this.render();
+    if(!S.seen.caveHint){S.seen.caveHint=true;saveNow();
+      $('#cavehint').textContent='Zieh die Sachen dahin, wo sie schön sind. Der Topf will angetippt werden.';
+      setTimeout(()=>{$('#cavehint').textContent=''},6000);}
+  },
+  render(){
+    const look=CAVE_LOOKS[S.cave.id]||CAVE_LOOKS.erdmulde;
+    $('#cavebg').style.background=look.bg;
+    $('#cavefloor').style.background=look.floor;
+    const h=DATA2.hoehlen.find(x=>x.id===S.cave.id);
+    $('#cavename').textContent=h?h.name:'';
+    $('#cavename').style.color=look.ink;
+    const wrap=$('#caveitems');wrap.innerHTML='';
+    // Sterne in der Sternenspalte
+    if(S.cave.id==='sternenspalte'){
+      for(let i=0;i<14;i++){const st=el('div','star');
+        st.style.cssText=`position:absolute;left:${Math.random()*100}%;top:${Math.random()*30}%;width:2.5px;height:2.5px;animation-delay:${Math.random()*3}s`;
+        wrap.appendChild(st)}
+    }
+    S.cave.items.forEach((it,idx)=>{
+      const d=objDef(it.id);if(!d)return;
+      const o=el('div','caveobj',d.emoji+(S.pot&&it.id==='kochtopf'?'<span style="position:absolute;top:-14px;left:12px;font-size:20px">💨</span>':''));
+      o.style.left=(it.x*100)+'%';o.style.top=(it.y*100)+'%';
+      o.dataset.idx=idx;
+      o.addEventListener('pointerdown',e=>this.down(e,o,idx));
+      wrap.appendChild(o);
+    });
+  },
+  down(e,o,idx){
+    e.preventDefault();
+    this.drag={o,idx,x0:e.clientX,y0:e.clientY,moved:false};
+    o.classList.add('dragging');
+    const move=ev=>{
+      const d=this.drag;if(!d)return;
+      if(Math.hypot(ev.clientX-d.x0,ev.clientY-d.y0)>8)d.moved=true;
+      const r=$('#scr-cave').getBoundingClientRect();
+      d.o.style.left=(clamp((ev.clientX-r.left)/r.width,0.06,0.94)*100)+'%';
+      d.o.style.top=(clamp((ev.clientY-r.top)/r.height,0.24,0.9)*100)+'%';
+      const tr=$('#cavetrash').getBoundingClientRect();
+      $('#cavetrash').classList.toggle('hot',ev.clientX>tr.left-16&&ev.clientY>tr.top-16);
+    };
+    const up=ev=>{
+      document.removeEventListener('pointermove',move);
+      document.removeEventListener('pointerup',up);
+      const d=this.drag;this.drag=null;if(!d)return;
+      d.o.classList.remove('dragging');
+      $('#cavetrash').classList.remove('hot');
+      const it=S.cave.items[d.idx];
+      if(!d.moved){ // Antippen
+        if(it.id==='kochtopf')Cook.open();
+        else{const r=d.o.getBoundingClientRect();UI.pop(r.left+22,r.top,'✨');Sound.plink()}
+        return;
+      }
+      const tr=$('#cavetrash').getBoundingClientRect();
+      if(ev.clientX>tr.left-16&&ev.clientY>tr.top-16&&it.id!=='kochtopf'){
+        S.cave.items.splice(d.idx,1); // zurück ins Lager
+        UI.toast(objDef(it.id).name+' ist im Lager. Im Laden holst du es wieder raus.');
+      } else {
+        const r=$('#scr-cave').getBoundingClientRect();
+        it.x=clamp((ev.clientX-r.left)/r.width,0.06,0.94);
+        it.y=clamp((ev.clientY-r.top)/r.height,0.24,0.9);
+      }
+      saveNow();this.render();
+    };
+    document.addEventListener('pointermove',move);
+    document.addEventListener('pointerup',up);
+  },
+  /* Eingerichtetes taucht auch draußen vor der Höhle auf */
+  renderHomeProps(){
+    let hp=$('#homeprops');
+    if(!hp){hp=el('div');hp.id='homeprops';
+      hp.style.cssText='position:absolute;left:0;right:0;bottom:calc(150px + env(safe-area-inset-bottom));height:60px;pointer-events:none;z-index:11';
+      $('#stage').appendChild(hp);}
+    hp.innerHTML='';
+    if(!S)return;
+    S.cave.items.slice(0,5).forEach(it=>{
+      const d=objDef(it.id);if(!d)return;
+      const o=el('div','',d.emoji);
+      o.style.cssText=`position:absolute;left:${8+it.x*84}%;bottom:${(1-it.y)*26}px;font-size:26px;pointer-events:auto;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))`;
+      if(it.id==='kochtopf'){o.style.fontSize='32px';o.onclick=()=>Cook.open();
+        if(S.pot)o.innerHTML+='<span style="position:absolute;top:-12px;left:10px;font-size:16px">💨</span>'}
+      hp.appendChild(o);
+    });
+  },
+};
+
+/* ---------- Kochen ---------- */
+const Cook={
+  slots:[],
+  open(){
+    this.slots=[];
+    this.renderPot();
+    UI.overlay('ov-cook');
+  },
+  renderPot(){
+    const cooking=!!S.pot;
+    $('#cooktitle').textContent=cooking?'Es kocht':'Kochen';
+    const ps=$('#potslots');ps.innerHTML='';
+    const shown=cooking?S.pot.zutaten:this.slots;
+    for(let i=0;i<3;i++){
+      const z=shown[i];
+      const sl=el('div','potslot'+(z?' filled':''),z?zutDef(z).emoji:(i<2?'·':'+'));
+      if(!cooking&&z)sl.onclick=()=>{this.slots.splice(i,1);this.renderPot()};
+      ps.appendChild(sl);
+    }
+    $('#potfig').classList.toggle('cooking',cooking);
+    const steam=$('#potsteam');
+    if(cooking){
+      const restMin=Math.max(1,Math.ceil((S.pot.end-nowMs())/6e4));
+      steam.textContent=rnd(DATA2.microcopy2.kochen_laeuft).replace('{zeit}',restMin+' Minuten');
+      $('#cookfire').style.display='none';
+    } else {
+      steam.textContent=this.slots.length<2?'Zieh zwei oder drei Zutaten in den Topf.':'Das könnte was werden.';
+      $('#cookfire').style.display='block';
+      $('#cookfire').disabled=this.slots.length<2;
+      $('#cookfire').style.opacity=this.slots.length<2?.5:1;
+    }
+    const cz=$('#cookzutaten');cz.innerHTML='';
+    if(!cooking){
+      DATA2.zutaten.forEach(z=>{
+        const c=S.inventory[z.id]||0;if(c<=0)return;
+        const used=this.slots.filter(x=>x===z.id).length;
+        if(c-used<=0)return;
+        const fi=el('button','fooditem',`<span>${z.emoji}</span><small>${z.name}</small><span class="cnt">${c-used}</span>`);
+        fi.onclick=()=>{if(this.slots.length<3){this.slots.push(z.id);Sound.blubb();this.renderPot()}};
+        cz.appendChild(fi);
+      });
+      if(!cz.childElementCount)cz.appendChild(el('div','drawerempty','Keine Zutaten da. Der Tagesfund und Streifzüge bringen welche.'));
+    }
+  },
+  fire(){
+    if(S.pot||this.slots.length<2)return;
+    const zut=[...this.slots].sort();
+    zut.forEach(id=>{S.inventory[id]=Math.max(0,(S.inventory[id]||0)-1)});
+    const rec=DATA2.rezepte.find(r=>[...r.zutaten].sort().join('+')===zut.join('+'));
+    const minuten=(rec?rec.kochzeit:15)*caveMods(S).kochMul;
+    S.pot={zutaten:zut,rezept:rec?rec.id:'matsch',start:nowMs(),end:nowMs()+minuten*6e4};
+    this.slots=[];
+    Sound.blubb();vibr(20);
+    this.renderPot();
+    UI.renderDrawer();
+    Cave.renderHomeProps();
+    if(UI.screen==='cave')Cave.render();
+    saveNow();
+  },
+  /* wird aus Tick/Catchup aufgerufen, wenn der Topf fertig ist */
+  complete(st){
+    const pot=st.pot;st.pot=null;
+    if(!pot)return null;
+    let neu=false;
+    if(pot.rezept==='matsch'){
+      st.dishes.matsch=(st.dishes.matsch||0)+1;
+    } else {
+      st.dishes[pot.rezept]=(st.dishes[pot.rezept]||0)+1;
+      if(!st.recipes.includes(pot.rezept)){st.recipes.push(pot.rezept);neu=true;funkelPlus(st,10);}
+    }
+    st.counters.gekocht++;
+    return {rezept:pot.rezept,neu};
+  },
+  announce(res){
+    if(!res)return;
+    if(res.rezept==='matsch'){UI.toast(rnd(DATA2.matsch.saetze),3600);Sound.blubb();}
+    else if(res.neu){
+      const r=rezDef(res.rezept);
+      UI.toast(rnd(DATA2.microcopy2.rezept_neu).replace('{rezept}',r.name)+' ✨ (+10 Funkel)',4200);
+      Sound.fanfare();vibr([40,60,40,60,80]);
+    } else {
+      const r=rezDef(res.rezept);
+      UI.toast(r.name+' ist fertig. Duftet.',3000);Sound.freude();
+    }
+    UI.renderDrawer();Cave.renderHomeProps();
+    if(UI.screen==='cave')Cave.render();
+    if($('#ov-cook').classList.contains('on'))Cook.renderPot();
+  },
+};
+
+/* ---------- Rezeptbuch ---------- */
+const RecipeBook={
+  open(){
+    const li=$('#rezeptliste');li.innerHTML='';
+    li.appendChild(el('p','',`<small>${S.recipes.length} von ${DATA2.rezepte.length} Rezepten entdeckt. Dein Glimmling hat ein Lieblingsgericht — finde es heraus.</small><br><br>`));
+    DATA2.rezepte.forEach(r=>{
+      const known=S.recipes.includes(r.id);
+      const row=el('div','rezeptrow'+(known?'':' unknown'));
+      if(known){
+        const w=[];
+        if(S.stage>=2){if(r.statplus&&r.stat)w.push(STATEM[r.stat]+' +'+r.statplus);if(r.effekt!=='keiner')w.push({kampf:'⚔️ stärkt den nächsten Kampf',traum:'🌙 vertieft die nächste Traumreise',schwung:'⚡ +3 Schwung',schutz:'🛡️ hält eine Stunde lang satt und munter'}[r.effekt])}
+        row.innerHTML=`<div class="rem">${r.emoji}</div><div><div class="rname">${r.name}</div>
+          <div class="rsub">${r.zutaten.map(z=>zutDef(z).emoji).join(' ')} · ${r.flavor}${w.length?'<br>'+w.join(' · '):''}</div></div>`;
+      } else {
+        row.innerHTML=`<div class="rem">❔</div><div><div class="rname">???</div>
+          <div class="rsub">${r.zutaten.length} Zutaten · ${r.kochzeit} Minuten</div></div>`;
+      }
+      li.appendChild(row);
+    });
+    UI.overlay('ov-rezepte');
+  },
+};
+
+/* ---------- Formenkarte ---------- */
+const FormMap={
+  cells(){
+    const e=S.element;
+    const c=[{key:'knospe',stufe:1,name:'Knospe',hint:'',opts:{element:e,stage:1,look:S.look}}];
+    DATA2.formen.knirps.forEach(f=>c.push({key:'knirps-'+f.variant,stufe:2,name:f.name,hint:f.hinweis,opts:{element:e,stage:2,knirps:f.variant,look:S.look}}));
+    DATA2.formen.gestalt.forEach(f=>c.push({key:'gestalt-'+f.variant,stufe:3,name:f.name,hint:f.hinweis,opts:{element:e,stage:3,form:f.variant,look:S.look}}));
+    DATA2.formen.wesen.forEach(f=>{const [form,va]=f.variant.split('-');
+      c.push({key:'wesen-'+f.variant,stufe:4,name:f.name,hint:f.hinweis,opts:{element:e,stage:4,form,variant:va,look:S.look}})});
+    return c;
+  },
+  open(){
+    const tree=$('#formtree');tree.innerHTML='';
+    const rows={1:el('div','formrow'),2:el('div','formrow'),3:el('div','formrow'),4:el('div','formrow')};
+    const reached=new Set(S.formsSeen);
+    let n=0;
+    this.cells().forEach(c=>{
+      const ok=reached.has(c.key);if(ok)n++;
+      const cell=el('div','formcell '+(ok?'reached':'locked'));
+      cell.innerHTML=`<div class="fsil">${svgWesen(Object.assign({glow:ok?'hell':'ruhig',glowOp:ok?1:.4},c.opts))}</div>
+        <div class="fname">${ok?c.name:'???'}</div>
+        ${ok?'':`<div class="fhint">${c.hint}</div>`}`;
+      rows[c.stufe].appendChild(cell);
+    });
+    [1,2,3,4].forEach(s=>tree.appendChild(rows[s]));
+    UI.overlay('ov-formmap');
+    if(!S.seen.formenkarte){S.seen.formenkarte=true;saveNow();
+      UI.toast(DATA2.microcopy2.formenkarte_intro[0],4200)}
+  },
+};
+
+/* ---------- Laden: Höhlen und Objekte ---------- */
+const Shop={
+  open(){
+    $('#shopfunkel').innerHTML=`<span class="fk" style="display:inline-block;width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff8dc,#f4c95a);box-shadow:0 0 6px rgba(244,201,90,.7)"></span> ${S.funkel} Funkel`;
+    const li=$('#shopliste');li.innerHTML='';
+    li.appendChild(el('div','','<b>Höhlen</b>'));
+    DATA2.hoehlen.forEach(h=>{
+      const owned=S.cave.owned.includes(h.id),curr=S.cave.id===h.id;
+      const row=el('div','shoprow');
+      row.innerHTML=`<div class="sem">${{erdmulde:'🕳️',moosgrotte:'🌿',kristallkammer:'💎',wurzelhoehle:'🪵',sternenspalte:'🌌'}[h.id]}</div>
+        <div class="sinfo"><div class="sname">${h.name}</div><div class="ssub">${h.satz}</div></div>`;
+      const b=el('button','shopbuy'+(curr?' owned':''));
+      b.textContent=curr?'Wohnt hier':owned?'Einziehen':h.preis+' ✦';
+      b.disabled=curr||(!owned&&S.funkel<h.preis);
+      b.onclick=()=>{
+        if(curr)return;
+        if(!owned){S.funkel-=h.preis;S.cave.owned.push(h.id);}
+        S.cave.id=h.id;saveNow();Sound.fanfare();
+        UI.toast('Umgezogen in die '+h.name+'.');
+        Cave.render();this.open();UI.renderFunkel();
+      };
+      row.appendChild(b);li.appendChild(row);
+    });
+    li.appendChild(el('div','','<br><b>Sachen</b>'));
+    DATA2.objekte.forEach(o=>{
+      if(o.id==='kochtopf')return;
+      const owned=S.cave.ownedItems.includes(o.id);
+      const placed=S.cave.items.some(i=>i.id===o.id);
+      const row=el('div','shoprow');
+      row.innerHTML=`<div class="sem">${o.emoji}</div>
+        <div class="sinfo"><div class="sname">${o.name}</div><div class="ssub">${o.wirkung}</div></div>`;
+      const b=el('button','shopbuy'+(placed?' owned':''));
+      b.textContent=placed?'Steht da':owned?'Aufstellen':o.preis+' ✦';
+      b.disabled=placed||(!owned&&S.funkel<o.preis);
+      b.onclick=()=>{
+        if(placed)return;
+        if(!owned){S.funkel-=o.preis;S.cave.ownedItems.push(o.id);Sound.freude()}
+        S.cave.items.push({id:o.id,x:0.2+Math.random()*0.6,y:0.4+Math.random()*0.35});
+        saveNow();Cave.render();this.open();UI.renderFunkel();
+      };
+      row.appendChild(b);li.appendChild(row);
+    });
+    UI.overlay('ov-shop');
+  },
+};
+
+/* ---------- Tagesfund ---------- */
+const Fund={
+  svg(){
+    return `<svg viewBox="0 0 64 64">
+      <defs><radialGradient id="tfg"><stop offset="0%" stop-color="#ffe9a0" stop-opacity=".9"/><stop offset="100%" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="32" cy="34" r="26" fill="url(#tfg)"/>
+      <path d="M20,30 Q32,16 44,30 L42,48 Q32,54 22,48 Z" fill="#8a6f4d"/>
+      <path d="M20,30 Q32,16 44,30" fill="none" stroke="#6d573c" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="32" cy="27" r="4" fill="#ffe9a0"><animate attributeName="opacity" values="1;.4;1" dur="2s" repeatCount="indefinite"/></circle>
+    </svg>`;
+  },
+  mount(){$('#tagesfund').innerHTML=this.svg();},
+  collect(){
+    if(!S||S.dailyFind.taken)return;
+    const w=windowOf(nowMs());
+    const roll=Math.random();
+    let em,text;
+    const kaufbar=DATA2.objekte.filter(o=>o.preis>0&&o.preis<=60&&!S.cave.ownedItems.includes(o.id));
+    if(roll<0.12&&kaufbar.length){
+      const o=rnd(kaufbar);S.cave.ownedItems.push(o.id);
+      S.cave.items.push({id:o.id,x:0.2+Math.random()*0.6,y:0.4+Math.random()*0.35});
+      em=o.emoji;text=o.name;
+    } else if(roll<0.42){
+      const n=5+Math.floor(Math.random()*11);funkelPlus(S,n);
+      em='✦';text=n+' Funkel';
+    } else {
+      let pool=DATA2.zutaten.filter(z=>z.tier==='haeufig');
+      if(w==='nacht')pool=DATA2.zutaten.filter(z=>z.tier==='rar').concat(pool); // Sternfunde
+      else if(Math.random()<0.25)pool=DATA2.zutaten.filter(z=>z.tier==='selten');
+      const z=rnd(pool);
+      S.inventory[z.id]=(S.inventory[z.id]||0)+1;
+      em=z.emoji;text=z.name;
+    }
+    S.dailyFind.taken=true;
+    const r=$('#tagesfund').getBoundingClientRect();
+    UI.pop(r.left+30,r.top,em);
+    UI.sparkleAt(r.left+30,r.top+20);
+    UI.toast(rnd(DATA2.microcopy2.tagesfund).replace('{fund}',text),3200);
+    Sound.freude();vibr([20,40,20]);
+    UI.renderTagesfund();UI.renderDrawer();UI.renderFunkel();
+    saveNow();
   },
 };
 /* ============================================================
@@ -3198,7 +3952,7 @@ const Start={
       const card=el('div','pcard'+(st?'':' empty'));
       if(st){
         const sleeping=windowOf(nowMs())==='nacht'&&(!st.task||st.task.type==='traum');
-        card.innerHTML=`<div class="mini">${svgWesen({element:st.element,stage:st.stage,form:st.form,variant:st.variant,
+        card.innerHTML=`<div class="mini">${svgWesen({element:st.element,stage:st.stage,knirps:st.knirps,form:st.form,variant:st.variant,look:st.look,
           glow:st.needs.laune>=70?'hell':'ruhig',glowOp:.5+.5*st.needs.laune/100,sleeping,mood:st.needs.laune<32?'sad':'happy'})}</div>
           <div class="pname">${st.name}</div>
           <div class="pstat">${st.task&&st.task.type!=='traum'?st.name+' ist unterwegs':sleeping?st.name+' schläft':st.name+' wartet auf dich'}</div>`;
@@ -3223,83 +3977,140 @@ const Start={
   },
 };
 
-/* ---------- Entstehungsritual ---------- */
+/* ---------- Entstehungsritual: der Zauberkessel ---------- */
 const Ritual={
-  pid:null,taps:0,element:null,
-  start(pid){
-    this.pid=pid;this.taps=0;this.element=null;
-    $('#knospe').innerHTML=svgKnospe('#8fa8d8','rit');
-    $('#sparks').innerHTML='';
-    $('#ritualhint').textContent='Da liegt etwas im Dunkeln. Tipp es an.';
-    UI.show('ritual');
-    const k=$('#knospe');
-    k.onpointerdown=()=>this.tapKnospe();
+  pid:null,taps:0,chosen:[],stirring:false,wind:0,lastA:null,
+  svgKessel(glow){
+    return `<svg viewBox="0 0 220 200">
+      <defs><radialGradient id="kgl"><stop offset="0%" stop-color="${glow||'#8fa8d8'}" stop-opacity=".85"/>
+        <stop offset="100%" stop-color="${glow||'#8fa8d8'}" stop-opacity="0"/></radialGradient></defs>
+      <ellipse cx="110" cy="188" rx="70" ry="9" fill="rgba(0,0,0,.4)"/>
+      <path d="M30,70 Q30,175 110,175 Q190,175 190,70 Z" fill="#2e3348"/>
+      <path d="M30,70 Q30,150 110,150" fill="none" stroke="#232840" stroke-width="8" opacity=".6"/>
+      <ellipse cx="110" cy="70" rx="80" ry="20" fill="#3c4260"/>
+      <ellipse cx="110" cy="68" rx="66" ry="14" fill="#151a2e" class="kessel-mund"/>
+      <ellipse cx="110" cy="68" rx="60" ry="12" fill="url(#kgl)" class="kessel-glow"/>
+      <path d="M52,168 L40,188 M168,168 L180,188" stroke="#232840" stroke-width="10" stroke-linecap="round"/>
+    </svg>`;
   },
-  tapKnospe(){
-    if(this.taps>=4)return;
+  start(pid){
+    this.pid=pid;this.taps=0;this.chosen=[];this.stirring=false;this.wind=0;this.lastA=null;
+    $('#kessel').innerHTML=this.svgKessel();
+    $('#kesselslots').innerHTML='';
+    $('#kesselzutaten').classList.remove('on');
+    $('#stirbtn').classList.add('hidden');
+    $('#ritualhint').textContent='Da steht ein alter Kessel. Tipp ihn an.';
+    UI.show('ritual');
+    const k=$('#kessel');
+    k.onpointerdown=e=>this.tapKessel(e);
+    k.onpointermove=e=>this.stir(e);
+  },
+  tapKessel(e){
+    if(this.chosen.length>=3){this.stirring=true;this.stir(e);return}
     this.taps++;
-    const k=$('#knospe');
-    k.classList.remove('shake');void k.offsetWidth;k.classList.add('shake');
-    Sound.tief();vibr(20);
-    const g=k.querySelector('.glim');
-    if(g)g.style.transform='scale('+(1+this.taps*0.3)+')';
-    if(this.taps===2)$('#ritualhint').textContent='Es regt sich. Weiter.';
-    if(this.taps>=4){
-      $('#ritualhint').textContent='Vier Funken kommen. Wisch einen in die Knospe.';
-      setTimeout(()=>this.spawnSparks(),500);
+    const k=$('#kessel');
+    k.classList.remove('wobble');void k.offsetWidth;k.classList.add('wobble');
+    Sound.blubb();vibr(20);
+    this.bubble();
+    if(this.taps===1)$('#ritualhint').textContent='Es blubbert. Da will etwas werden.';
+    if(this.taps>=2&&!$('#kesselzutaten').classList.contains('on')){
+      $('#ritualhint').textContent='Wirf drei Dinge hinein. Was du mischst, bestimmt, wer kommt.';
+      this.renderZutaten();this.renderSlots();
     }
   },
-  spawnSparks(){
-    const wrap=$('#sparks');wrap.innerHTML='';
-    const pos=[[14,22],[70,16],[10,58],[74,54]];
-    Object.keys(ELEMENTS).forEach((elId,i)=>{
-      const E=ELEMENTS[elId];
-      const s=el('div','spark');
-      s.style.setProperty('--sc',E.farbe);s.style.setProperty('--sg',E.glow);
-      s.style.left=pos[i][0]+'%';s.style.top=pos[i][1]+'%';
-      s.style.animationDelay=(i*0.6)+'s';
-      s.dataset.el=elId;
-      s.addEventListener('pointerdown',ev=>this.dragSpark(ev,s,elId));
-      wrap.appendChild(s);
+  bubble(col){
+    const k=$('#kessel').getBoundingClientRect();
+    for(let i=0;i<3;i++){
+      const b=el('div','kbubble');
+      const sz=6+Math.random()*12;
+      b.style.cssText=`left:${k.left-UI.appLeft()+60+Math.random()*90}px;top:${k.top+46}px;width:${sz}px;height:${sz}px;background:${col||'#8fa8d8'};opacity:.8`;
+      $('#app').appendChild(b);setTimeout(()=>b.remove(),1600);
+    }
+  },
+  renderZutaten(){
+    const wrap=$('#kesselzutaten');wrap.innerHTML='';wrap.classList.add('on');
+    DATA2.zutaten.forEach(z=>{
+      const fi=el('button','fooditem'+(this.chosen.includes(z.id)?' used':''));
+      fi.innerHTML=`<span>${z.emoji}</span><small>${z.name}</small>`;
+      fi.onclick=()=>this.pick(z);
+      wrap.appendChild(fi);
     });
   },
-  dragSpark(ev,s,elId){
-    ev.preventDefault();
-    s.style.animation='none';s.style.zIndex=10;
-    const move=e=>{s.style.left=(e.clientX-32)+'px';s.style.top=(e.clientY-32)+'px'};
-    const up=e=>{
-      document.removeEventListener('pointermove',move);
-      document.removeEventListener('pointerup',up);
-      const k=$('#knospe').getBoundingClientRect();
-      const inside=e.clientX>k.left-30&&e.clientX<k.right+30&&e.clientY>k.top-30&&e.clientY<k.bottom+30;
-      if(inside)this.chose(elId);
-      else{s.style.left='';s.style.top='';s.style.zIndex='';s.style.animation='';
-        // Positionen wiederherstellen
-        this.spawnSparks();}
-    };
-    document.addEventListener('pointermove',move);
-    document.addEventListener('pointerup',up);
+  renderSlots(){
+    const ps=$('#kesselslots');ps.innerHTML='';
+    for(let i=0;i<3;i++){
+      const z=this.chosen[i];
+      const sl=el('div','potslot'+(z?' filled':''),z?zutDef(z).emoji:'·');
+      if(z)sl.onclick=()=>{this.chosen.splice(i,1);this.renderZutaten();this.renderSlots();
+        $('#ritualhint').textContent='Wirf drei Dinge hinein.';$('#stirbtn').classList.add('hidden')};
+      ps.appendChild(sl);
+    }
   },
-  chose(elId){
-    this.element=elId;
-    $('#sparks').innerHTML='';
-    const k=$('#knospe');
-    k.innerHTML=svgKnospe(ELEMENTS[elId].farbe,'rit2');
-    const g=k.querySelector('.glim');
-    if(g){g.style.transform='scale(2.2)';g.classList.remove('glim-ruhig');g.classList.add('glim-hell')}
-    Sound.freude();vibr([30,60,30]);
-    $('#ritualhint').textContent='Da drin leuchtet es jetzt.';
+  pick(z){
+    if(this.chosen.length>=3||this.chosen.includes(z.id))return;
+    this.chosen.push(z.id);
+    Sound.blubb();vibr(15);
+    this.bubble(ELEMENTS[ZUTAT_ELEMENT[z.id]].farbe);
+    this.renderZutaten();this.renderSlots();
+    if(this.chosen.length===3){
+      $('#ritualhint').textContent='Jetzt rühr um! Mal mit dem Finger Kreise über dem Kessel.';
+      setTimeout(()=>{if(this.chosen.length===3&&!this.brewed)$('#stirbtn').classList.remove('hidden')},6000);
+      $('#stirbtn').onclick=()=>this.brew();
+      const brew=brewLook(this.chosen);
+      const g=$('#kessel .kessel-glow');
+      if(g)g.setAttribute('fill','url(#kgl)');
+      this.bubble(ELEMENTS[brew.element].farbe);
+    }
+  },
+  stir(e){
+    if(this.chosen.length<3||this.brewed)return;
+    const k=$('#kessel').getBoundingClientRect();
+    const a=Math.atan2(e.clientY-(k.top+k.height/2),e.clientX-(k.left+k.width/2));
+    if(this.lastA!=null){
+      let da=a-this.lastA;if(da>Math.PI)da-=2*Math.PI;if(da<-Math.PI)da+=2*Math.PI;
+      this.wind+=da;
+      if(Math.random()<0.2)this.bubble(ELEMENTS[brewLook(this.chosen).element].farbe);
+      if(Math.abs(this.wind)>2.6*Math.PI)this.brew();
+    }
+    this.lastA=a;
+  },
+  brewed:false,
+  brew(){
+    if(this.brewed||this.chosen.length<3)return;
+    this.brewed=true;
+    $('#stirbtn').classList.add('hidden');
+    $('#kesselzutaten').classList.remove('on');
+    $('#kesselslots').innerHTML='';
+    const res=brewLook(this.chosen);
+    this._brew=res;
+    const E=ELEMENTS[res.element];
+    Sound.fanfare();vibr([50,80,50,80,140]);
+    for(let i=0;i<10;i++)setTimeout(()=>this.bubble(E.farbe),i*140);
+    const k=$('#kessel');
+    k.innerHTML=this.svgKessel(E.farbe);
+    // der neue Glimmling steigt aus dem Kessel
+    const rise=el('div','');
+    rise.style.cssText='position:absolute;left:50%;top:30%;width:170px;height:170px;transform:translate(-50%,40px) scale(.2);opacity:0;transition:all 1.6s cubic-bezier(.3,1.3,.5,1);z-index:5';
+    rise.innerHTML=svgWesen({element:res.element,stage:1,look:res.look,glow:'hell',glowOp:1});
+    $('#scr-ritual').appendChild(rise);
+    this._rise=rise;
+    requestAnimationFrame(()=>{rise.style.transform='translate(-50%,-40px) scale(1)';rise.style.opacity='1'});
+    $('#ritualhint').textContent='Da ist es. Ganz neu und schon ganz deins.';
     setTimeout(()=>{
       $('#nameinput').value='';
       UI.overlay('ov-name');
       setTimeout(()=>{try{$('#nameinput').focus()}catch(e){}},300);
-    },1400);
+    },2200);
   },
   finish(name){
-    const st=newState(name,this.element);
-    st.pref=rnd(DATA.welt.futter.filter(f=>!f.selten)).id;
+    const res=this._brew||brewLook(this.chosen.length?this.chosen:['sonnenbeere','moosknolle','wildhonig']);
+    const st=newState(name,res.element,res.look,[...this.chosen]);
+    this.chosen.forEach(id=>{const z=zutDef(id);if(z)st.stats[z.stat]+=2}); // die Mischung prägt die Anlagen
+    st.favourite=rnd(DATA2.rezepte).id;
     save(this.pid,st);
     meta.profiles[this.pid]=name;saveMeta();
+    if(this._rise){this._rise.remove();this._rise=null}
+    this.brewed=false;
     UI.overlay('ov-name',false);
     Boot.enter(this.pid,true);
   },
@@ -3331,8 +4142,11 @@ const Help={
       case 'fuettern':return mini()+'<div class="hand lift" style="left:48%;top:40%">🫐</div>';
       case 'waschen':return mini()+'<div class="hand circle" style="left:50%;top:38%">🧽</div>';
       case 'losschicken':return mini()+'<div class="hand pull" style="left:40%;top:42%">🖐️</div><div style="position:absolute;right:6px;top:44%;font-size:26px">🥾</div>';
-      case 'herzen':return '<div style="display:flex;gap:14px;justify-content:center;align-items:center;height:100%">'+
-        [1,1,0].map(f=>`<svg viewBox="0 0 24 24" width="44" height="44"><path d="M12 20.6C7.2 16.9 3 13.3 3 9.3 3 6.4 5.3 4.4 7.9 4.4c1.6 0 3.1.8 4.1 2.2 1-1.4 2.5-2.2 4.1-2.2 2.6 0 4.9 2 4.9 4.9 0 4-4.2 7.6-9 11.3Z" fill="${f?'#e8756d':'none'}" stroke="#e8756d" stroke-width="1.6"/></svg>`).join('')+'</div>';
+      case 'toben':return mini('hell')+'<div class="hand pull" style="left:44%;top:40%">🖐️</div>';
+      case 'kochen':return '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:56px">🫕</div><div class="hand lift" style="left:52%;top:40%">🫐</div>';
+      case 'hoehle':return '<div style="display:flex;align-items:center;justify-content:center;height:100%"><svg viewBox="0 0 100 70" width="120"><path d="M10 65 C10 25 35 8 50 8 C65 8 90 25 90 65 Z" fill="#4a3628"/><path d="M32 65 C32 42 41 33 50 33 C59 33 68 42 68 65 Z" fill="#241a12"/></svg></div><div class="hand lift" style="left:48%;top:30%;transform:rotate(180deg)">🖐️</div>';
+      case 'schwung':return '<div style="display:flex;gap:4px;align-items:center;justify-content:center;height:100%">'+
+        [1,1,1,1,1,1,0,0,0,0].map(f=>`<div style="width:14px;height:16px;border-radius:5px;background:${f?'linear-gradient(180deg,#ffe9a0,#f4b95a)':'rgba(120,120,140,.25)'}"></div>`).join('')+'</div>';
       case 'licht':return '<div class="glowrow">'+
         [['hell','hell'],['flackern','flackernd'],['langsam','langsam'],['trueb','trüb'],['ruhig','ruhig']]
         .map(([g,w])=>`<div class="gr">${svgWesen({element:elmt,stage:1,glow:g,glowOp:g==='hell'?1:.7})}<div>${w}</div></div>`).join('')+'</div>';
@@ -3344,14 +4158,14 @@ const Help={
     return mini();
   },
   bild(body){
-    DATA.welt.bildhilfe.forEach(h=>{
+    DATA2.bildhilfe2.forEach(h=>{
       const c=el('div','helpcard');
       c.innerHTML=`<div class="demo">${this.demo(h.id)}</div><h3>${h.titel}</h3><p>${h.satz}</p>`;
       body.appendChild(c);
     });
   },
   text(body){
-    DATA.welt.texthilfe.forEach(h=>{
+    DATA2.texthilfe2.forEach(h=>{
       const d=el('details','hsec');
       d.innerHTML=`<summary>${h.titel}</summary><div class="htxt">${h.text}</div>`;
       body.appendChild(d);
@@ -3368,8 +4182,11 @@ const Menu={
     if(!view){
       t.textContent='Mehr';
       const items=[];
-      if(S){items.push(['werte','📊 Werte'],['chronik','📖 Chronik'],['code','🤝 Freundescode']);
-        if(S.stage>=3)items.push(['statistik','🧮 Statistik']);}
+      if(S){
+        items.push(['rezepte','🍲 Rezeptbuch']);
+        if(S.stage>=2)items.push(['werte','📊 Werte'],['chronik','📖 Chronik']);
+        if(S.stage>=3)items.push(['code','🤝 Freundescode'],['statistik','🧮 Statistik']);
+      }
       items.push(['sichern','🗝️ Sichern & Laden']);
       items.forEach(([id,label])=>{const bb=el('button','bigbtn ghost',label);bb.onclick=()=>this.open(id,this.fromStart);b.appendChild(bb)});
     }
@@ -3395,12 +4212,13 @@ const Menu={
       b.appendChild(el('p','','<small>Hunger, Müdigkeit, Laune und Schmutz machen die Werte im Kampf schwächer. Nichts geht je verloren.</small>'));
       back();
     }
+    else if(view==='rezepte'){UI.overlay('ov-menu',false);RecipeBook.open();return}
     else if(view==='chronik'){
       t.textContent='Chronik';
       if(!S.chronicle.length&&!S.log.length)b.appendChild(el('p','','Noch ist alles neu. Die Chronik füllt sich mit der Zeit.'));
       [...S.chronicle].reverse().forEach(c=>{
         const d=new Date(c.t);
-        b.appendChild(el('div','chronentry',`<div class="cd">${d.toLocaleDateString('de-DE')} · ${FORMNAME(c.form,c.stage)}</div>${c.text}`));
+        b.appendChild(el('div','chronentry',`<div class="cd">${d.toLocaleDateString('de-DE')} · ${c.name||''}</div>${c.text}`));
       });
       S.log.filter(r=>r.typ==='traum').slice(0,6).forEach(r=>{
         b.appendChild(el('div','chronentry',`<div class="cd">Traum ${r.icons.join(' ')}</div>${r.text}`));
@@ -3436,9 +4254,10 @@ const Menu={
       const c=S.counters;
       const d=new Date(S.born);
       b.innerHTML+=`<div class="chronentry">Geboren am ${d.toLocaleDateString('de-DE')}<br>
-        Erlebte Tageszeiten: <b>${c.fenster}</b><br>Kämpfe: <b>${c.kaempfe}</b> (davon gewonnen: ${c.siege})<br>
-        Traumreisen: <b>${c.traeume}</b><br>Spiele gespielt: <b>${c.spiele}</b><br>
-        Mahlzeiten: <b>${c.fuetterungen}</b><br>Gestreichelt: <b>${c.streicheln}</b>× ausgiebig<br>
+        Funkel gesammelt: <b>${S.funkel}</b> im Beutel<br>Kämpfe: <b>${c.kaempfe}</b> (davon gewonnen: ${c.siege})<br>
+        Traumreisen: <b>${c.traeume}</b> · Spiele: <b>${c.spiele}</b> · Trainiert: <b>${c.trainiert}</b>×<br>
+        Gekocht: <b>${c.gekocht}</b>× · Rezepte: <b>${S.recipes.length}/${DATA2.rezepte.length}</b><br>
+        Mahlzeiten: <b>${c.fuetterungen}</b> · Gestreichelt: <b>${c.streicheln}</b>× · Getobt: <b>${c.getobt}</b>×<br>
         Gebadet: <b>${c.gewaschen}</b>×</div>`;
       back();
     }
@@ -3491,8 +4310,8 @@ const Treffen={
     if(!s1||!s2)return;
     meta.treffenWindow=windowId(nowMs());saveMeta();
     const st=$('#treffenstage');
-    st.innerHTML=`<div class="tw" style="left:-10%">${svgWesen({element:s1.element,stage:s1.stage,form:s1.form,variant:s1.variant,glow:'hell',glowOp:1})}</div>
-      <div class="tw" style="right:-10%">${svgWesen({element:s2.element,stage:s2.stage,form:s2.form,variant:s2.variant,glow:'hell',glowOp:1})}</div>`;
+    st.innerHTML=`<div class="tw" style="left:-10%">${svgWesen({element:s1.element,stage:s1.stage,knirps:s1.knirps,form:s1.form,variant:s1.variant,look:s1.look,glow:'hell',glowOp:1})}</div>
+      <div class="tw" style="right:-10%">${svgWesen({element:s2.element,stage:s2.stage,knirps:s2.knirps,form:s2.form,variant:s2.variant,look:s2.look,glow:'hell',glowOp:1})}</div>`;
     const mc=rnd(DATA.welt.microcopy.treffen).replace('{a}',s1.name).replace('{b}',s2.name);
     $('#treffenmsg').textContent='';
     UI.overlay('ov-treffen');
@@ -3513,7 +4332,7 @@ const Treffen={
   },
 };
 /* ============================================================
-   BOOT: Verdrahtung, Zeittakt, Debug
+   BOOT v2: Verdrahtung, Zeittakt, Debug, PWA
    ============================================================ */
 const Boot={
   catchupProfile(pid){
@@ -3524,15 +4343,20 @@ const Boot={
       const events=offlineCatchup(st);
       if(windowOf(t)==='morgen'&&/-nacht$/.test(oldWid)&&oldWid!==st.windowId)st.wakePending=true;
       events.forEach(ev=>{
+        const prev=S;S=st;
         if(ev.typ==='bericht'){
-          const prev=S;S=st;
           const rep=Actions.completeTask(ev.task);
-          S=prev;
           st.pendingReport=rep;
           if(ev.task.type==='traum'&&windowOf(t)==='morgen')st.wakePending=true;
         }
+        if(ev.typ==='gekocht'){ st.pendingCook=Cook.complete(st); }
+        if(ev.typ==='beet'){
+          for(let i=0;i<ev.n;i++){const z=rnd(DATA2.zutaten.filter(x=>x.tier==='haeufig'));
+            st.inventory[z.id]=(st.inventory[z.id]||0)+1;}
+        }
+        S=prev;
       });
-    } else { st.lastSeen=t; }
+    } else { offlineCatchup(st); }
     save(pid,st);
   },
   enter(pid,fresh){
@@ -3542,10 +4366,10 @@ const Boot={
     meta.lastActive=pid;saveMeta();
     UI.show('home');
     Creature.mount();
+    Fund.mount();
     this.updateSoundBtn();
     UI.refreshHome();
     if(fresh){
-      // Schlüpfen
       const w=$('#wesen');w.style.transform='scale(0)';w.style.transition='transform 1.1s cubic-bezier(.3,1.4,.5,1)';
       const r=w.getBoundingClientRect();
       setTimeout(()=>{w.style.transform='';UI.sparkleAt(r.left+r.width/2,r.top+r.height/2,ELEMENTS[S.element].farbe);
@@ -3557,25 +4381,29 @@ const Boot={
       return;
     }
     const proceed=()=>{
+      if(S.pendingCook){const pc=S.pendingCook;S.pendingCook=null;saveNow();setTimeout(()=>Cook.announce(pc),1000)}
       if(S.wakePending){UI.status('Pssst. '+S.name+' schläft noch. Tipp es wach.',true);return}
-      if(S.pendingReport){const rep=S.pendingReport;setTimeout(()=>Actions.showReport(rep),1200)}
+      if(S.pendingReport){const rep=S.pendingReport;setTimeout(()=>Actions.showReport(rep),1400)}
     };
     if(Evo.ready())setTimeout(()=>Evo.run(proceed),900);
     else proceed();
   },
   tick(){
-    if(!S||UI.screen!=='home')return;
+    if(!S||UI.screen==='start'||UI.screen==='ritual')return;
     const t=nowMs();
     if(t>S.lastSeen){applyDecay(S,S.lastSeen,Math.min(t,S.lastSeen+14*36e5));S.lastSeen=t;}
+    refreshSchwung(S,t);
     const wid=windowId(t);
     if(wid!==S.windowId){
       const wasNight=/-nacht$/.test(S.windowId);
-      S.windowId=wid;S.beats=beatsMax(windowOf(t));
-      S.care={fensterId:wid,beatSpent:false,pet:false,wash:0,geweckt:false,gekaempft:false,gespielt:false};
+      S.windowId=wid;
+      S.care={fensterId:wid,pet:false,wash:0,geweckt:false};
       if(windowOf(t)==='morgen'&&wasNight)S.wakePending=true;
+      S.dailyFind={windowId:wid,taken:false,typ:null,item:null};
       Creature.render();UI.refreshHome();
       UI.toast(windowOf(t)==='morgen'?'Ein neuer Morgen.':windowOf(t)==='mittag'?'Mittagszeit.':windowOf(t)==='abend'?'Der Abend kommt.':'Nacht wird es.',2400);
     }
+    if(S.dailyFind.windowId!==wid)S.dailyFind={windowId:wid,taken:false,typ:null,item:null};
     if(S.task&&t>=S.task.end){
       const task=S.task;
       const rep=Actions.completeTask(task);
@@ -3588,8 +4416,27 @@ const Boot={
         setTimeout(()=>Actions.showReport(rep),1150);
       }
     }
+    if(S.pot&&t>=S.pot.end){ Cook.announce(Cook.complete(S)); }
+    if(hatObjekt(S,'beetkiste')&&t-S.beetStamp>=8*36e5){
+      S.beetStamp=t;
+      const z=rnd(DATA2.zutaten.filter(x=>x.tier==='haeufig'));
+      S.inventory[z.id]=(S.inventory[z.id]||0)+1;
+      UI.toast('Die Beetkiste hat was: '+z.emoji+' '+z.name+'.',2800);
+      UI.renderDrawer();
+    }
     if(S.task)Away.refresh();
-    if(Evo.ready()&&!UI.anyOverlay()&&!S.task&&!S.wakePending)Evo.run();
+    // Sternschnuppen: kleine Glücksmomente zum Antippen
+    if(UI.screen==='home'&&!UI.anyOverlay()&&!$('#shootstar').classList.contains('on')&&Math.random()<0.07){
+      const ss=$('#shootstar');
+      ss.style.left=(15+Math.random()*65)+'%';
+      ss.style.top=(14+Math.random()*30)+'%';
+      ss.classList.add('on');
+      clearTimeout(this._ssT);
+      this._ssT=setTimeout(()=>ss.classList.remove('on'),9000);
+    }
+    if(Evo.ready()&&!UI.anyOverlay()&&!S.task&&!S.wakePending&&UI.screen==='home')Evo.run();
+    UI.renderSchwung();
+    UI.renderTagesfund();
     Creature.refreshGlow();
     saveNow();
   },
@@ -3610,48 +4457,76 @@ const Boot={
     $('#sendclose').onclick=()=>UI.overlay('ov-send',false);
     $('#gameclose').onclick=()=>{Games.abort();UI.overlay('ov-game',false);UI.refreshHome()};
     $('#battleclose').onclick=()=>Battle.abort();
-    $('#ritualback').onclick=()=>{UI.overlay('ov-name',false);Start.render()};
-    $('#nameclose').onclick=()=>{UI.overlay('ov-name',false);Start.render()};
-    $('#helpclose').onclick=()=>UI.overlay('ov-help',false);
+    $('#helpclose').onclick=()=>{UI.overlay('ov-help',false);
+      if(S&&!S.seen.formenkarte)setTimeout(()=>FormMap.open(),700)};
     $('#menuclose').onclick=()=>UI.overlay('ov-menu',false);
     $('#treffenok').onclick=()=>{UI.overlay('ov-treffen',false);Start.render()};
+    $('#ritualback').onclick=()=>{UI.overlay('ov-name',false);Start.render()};
+    $('#nameclose').onclick=()=>{UI.overlay('ov-name',false);Start.render()};
     $('#nameok').onclick=()=>{
       const n=$('#nameinput').value.trim().slice(0,12);
       if(!n){$('#nameinput').placeholder='Erst ein Name …';return}
       Ritual.finish(n);
     };
     $('#dicebtn').onclick=()=>{$('#nameinput').value=rnd(DATA.traeume.namen)};
+    // v2
+    $('#cavebtn').onclick=()=>Cave.open();
+    $('#caveup').onclick=()=>{UI.show('home');UI.refreshHome()};
+    $('#caveshop').onclick=()=>Shop.open();
+    $('#formmapbtn').onclick=()=>FormMap.open();
+    $('#tagesfund').onclick=()=>Fund.collect();
+    $('#shootstar').onclick=e=>{
+      const ss=$('#shootstar');ss.classList.remove('on');clearTimeout(this._ssT);
+      const n=1+Math.floor(Math.random()*3);
+      if(Math.random()<0.18){const z=rnd(DATA2.zutaten.filter(x=>x.tier!=='haeufig'));
+        S.inventory[z.id]=(S.inventory[z.id]||0)+1;
+        UI.pop(e.clientX,e.clientY,z.emoji);UI.toast('Eine Sternschnuppe! '+z.name+' gefunden.',2600);}
+      else{funkelPlus(S,n);UI.pop(e.clientX,e.clientY,'✦');UI.toast('Eine Sternschnuppe! +'+n+' Funkel.',2200);}
+      UI.sparkleAt(e.clientX,e.clientY);Sound.freude();vibr([15,30,15]);
+      UI.renderDrawer();saveNow();
+    };
+    $('#cookclose').onclick=()=>UI.overlay('ov-cook',false);
+    $('#cookfire').onclick=()=>Cook.fire();
+    $('#cookbook').onclick=()=>RecipeBook.open();
+    $('#rezepteclose').onclick=()=>UI.overlay('ov-rezepte',false);
+    $('#formmapclose').onclick=()=>UI.overlay('ov-formmap',false);
+    $('#shopclose').onclick=()=>UI.overlay('ov-shop',false);
     $('#actionrow').addEventListener('click',e=>{
       const b=e.target.closest('.pillbtn');if(!b)return;
       if(b.id==='act-send')Actions.openSend();
       if(b.id==='act-spiel')Games.open();
       if(b.id==='act-kampf')Battle.openWander();
       if(b.id==='act-traum')Actions.startTraum();
+      if(b.id==='act-training')Actions.training();
       if(b.id==='act-mehr')Menu.open();
     });
     document.addEventListener('visibilitychange',()=>{
       if(document.hidden)saveNow();
-      else{this.catchupVisible()}
+      else this.catchupVisible();
     });
     window.addEventListener('pagehide',()=>saveNow());
   },
   catchupVisible(){
     if(S&&P){
-      // längere Abwesenheit bei offener Seite: wie Neustart behandeln
       save(P,S);
       this.catchupProfile(P);
       S=loadProfile(P);
       Creature.render();UI.refreshHome();
+      if(S.pendingCook){const pc=S.pendingCook;S.pendingCook=null;saveNow();Cook.announce(pc)}
       if(S.wakePending)UI.status('Pssst. '+S.name+' schläft. Tipp es wach.',true);
       else if(S.pendingReport){const rep=S.pendingReport;setTimeout(()=>Actions.showReport(rep),800)}
       if(Evo.ready())setTimeout(()=>Evo.run(),600);
-    } else Start.render();
+    } else if(UI.screen==='start') Start.render();
   },
   start(){
     UI.buildSkyDeco();
     this.wire();
     Gestures.init();
-    ['p1','p2'].forEach(p=>this.catchupProfile(p));
+    ['p1','p2'].forEach(p=>{
+      const raw=store.get('glimm.'+p);
+      if(raw&&raw.v!==2){try{localStorage.removeItem('glimm.'+p)}catch(e){}}
+      this.catchupProfile(p);
+    });
     if(store.volatile)setTimeout(()=>UI.toast('Hinweis: Hier kann nichts dauerhaft gespeichert werden. Am Handy „Zum Startbildschirm hinzufügen“ nutzen.',5000),1500);
     Start.render();
     setInterval(()=>this.tick(),15000);
@@ -3665,24 +4540,26 @@ if(DEBUG.on){
     get S(){return S}, get meta(){return meta}, store,
     off(h){DEBUG.offset+=h*36e5;Boot.tick();if(S){Creature.render();UI.refreshHome()}},
     setOff(ms){DEBUG.offset=ms;},
-    beats(n){S.beats=n;UI.renderHearts();UI.renderActions()},
+    schwung(n){S.schwung=n;S.schwungStamp=nowMs();UI.renderSchwung();UI.renderActions()},
+    funkel(n){S.funkel=n;UI.renderFunkel()},
+    zutat(id,n){S.inventory[id]=(S.inventory[id]||0)+(n||1);UI.renderDrawer()},
     need(k,v){S.needs[k]=v;Creature.render();},
     stat(k,v){S.stats[k]=v},
     counters(o){Object.assign(S.counters,o)},
-    fenster(n){S.counters.fenster=n},
     finishTask(){if(S&&S.task){S.task.end=nowMs()-1;Boot.tick()}},
+    finishPot(){if(S&&S.pot){S.pot.end=nowMs()-1;Boot.tick()}},
+    born(h){S.born=nowMs()-h*36e5},
     evo(){Evo.run()},
     enter(p){Boot.enter(p)}, home(){Start.render()},
     tick(){Boot.tick()},
     reset(){try{['glimm.meta','glimm.p1','glimm.p2'].forEach(k=>localStorage.removeItem(k))}catch(e){};location.reload()},
-    mkProfile(pid,name,elmt){const st=newState(name||'Testi',elmt||'glut');st.pref='sonnenbeere';save(pid||'p1',st);meta.profiles[pid||'p1']=st.name;saveMeta();Start.render()},
+    mkProfile(pid,name,elmt){const st=newState(name||'Testi',elmt||'glut');st.favourite=DATA2.rezepte[0].id;save(pid||'p1',st);meta.profiles[pid||'p1']=st.name;saveMeta();Start.render()},
   };
 }
 
 document.addEventListener('DOMContentLoaded',()=>Boot.start());
 
-/* ---------- PWA: Manifest + Icon zur Laufzeit erzeugen ----------
-   Ein Data-URI-Manifest braucht absolute URLs; die kennen wir erst hier. */
+/* ---------- PWA: Manifest + Icon zur Laufzeit erzeugen ---------- */
 (function pwa(){
   try{
     if(location.protocol!=='https:'&&location.hostname!=='localhost')return;
@@ -3692,18 +4569,14 @@ document.addEventListener('DOMContentLoaded',()=>Boot.start());
     const rr=size*0.22;
     x.beginPath();x.moveTo(rr,0);x.arcTo(size,0,size,size,rr);x.arcTo(size,size,0,size,rr);
     x.arcTo(0,size,0,0,rr);x.arcTo(0,0,size,0,rr);x.fill();
-    // Körper
     x.fillStyle='#4a4560';
     x.beginPath();x.ellipse(size/2,size*0.62,size*0.27,size*0.24,0,0,7);x.fill();
     x.beginPath();x.arc(size/2,size*0.38,size*0.21,0,7);x.fill();
-    // Ohren
     x.beginPath();x.ellipse(size*0.36,size*0.22,size*0.06,size*0.1,-0.3,0,7);x.fill();
     x.beginPath();x.ellipse(size*0.64,size*0.22,size*0.06,size*0.1,0.3,0,7);x.fill();
-    // Glimmen
     const g=x.createRadialGradient(size/2,size*0.62,10,size/2,size*0.62,size*0.2);
     g.addColorStop(0,'#fff6e0');g.addColorStop(0.4,'rgba(255,179,92,.85)');g.addColorStop(1,'rgba(255,179,92,0)');
     x.fillStyle=g;x.beginPath();x.arc(size/2,size*0.62,size*0.2,0,7);x.fill();
-    // Augen
     x.fillStyle='#f6efdd';
     x.beginPath();x.ellipse(size*0.43,size*0.38,size*0.035,size*0.045,0,0,7);x.fill();
     x.beginPath();x.ellipse(size*0.57,size*0.38,size*0.035,size*0.045,0,0,7);x.fill();
@@ -3720,8 +4593,6 @@ document.addEventListener('DOMContentLoaded',()=>Boot.start());
     document.head.appendChild(link);
     const ap=document.createElement('link');ap.rel='apple-touch-icon';ap.href=icon;
     document.head.appendChild(ap);
-    // Service Worker (liegt als sw.js daneben): macht die installierte App offline-fähig.
-    // Wo es kein sw.js gibt (z. B. Artifact-Vorschau), schlägt das leise fehl.
     if('serviceWorker' in navigator)
       navigator.serviceWorker.register('sw.js').catch(()=>{});
   }catch(e){}
