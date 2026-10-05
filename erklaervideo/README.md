@@ -55,7 +55,7 @@ D4 sieht Georgia und Calibri vor. Sind sie installiert (`fc-list`), werden sie v
 
 ```
 content/script.json   einzige Quelle für alle Texte und Animationszeiten
-src/lib/              Zeitsteuerung, Leseregel, Textumbruch, Farben, Fabrik, Zeitachsen, Endbild
+src/lib/              Zeitsteuerung, Textumbruch, Farben, Fabrik, Zeitachsen, Endbild
 src/scenes/           eine Datei pro Szene, jeweils render(t) → SVG
 src/preview.html      Vorschau
 render/serve.js       lokaler Server, wählt die Schriften
@@ -63,7 +63,7 @@ render/render.js      Playwright, Bild für Bild
 render/encode.sh      ffmpeg
 ```
 
-Szenendauern werden aus der Leseregel (D4) und den Animationszeiten berechnet, nie von Hand gesetzt. Wer einen Block in `script.json` kürzt, kürzt die Szene.
+Szenendauern folgen der Stimme, nie von Hand gesetzt. Wer einen Sprechtext in `script.json` kürzt und `npm run stimme` ausführt, kürzt die Szene.
 
 Erweiterungen am Format von `script.json` gegenüber D3:
 
