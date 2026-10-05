@@ -1,6 +1,6 @@
 {
   "fassung": "Drehbuch Fassung 4 mit Sprecherstimme, Stand 5. Oktober 2026",
-  "stimme": { "anbieter": "heygen", "voice_id": "d284344a1ba04039bdfdede36a319f32", "name": "Mordecai", "sprache": "de", "tempo": 1.0 },
+  "stimme": { "anbieter": "heygen", "voice_id": "9baaa52569594e718cf70af5ad1b17b3", "name": "Quiet Dieter - Serious", "sprache": "de", "tempo": 1.0 },
   "musik": { "anbieter": "heygen", "id": "24d00467278d4e729714670f619b787f", "beschreibung": "calm minimal ambient, contemplative, serious boardroom tone", "pegel_lufs": -33 },
   "szenen": [
     {

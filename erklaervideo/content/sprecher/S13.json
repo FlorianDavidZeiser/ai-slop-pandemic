@@ -1,307 +1,307 @@
 {
- "hash": "35ed8e390de2a00d",
- "dauer": 23.588571428571427,
+ "hash": "5fe172df4d535940",
+ "dauer": 25.939591836734692,
  "woerter": [
   {
-   "end": 0.597,
-   "start": 0.299,
+   "end": 0.64,
+   "start": 0.256,
    "word": "Darauf"
   },
   {
-   "end": 0.8107,
-   "start": 0.64,
+   "end": 0.981,
+   "start": 0.725,
    "word": "bauen"
   },
   {
-   "end": 1.0667,
-   "start": 0.853,
+   "end": 1.3227,
+   "start": 1.067,
    "word": "drei"
   },
   {
-   "end": 1.4507,
-   "start": 1.109,
+   "end": 1.7067,
+   "start": 1.365,
    "word": "Stufen"
   },
   {
-   "end": 1.668,
-   "start": 1.493,
+   "end": 1.984,
+   "start": 1.749,
    "word": "auf."
   },
   {
-   "end": 2.795,
-   "start": 2.091,
+   "end": 3.307,
+   "start": 2.56,
    "word": "Nutzen,"
   },
   {
-   "end": 3.243,
-   "start": 3.072,
+   "end": 3.755,
+   "start": 3.584,
    "word": "für"
   },
   {
-   "end": 3.413,
-   "start": 3.285,
+   "end": 3.989,
+   "start": 3.797,
    "word": "alle,"
   },
   {
-   "end": 3.541,
-   "start": 3.456,
+   "end": 4.096,
+   "start": 4.053,
    "word": "die"
-  },
-  {
-   "end": 3.84,
-   "start": 3.584,
-   "word": "KI"
   },
   {
    "end": 4.48,
-   "start": 3.883,
+   "start": 4.139,
+   "word": "KI"
+  },
+  {
+   "end": 5.035,
+   "start": 4.523,
    "word": "regelmäßig"
   },
   {
-   "end": 4.565,
-   "start": 4.523,
+   "end": 5.163,
+   "start": 5.12,
    "word": "in"
   },
   {
-   "end": 4.736,
-   "start": 4.608,
+   "end": 5.376,
+   "start": 5.205,
    "word": "ihren"
   },
   {
-   "end": 5.205,
-   "start": 4.779,
+   "end": 5.803,
+   "start": 5.419,
    "word": "Aufgaben"
   },
   {
-   "end": 5.687,
-   "start": 5.248,
+   "end": 6.366,
+   "start": 5.845,
    "word": "einsetzen."
   },
   {
-   "end": 6.955,
-   "start": 6.187,
+   "end": 7.701,
+   "start": 6.827,
    "word": "Umsetzen,"
   },
   {
-   "end": 7.253,
-   "start": 7.083,
+   "end": 8.064,
+   "start": 7.893,
    "word": "für"
   },
   {
-   "end": 7.467,
-   "start": 7.296,
+   "end": 8.277,
+   "start": 8.107,
    "word": "die,"
   },
   {
-   "end": 7.552,
-   "start": 7.509,
+   "end": 8.448,
+   "start": 8.32,
    "word": "die"
   },
   {
-   "end": 7.979,
-   "start": 7.595,
+   "end": 8.917,
+   "start": 8.491,
    "word": "Lösungen"
   },
   {
-   "end": 8.149,
-   "start": 8.021,
+   "end": 9.088,
+   "start": 8.96,
    "word": "für"
   },
   {
-   "end": 8.405,
-   "start": 8.192,
+   "end": 9.259,
+   "start": 9.131,
    "word": "ihr"
   },
   {
-   "end": 8.533,
-   "start": 8.448,
+   "end": 9.472,
+   "start": 9.301,
    "word": "Team"
   },
   {
-   "end": 8.789,
-   "start": 8.533,
+   "end": 9.823,
+   "start": 9.515,
    "word": "bauen."
   },
   {
-   "end": 10.385,
-   "start": 9.553,
+   "end": 11.534,
+   "start": 10.681,
    "word": "Transformieren,"
   },
   {
-   "end": 10.577,
-   "start": 10.449,
+   "end": 11.918,
+   "start": 11.748,
    "word": "für"
   },
   {
-   "end": 10.748,
-   "start": 10.62,
+   "end": 12.26,
+   "start": 11.961,
    "word": "die,"
   },
   {
-   "end": 10.833,
-   "start": 10.79,
+   "end": 12.558,
+   "start": 12.43,
    "word": "die"
   },
   {
-   "end": 11.26,
-   "start": 10.876,
+   "end": 13.07,
+   "start": 12.601,
    "word": "Prozesse"
   },
   {
-   "end": 11.43,
-   "start": 11.345,
+   "end": 13.412,
+   "start": 13.241,
    "word": "und"
   },
   {
-   "end": 11.772,
-   "start": 11.473,
+   "end": 13.838,
+   "start": 13.497,
    "word": "Daten"
   },
   {
-   "end": 11.942,
-   "start": 11.814,
+   "end": 14.35,
+   "start": 14.052,
    "word": "neu"
   },
   {
-   "end": 12.463,
-   "start": 11.985,
+   "end": 15.046,
+   "start": 14.521,
    "word": "ordnen."
   },
   {
-   "end": 13.137,
-   "start": 12.924,
+   "end": 15.801,
+   "start": 15.545,
    "word": "Nicht"
   },
   {
-   "end": 13.35,
-   "start": 13.18,
+   "end": 16.1,
+   "start": 15.844,
    "word": "jede"
   },
   {
-   "end": 13.564,
-   "start": 13.393,
+   "end": 16.398,
+   "start": 16.185,
    "word": "Rolle"
   },
   {
-   "end": 13.862,
-   "start": 13.606,
+   "end": 16.697,
+   "start": 16.441,
    "word": "braucht"
   },
   {
-   "end": 14.118,
-   "start": 13.905,
+   "end": 16.996,
+   "start": 16.74,
    "word": "Stufe"
   },
   {
-   "end": 14.694,
-   "start": 14.204,
+   "end": 17.614,
+   "start": 17.038,
    "word": "4."
   },
   {
-   "end": 15.185,
-   "start": 14.929,
+   "end": 18.19,
+   "start": 17.892,
    "word": "Jede"
   },
   {
-   "end": 15.74,
-   "start": 15.356,
+   "end": 18.788,
+   "start": 18.446,
    "word": "braucht"
   },
   {
-   "end": 16.038,
-   "start": 15.782,
+   "end": 19.086,
+   "start": 18.83,
    "word": "Stufe"
   },
   {
-   "end": 16.506,
-   "start": 16.124,
+   "end": 19.464,
+   "start": 19.129,
    "word": "1."
   },
   {
-   "end": 17.52,
-   "start": 17.264,
+   "end": 20.558,
+   "start": 20.174,
    "word": "Und"
   },
   {
-   "end": 17.947,
-   "start": 17.563,
+   "end": 20.9,
+   "start": 20.601,
    "word": "Führung"
   },
   {
-   "end": 18.544,
-   "start": 18.032,
+   "end": 21.454,
+   "start": 20.942,
    "word": "beantwortet"
   },
   {
-   "end": 18.715,
-   "start": 18.587,
+   "end": 21.582,
+   "start": 21.497,
    "word": "eine"
   },
   {
-   "end": 19.397,
-   "start": 18.8,
+   "end": 22.052,
+   "start": 21.668,
    "word": "Frage,"
   },
   {
-   "end": 19.739,
-   "start": 19.611,
+   "end": 22.137,
+   "start": 22.095,
    "word": "die"
   },
   {
-   "end": 19.952,
-   "start": 19.781,
+   "end": 22.351,
+   "start": 22.18,
    "word": "alle"
   },
   {
-   "end": 20.336,
-   "start": 20.037,
+   "end": 22.649,
+   "start": 22.436,
    "word": "hören"
   },
   {
-   "end": 20.955,
-   "start": 20.379,
+   "end": 23.311,
+   "start": 22.692,
    "word": "wollen:"
   },
   {
-   "end": 21.659,
-   "start": 21.275,
+   "end": 24.27,
+   "start": 23.673,
    "word": "Wofür"
   },
   {
-   "end": 22,
-   "start": 21.701,
+   "end": 24.569,
+   "start": 24.313,
    "word": "nutzen"
   },
   {
-   "end": 22.128,
-   "start": 22.043,
+   "end": 24.697,
+   "start": 24.612,
    "word": "wir"
   },
   {
-   "end": 22.256,
-   "start": 22.171,
+   "end": 24.825,
+   "start": 24.74,
    "word": "die"
   },
   {
-   "end": 22.597,
-   "start": 22.299,
+   "end": 25.102,
+   "start": 24.868,
    "word": "Zeit,"
   },
   {
-   "end": 22.725,
-   "start": 22.683,
+   "end": 25.209,
+   "start": 25.166,
    "word": "die"
   },
   {
-   "end": 22.981,
-   "start": 22.768,
+   "end": 25.422,
+   "start": 25.252,
    "word": "frei"
   },
   {
-   "end": 23.46267573696145,
-   "start": 23.024,
+   "end": 25.894,
+   "start": 25.508,
    "word": "wird?"
   }
  ],
- "stimme": "Mordecai"
+ "stimme": "Quiet Dieter - Serious"
 }

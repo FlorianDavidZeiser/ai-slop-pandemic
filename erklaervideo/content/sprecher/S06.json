@@ -1,247 +1,247 @@
 {
- "hash": "5e2b2b4d6d9fd4d6",
- "dauer": 21.420408163265307,
+ "hash": "c172d0eb10625337",
+ "dauer": 21.78612244897959,
  "woerter": [
   {
-   "end": 1.5787,
-   "start": 0.299,
+   "end": 1.536,
+   "start": 0.256,
    "word": "1895"
   },
   {
-   "end": 2.005,
-   "start": 1.664,
+   "end": 2.2187,
+   "start": 1.792,
    "word": "entstehen"
   },
   {
-   "end": 2.133,
-   "start": 2.048,
+   "end": 2.3467,
+   "start": 2.261,
    "word": "die"
   },
   {
-   "end": 2.4747,
-   "start": 2.176,
+   "end": 2.7307,
+   "start": 2.389,
    "word": "ersten"
   },
   {
-   "end": 3.541,
-   "start": 2.517,
+   "end": 3.7547,
+   "start": 2.773,
    "word": "Sicherheitsvorschriften"
   },
   {
-   "end": 3.712,
-   "start": 3.584,
+   "end": 4.224,
+   "start": 3.925,
    "word": "für"
   },
   {
-   "end": 4.949,
-   "start": 3.755,
+   "end": 5.419,
+   "start": 4.267,
    "word": "Starkstromanlagen."
   },
   {
-   "end": 5.376,
-   "start": 5.248,
+   "end": 5.845,
+   "start": 5.675,
    "word": "Sie"
   },
   {
-   "end": 5.632,
-   "start": 5.419,
+   "end": 6.0587,
+   "start": 5.888,
    "word": "machen"
   },
   {
-   "end": 5.717,
-   "start": 5.675,
+   "end": 6.1867,
+   "start": 6.101,
    "word": "den"
   },
   {
-   "end": 6.0587,
-   "start": 5.76,
+   "end": 6.485,
+   "start": 6.229,
    "word": "Betrieb"
   },
   {
-   "end": 6.784,
-   "start": 6.101,
+   "end": 7.083,
+   "start": 6.528,
    "word": "sicher."
   },
   {
-   "end": 7.381,
-   "start": 7.211,
+   "end": 7.552,
+   "start": 7.381,
    "word": "Den"
   },
   {
-   "end": 8.405,
-   "start": 7.424,
+   "end": 8.704,
+   "start": 7.637,
    "word": "Produktivitätsgewinn"
   },
   {
-   "end": 8.704,
-   "start": 8.491,
+   "end": 9.173,
+   "start": 8.917,
    "word": "bringen"
   },
   {
-   "end": 8.8747,
-   "start": 8.747,
+   "end": 9.301,
+   "start": 9.216,
    "word": "sie"
   },
   {
-   "end": 9.1307,
-   "start": 8.917,
+   "end": 9.557,
+   "start": 9.344,
    "word": "allein"
   },
   {
-   "end": 9.496,
-   "start": 9.216,
+   "end": 9.93,
+   "start": 9.643,
    "word": "nicht."
   },
   {
-   "end": 10.607,
-   "start": 10.095,
+   "end": 10.979,
+   "start": 10.595,
    "word": "Heute"
   },
   {
-   "end": 11.333,
-   "start": 10.778,
+   "end": 11.193,
+   "start": 11.107,
    "word": "ist"
   },
   {
-   "end": 11.589,
-   "start": 11.418,
+   "end": 11.406,
+   "start": 11.235,
    "word": "das"
   },
   {
-   "end": 11.759,
-   "start": 11.674,
+   "end": 11.577,
+   "start": 11.491,
    "word": "die"
   },
   {
-   "end": 12.101,
-   "start": 11.802,
+   "end": 11.918,
+   "start": 11.619,
    "word": "Pflicht"
   },
   {
-   "end": 12.229,
-   "start": 12.143,
+   "end": 12.046,
+   "start": 11.961,
    "word": "nach"
   },
   {
-   "end": 12.613,
-   "start": 12.314,
+   "end": 12.43,
+   "start": 12.131,
    "word": "Artikel"
   },
   {
-   "end": 13.125,
-   "start": 12.655,
+   "end": 12.814,
+   "start": 12.473,
    "word": "4:"
   },
   {
-   "end": 13.765,
-   "start": 13.381,
+   "end": 13.774,
+   "start": 12.985,
    "word": "wissen,"
   },
   {
-   "end": 14.021,
-   "start": 13.807,
+   "end": 14.137,
+   "start": 13.881,
    "word": "welche"
   },
   {
-   "end": 14.618,
-   "start": 14.063,
+   "end": 14.691,
+   "start": 14.179,
    "word": "Werkzeuge"
   },
   {
-   "end": 14.959,
-   "start": 14.661,
+   "end": 15.118,
+   "start": 14.734,
    "word": "erlaubt"
   },
   {
-   "end": 15.215,
-   "start": 15.002,
+   "end": 15.289,
+   "start": 15.161,
    "word": "sind"
   },
   {
-   "end": 15.727,
-   "start": 15.386,
+   "end": 15.587,
+   "start": 15.459,
    "word": "und"
   },
   {
-   "end": 15.983,
-   "start": 15.77,
+   "end": 15.843,
+   "start": 15.63,
    "word": "welche"
   },
   {
-   "end": 16.41,
-   "start": 16.069,
+   "end": 16.227,
+   "start": 15.886,
    "word": "Daten"
   },
   {
-   "end": 16.666,
-   "start": 16.453,
+   "end": 16.483,
+   "start": 16.313,
    "word": "nicht"
   },
   {
-   "end": 16.751,
-   "start": 16.709,
+   "end": 16.611,
+   "start": 16.526,
    "word": "in"
   },
   {
-   "end": 16.922,
-   "start": 16.794,
+   "end": 16.825,
+   "start": 16.654,
    "word": "einen"
   },
   {
-   "end": 17.263,
-   "start": 16.965,
+   "end": 17.209,
+   "start": 16.867,
    "word": "Chatbot"
   },
   {
-   "end": 18.01,
-   "start": 17.349,
+   "end": 18.019,
+   "start": 17.294,
    "word": "gehören."
   },
   {
-   "end": 18.543,
-   "start": 18.373,
+   "end": 18.531,
+   "start": 18.403,
    "word": "Wer"
   },
   {
-   "end": 18.714,
-   "start": 18.586,
+   "end": 18.659,
+   "start": 18.574,
    "word": "das"
   },
   {
-   "end": 19.205,
-   "start": 18.842,
+   "end": 19.022,
+   "start": 18.702,
    "word": "weiß,"
   },
   {
-   "end": 19.823,
-   "start": 19.311,
+   "end": 19.769,
+   "start": 19.129,
    "word": "arbeitet"
   },
   {
-   "end": 20.079,
-   "start": 19.866,
+   "end": 20.153,
+   "start": 19.811,
    "word": "dadurch"
   },
   {
-   "end": 20.293,
-   "start": 20.165,
+   "end": 20.366,
+   "start": 20.238,
    "word": "noch"
   },
   {
-   "end": 20.506,
-   "start": 20.335,
+   "end": 20.707,
+   "start": 20.409,
    "word": "keinen"
   },
   {
-   "end": 20.677,
-   "start": 20.549,
+   "end": 20.963,
+   "start": 20.75,
    "word": "Tag"
   },
   {
-   "end": 21.299931972789114,
-   "start": 20.762,
+   "end": 21.721,
+   "start": 21.219,
    "word": "besser."
   }
  ],
- "stimme": "Mordecai"
+ "stimme": "Quiet Dieter - Serious"
 }

@@ -1,232 +1,232 @@
 {
- "hash": "36fc44ad2dd58cfe",
- "dauer": 20.401632653061224,
+ "hash": "f80d3bd8639940a6",
+ "dauer": 18.599183673469387,
  "woerter": [
   {
-   "end": 0.4267,
-   "start": 0.256,
+   "end": 0.469,
+   "start": 0.299,
    "word": "Das"
   },
   {
-   "end": 0.64,
-   "start": 0.469,
+   "end": 0.683,
+   "start": 0.512,
    "word": "gab"
   },
   {
-   "end": 0.725,
-   "start": 0.683,
+   "end": 0.768,
+   "start": 0.725,
    "word": "es"
   },
   {
-   "end": 0.896,
-   "start": 0.768,
+   "end": 0.9387,
+   "start": 0.811,
    "word": "schon"
   },
   {
-   "end": 1.34,
-   "start": 0.939,
+   "end": 1.327,
+   "start": 0.981,
    "word": "einmal."
   },
   {
-   "end": 3.499,
-   "start": 1.877,
+   "end": 3.2,
+   "start": 1.749,
    "word": "1867"
   },
   {
-   "end": 4.011,
-   "start": 3.84,
+   "end": 3.456,
+   "start": 3.328,
    "word": "wird"
   },
   {
-   "end": 4.139,
-   "start": 4.053,
+   "end": 3.584,
+   "start": 3.499,
    "word": "das"
   },
   {
-   "end": 4.693,
-   "start": 4.224,
+   "end": 3.968,
+   "start": 3.627,
    "word": "Prinzip"
   },
   {
-   "end": 5.12,
-   "start": 4.949,
+   "end": 4.181,
+   "start": 4.096,
    "word": "der"
   },
   {
-   "end": 5.845,
-   "start": 5.163,
+   "end": 4.864,
+   "start": 4.224,
    "word": "Dynamomaschine"
   },
   {
-   "end": 6.997,
-   "start": 5.931,
+   "end": 5.76,
+   "start": 4.949,
    "word": "vorgestellt."
   },
   {
-   "end": 9.173,
-   "start": 7.424,
+   "end": 7.979,
+   "start": 6.059,
    "word": "1882"
   },
   {
-   "end": 9.472,
-   "start": 9.259,
+   "end": 8.491,
+   "start": 8.235,
    "word": "gehen"
   },
   {
-   "end": 9.813,
-   "start": 9.643,
+   "end": 8.619,
+   "start": 8.533,
    "word": "in"
   },
   {
-   "end": 10.197,
-   "start": 9.856,
+   "end": 9.003,
+   "start": 8.661,
    "word": "London"
   },
   {
-   "end": 10.795,
-   "start": 10.368,
+   "end": 9.259,
+   "start": 9.131,
    "word": "und"
   },
   {
-   "end": 10.965,
-   "start": 10.88,
+   "end": 9.387,
+   "start": 9.301,
    "word": "New"
   },
   {
-   "end": 11.221,
-   "start": 11.008,
+   "end": 9.643,
+   "start": 9.429,
    "word": "York"
   },
   {
-   "end": 11.648,
-   "start": 11.477,
+   "end": 10.069,
+   "start": 9.856,
    "word": "die"
   },
   {
-   "end": 11.947,
-   "start": 11.691,
+   "end": 10.411,
+   "start": 10.112,
    "word": "ersten"
   },
   {
-   "end": 12.459,
-   "start": 11.989,
+   "end": 10.965,
+   "start": 10.453,
    "word": "Kraftwerke"
   },
   {
-   "end": 12.672,
-   "start": 12.544,
+   "end": 11.136,
+   "start": 11.008,
    "word": "für"
   },
   {
-   "end": 12.757,
-   "start": 12.715,
+   "end": 11.221,
+   "start": 11.179,
    "word": "die"
   },
   {
-   "end": 12.971,
-   "start": 12.8,
+   "end": 11.477,
+   "start": 11.264,
    "word": "Stadt"
   },
   {
-   "end": 13.099,
-   "start": 13.013,
+   "end": 11.861,
+   "start": 11.691,
    "word": "ans"
   },
   {
-   "end": 13.588,
-   "start": 13.184,
+   "end": 12.324,
+   "start": 11.947,
    "word": "Netz."
   },
   {
-   "end": 14.034,
-   "start": 13.735,
+   "end": 12.744,
+   "start": 12.445,
    "word": "Strom"
   },
   {
-   "end": 14.418,
-   "start": 14.29,
+   "end": 12.915,
+   "start": 12.829,
    "word": "ist"
   },
   {
-   "end": 14.631,
-   "start": 14.503,
+   "end": 13.128,
+   "start": 13,
    "word": "für"
   },
   {
-   "end": 14.802,
-   "start": 14.674,
+   "end": 13.299,
+   "start": 13.171,
    "word": "alle"
   },
   {
-   "end": 15.058,
-   "start": 14.844,
+   "end": 13.52,
+   "start": 13.341,
    "word": "da."
   },
   {
-   "end": 15.612,
-   "start": 15.442,
+   "end": 14.152,
+   "start": 13.981,
    "word": "Was"
   },
   {
-   "end": 15.996,
-   "start": 15.698,
+   "end": 14.536,
+   "start": 14.194,
    "word": "danach"
   },
   {
-   "end": 16.124,
-   "start": 16.082,
+   "end": 14.707,
+   "start": 14.621,
    "word": "in"
   },
   {
-   "end": 16.252,
-   "start": 16.167,
+   "end": 14.792,
+   "start": 14.749,
    "word": "den"
   },
   {
-   "end": 16.636,
-   "start": 16.295,
+   "end": 15.261,
+   "start": 14.835,
    "word": "Fabriken"
   },
   {
-   "end": 17.276,
-   "start": 16.722,
+   "end": 15.688,
+   "start": 15.304,
    "word": "passiert,"
   },
   {
-   "end": 17.532,
-   "start": 17.404,
+   "end": 15.773,
+   "start": 15.73,
    "word": "ist"
   },
   {
-   "end": 17.746,
-   "start": 17.66,
+   "end": 15.986,
+   "start": 15.858,
    "word": "ein"
   },
   {
-   "end": 18.3,
-   "start": 17.788,
+   "end": 16.498,
+   "start": 16.029,
    "word": "Muster."
   },
   {
-   "end": 18.77,
-   "start": 18.684,
+   "end": 16.968,
+   "start": 16.84,
    "word": "Es"
   },
   {
-   "end": 18.898,
-   "start": 18.812,
+   "end": 17.096,
+   "start": 17.011,
    "word": "ist"
   },
   {
-   "end": 19.196,
-   "start": 18.983,
+   "end": 17.352,
+   "start": 17.181,
    "word": "keine"
   },
   {
-   "end": 20.16451247165533,
-   "start": 19.282,
+   "end": 18.355,
+   "start": 17.48,
    "word": "Vorhersage."
   }
  ],
- "stimme": "Mordecai"
+ "stimme": "Quiet Dieter - Serious"
 }

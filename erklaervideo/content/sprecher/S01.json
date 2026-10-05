@@ -1,187 +1,187 @@
 {
- "hash": "21c3681a125baac8",
- "dauer": 20.92408163265306,
+ "hash": "b8572fddf653db5f",
+ "dauer": 19.539591836734694,
  "woerter": [
   {
-   "end": 0.512,
+   "end": 0.469,
    "start": 0.299,
    "word": "Seit"
   },
   {
-   "end": 1.6425,
-   "start": 0.597,
+   "end": 1.3865,
+   "start": 0.512,
    "word": "November"
   },
   {
-   "end": 2.688,
-   "start": 1.6425,
+   "end": 2.261,
+   "start": 1.3865,
    "word": "2022"
   },
   {
-   "end": 3.1147,
-   "start": 2.901,
+   "end": 2.4747,
+   "start": 2.389,
    "word": "ist"
   },
   {
-   "end": 3.6267,
-   "start": 3.2,
+   "end": 3.029,
+   "start": 2.56,
    "word": "Künstliche"
   },
   {
-   "end": 4.1387,
-   "start": 3.669,
+   "end": 3.4987,
+   "start": 3.072,
    "word": "Intelligenz"
   },
   {
-   "end": 4.3947,
-   "start": 4.224,
+   "end": 3.712,
+   "start": 3.584,
    "word": "für"
   },
   {
-   "end": 4.565,
-   "start": 4.437,
+   "end": 3.8827,
+   "start": 3.755,
    "word": "alle"
   },
   {
-   "end": 4.843,
-   "start": 4.651,
+   "end": 4.156,
+   "start": 3.968,
    "word": "da."
   },
   {
-   "end": 5.589,
-   "start": 5.419,
+   "end": 4.864,
+   "start": 4.693,
    "word": "Seit"
   },
   {
-   "end": 6.144,
-   "start": 5.675,
+   "end": 5.376,
+   "start": 4.907,
    "word": "Februar"
   },
   {
-   "end": 7.68,
-   "start": 6.357,
+   "end": 6.784,
+   "start": 5.504,
    "word": "2025"
   },
   {
-   "end": 8.448,
-   "start": 7.979,
+   "end": 7.296,
+   "start": 6.912,
    "word": "verlangt"
   },
   {
-   "end": 8.576,
-   "start": 8.491,
+   "end": 7.424,
+   "start": 7.339,
    "word": "die"
   },
   {
-   "end": 10.837,
-   "start": 8.619,
+   "end": 9.088,
+   "start": 7.467,
    "word": "EU-KI-Verordnung,"
   },
   {
-   "end": 11.349,
-   "start": 11.136,
+   "end": 9.472,
+   "start": 9.344,
    "word": "dass"
   },
   {
-   "end": 11.947,
-   "start": 11.392,
+   "end": 10.069,
+   "start": 9.557,
    "word": "Unternehmen"
   },
   {
-   "end": 12.117,
-   "start": 11.989,
+   "end": 10.283,
+   "start": 10.155,
    "word": "ihre"
   },
   {
-   "end": 12.843,
-   "start": 12.203,
+   "end": 11.008,
+   "start": 10.325,
    "word": "Mitarbeitenden"
   },
   {
-   "end": 13.013,
-   "start": 12.928,
+   "end": 11.264,
+   "start": 11.136,
    "word": "im"
   },
   {
-   "end": 13.44,
-   "start": 13.099,
+   "end": 11.648,
+   "start": 11.349,
    "word": "Umgang"
   },
   {
-   "end": 13.611,
-   "start": 13.525,
+   "end": 11.819,
+   "start": 11.733,
    "word": "mit"
   },
   {
-   "end": 14.037,
-   "start": 13.696,
+   "end": 12.16,
+   "start": 11.861,
    "word": "KI"
   },
   {
-   "end": 14.844,
-   "start": 14.208,
+   "end": 12.75,
+   "start": 12.203,
    "word": "befähigen."
   },
   {
-   "end": 16.17,
-   "start": 15.572,
+   "end": 14.176,
+   "start": 13.451,
    "word": "Werkzeuge"
   },
   {
-   "end": 16.298,
-   "start": 16.212,
+   "end": 14.347,
+   "start": 14.219,
    "word": "sind"
   },
   {
-   "end": 16.959,
-   "start": 16.34,
+   "end": 15.243,
+   "start": 14.39,
    "word": "eingeführt,"
   },
   {
-   "end": 17.492,
-   "start": 17.066,
+   "end": 16.011,
+   "start": 15.499,
    "word": "Schulungen"
   },
   {
-   "end": 18.068,
-   "start": 17.535,
+   "end": 16.715,
+   "start": 16.054,
    "word": "gemacht."
   },
   {
-   "end": 18.389,
-   "start": 18.218,
+   "end": 17.206,
+   "start": 16.95,
    "word": "Und"
   },
   {
-   "end": 18.474,
-   "start": 18.431,
+   "end": 17.334,
+   "start": 17.248,
    "word": "an"
   },
   {
-   "end": 18.815,
-   "start": 18.559,
+   "end": 17.718,
+   "start": 17.376,
    "word": "vielen"
   },
   {
-   "end": 19.583,
-   "start": 18.858,
+   "end": 18.443,
+   "start": 17.76,
    "word": "Arbeitsplätzen"
   },
   {
-   "end": 19.882,
-   "start": 19.626,
+   "end": 18.742,
+   "start": 18.486,
    "word": "ändert"
   },
   {
-   "end": 20.052,
-   "start": 19.924,
+   "end": 18.87,
+   "start": 18.784,
    "word": "sich"
   },
   {
-   "end": 20.694,
-   "start": 20.095,
+   "end": 19.506916099773242,
+   "start": 18.955,
    "word": "wenig."
   }
  ],
- "stimme": "Mordecai"
+ "stimme": "Quiet Dieter - Serious"
 }

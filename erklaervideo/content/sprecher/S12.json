@@ -1,6 +1,6 @@
 {
- "hash": "ab3f15a07a19aa3f",
- "dauer": 14.706938775510205,
+ "hash": "46f78802a9be2624",
+ "dauer": 15.542857142857143,
  "woerter": [
   {
    "end": 0.469,
@@ -8,185 +8,185 @@
    "word": "Was"
   },
   {
-   "end": 0.725,
-   "start": 0.512,
+   "end": 0.9387,
+   "start": 0.555,
    "word": "braucht"
   },
   {
-   "end": 0.853,
-   "start": 0.768,
+   "end": 1.109,
+   "start": 0.981,
    "word": "eine"
   },
   {
-   "end": 1.408,
-   "start": 0.981,
+   "end": 1.664,
+   "start": 1.237,
    "word": "Organisation"
   },
   {
-   "end": 2.048,
-   "start": 1.707,
+   "end": 2.278,
+   "start": 1.963,
    "word": "dafür?"
   },
   {
-   "end": 2.56,
-   "start": 2.432,
+   "end": 2.987,
+   "start": 2.816,
    "word": "Das"
   },
   {
-   "end": 2.901,
-   "start": 2.645,
+   "end": 3.413,
+   "start": 3.072,
    "word": "Papier"
   },
   {
-   "end": 3.328,
-   "start": 2.944,
+   "end": 4.011,
+   "start": 3.541,
    "word": "beschreibt"
   },
   {
-   "end": 3.499,
-   "start": 3.371,
+   "end": 4.309,
+   "start": 4.139,
    "word": "vier"
   },
   {
-   "end": 3.968,
-   "start": 3.541,
+   "end": 4.779,
+   "start": 4.395,
    "word": "Stufen"
   },
   {
-   "end": 4.181,
-   "start": 4.011,
+   "end": 5.163,
+   "start": 4.992,
    "word": "und"
   },
   {
-   "end": 4.352,
-   "start": 4.224,
+   "end": 5.333,
+   "start": 5.205,
    "word": "ein"
   },
   {
-   "end": 5.077,
-   "start": 4.437,
+   "end": 6.016,
+   "start": 5.376,
    "word": "Fundament."
   },
   {
-   "end": 5.589,
-   "start": 5.419,
+   "end": 6.571,
+   "start": 6.4,
    "word": "Das"
   },
   {
-   "end": 5.931,
-   "start": 5.632,
+   "end": 6.869,
+   "start": 6.613,
    "word": "Fundament"
   },
   {
-   "end": 6.272,
-   "start": 6.144,
+   "end": 7.595,
+   "start": 7.381,
    "word": "gilt"
   },
   {
-   "end": 6.485,
-   "start": 6.357,
+   "end": 7.979,
+   "start": 7.808,
    "word": "für"
   },
   {
-   "end": 6.88,
-   "start": 6.528,
+   "end": 8.393,
+   "start": 8.021,
    "word": "alle."
   },
   {
-   "end": 7.189,
-   "start": 7.104,
+   "end": 8.722,
+   "start": 8.594,
    "word": "Es"
   },
   {
-   "end": 7.36,
-   "start": 7.232,
+   "end": 8.85,
+   "start": 8.764,
    "word": "hat"
   },
   {
-   "end": 7.659,
-   "start": 7.445,
+   "end": 9.063,
+   "start": 8.892,
    "word": "zwei"
   },
   {
-   "end": 8.384,
-   "start": 7.701,
+   "end": 9.788,
+   "start": 9.148,
    "word": "Hälften:"
   },
   {
-   "end": 8.853,
-   "start": 8.683,
+   "end": 10.172,
+   "start": 10.044,
    "word": "die"
   },
   {
-   "end": 9.536,
-   "start": 8.896,
+   "end": 10.77,
+   "start": 10.215,
    "word": "Spielregeln"
   },
   {
-   "end": 9.749,
-   "start": 9.621,
+   "end": 10.983,
+   "start": 10.812,
    "word": "für"
   },
   {
-   "end": 9.92,
-   "start": 9.792,
+   "end": 11.196,
+   "start": 11.026,
    "word": "einen"
   },
   {
-   "end": 10.304,
-   "start": 9.963,
+   "end": 11.538,
+   "start": 11.239,
    "word": "sicheren"
   },
   {
-   "end": 10.859,
-   "start": 10.347,
+   "end": 12.05,
+   "start": 11.623,
    "word": "Einsatz"
   },
   {
-   "end": 11.499,
-   "start": 10.987,
+   "end": 12.604,
+   "start": 12.22,
    "word": "und"
   },
   {
-   "end": 11.627,
-   "start": 11.541,
+   "end": 12.732,
+   "start": 12.647,
    "word": "das"
   },
   {
-   "end": 12.267,
-   "start": 11.712,
+   "end": 13.33,
+   "start": 12.818,
    "word": "Verständnis"
   },
   {
-   "end": 12.437,
-   "start": 12.309,
+   "end": 13.5,
+   "start": 13.372,
    "word": "der"
   },
   {
-   "end": 13.248,
-   "start": 12.48,
+   "end": 14.247,
+   "start": 13.543,
    "word": "Zusammenhänge,"
   },
   {
-   "end": 13.504,
-   "start": 13.376,
+   "end": 14.482,
+   "start": 14.354,
    "word": "das"
   },
   {
-   "end": 13.717,
-   "start": 13.547,
+   "end": 14.738,
+   "start": 14.524,
    "word": "ihn"
   },
   {
-   "end": 14.059,
-   "start": 13.76,
+   "end": 15.036,
+   "start": 14.78,
    "word": "wirksam"
   },
   {
-   "end": 14.528,
-   "start": 14.144,
+   "end": 15.498,
+   "start": 15.079,
    "word": "macht."
   }
  ],
- "stimme": "Mordecai"
+ "stimme": "Quiet Dieter - Serious"
 }
