@@ -13,8 +13,8 @@ const KONTINUITAET = new Set(['S00>S01', 'S07>S08', 'S15>S16']);
 
 export function uebergang(a, b) {
   if (!b) return null;
-  if (a.akt === b.akt || KONTINUITAET.has(`${a.id}>${b.id}`)) return { art: 'blende', dauer: 0.5 };
-  return { art: 'weiss', dauer: 0.8 };
+  if (a.akt === b.akt || KONTINUITAET.has(`${a.id}>${b.id}`)) return { art: 'blende', dauer: 0.4 };
+  return { art: 'weiss', dauer: 0.7 };
 }
 
 export function szenePlanen(s) {
@@ -40,7 +40,7 @@ export function szenePlanen(s) {
       const text = zeilen.join(' ');
       let dauer = LESEREGEL.block(woerter(text));
       const klein = bi === 0 && ti === 0 && s.kleingedruckt ? s.kleingedruckt : null;
-      if (klein) dauer += LESEREGEL.block(woerter(klein));
+      if (klein) dauer += 0.4 * woerter(klein);
       if (anzeigen.length && ti === 0) t += zwischenVor(bi);
       anzeigen.push({ start: t, lese: dauer, zeilen, klein, block: bi, teil: ti, woerter: woerter(text) + woerter(klein) });
       t += dauer;

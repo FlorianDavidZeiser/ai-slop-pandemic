@@ -1,19 +1,23 @@
-import { eseg } from '../lib/core.js';
+import { eseg, clamp } from '../lib/core.js';
 import { fabrik, gestaffelt } from '../lib/fabrik.js';
-import { blockEnde } from '../lib/fabrikZustand.js';
+import { blockEnde, blockStart } from '../lib/fabrikZustand.js';
 
+// In drei Schritten: Welle und Riemen verschwinden, jede Maschine bekommt einen Motor,
+// dann rücken die Maschinen nacheinander in die Reihenfolge der Arbeit.
 export function render(t, p) {
-  const a0 = p.anzeigen[0];
-  const umbau = blockEnde(p, 0);
-  const welleWeg = 1 - eseg(t, 0.2);
+  const umbau = blockEnde(p, 0) + 0.2;
+  const teil2 = p.anzeigen.find((a) => a.block === 1 && a.teil === 1) || blockStart(p, 1);
+  const weg = 1 - eseg(t, 0.3, 0.7);
+  const layout = gestaffelt(t, umbau, 0.38, 1.0);
+  const umgebaut = clamp((t - umbau) / 4.2);
   return fabrik({
     halleOp: 1, kraftwerkOp: 1, maschinenOp: 1,
-    welleOp: welleWeg, riemenOp: welleWeg, rotT: 0,
-    motorOp: 1 - eseg(t, 0.9),
-    einzelmotoren: gestaffelt(t, a0.start + 0.4, 0.15, 0.5),
-    pfeilP: eseg(t, umbau + 0.1, 0.8),
-    layout: gestaffelt(t, umbau + 0.7, 0.25, 1.2),
-    materialOp: eseg(t, umbau + 3.4),
-    materialT: p.start + t,
+    welleOp: weg, riemenOp: weg, rotT: t,
+    motorOp: 1 - eseg(t, 1.0, 0.6),
+    zickOp: 1 - eseg(t, 0.2, 0.6), zickWegOp: 1 - eseg(t, umbau - 0.3, 0.4), materialT: t,
+    einzelmotoren: gestaffelt(t, 1.4, 0.13, 0.45),
+    layout,
+    pfeilP: eseg(t, umbau + 3.3, 0.8),
+    geradeOp: eseg(t, Math.max(umbau + 4.0, teil2.start - 0.3), 0.8) * umgebaut,
   });
 }

@@ -10,23 +10,14 @@ export function blitz(cx, cy, h, fill = C.weiss) {
 }
 
 export const maschine = (cx, cy, o = {}) =>
-  rect(cx - 60, cy - 40, 120, 80, { fill: C.flaeche, stroke: C.blau, sw: 4, op: o.op ?? 1 });
+  rect(cx - 70, cy - 47, 140, 94, { fill: C.flaeche, stroke: C.blau, sw: 4, op: o.op ?? 1 });
 
 export const maschinenKontur = (cx, cy, op = 1) =>
-  rect(cx - 60, cy - 40, 120, 80, { stroke: C.grau, sw: 2, dash: '8 8', op });
+  rect(cx - 70, cy - 47, 140, 94, { stroke: C.grau, sw: 3, dash: '10 10', op });
 
 export function elektromotor(cx, cy, r, op = 1) {
   if (op <= 0) return '';
   return `<g${op < 1 ? ` opacity="${f(op)}"` : ''}>${circle(cx, cy, r, { fill: C.blau })}${blitz(cx, cy, r * 1.15)}</g>`;
-}
-
-export function dampfmaschine(x, y, w, h, op = 1) {
-  if (op <= 0) return '';
-  return `<g${op < 1 ? ` opacity="${f(op)}"` : ''}>` +
-    rect(x, y, w, h, { fill: C.grau }) +
-    circle(x + 34, y + 34, 18, { fill: C.weiss }) +
-    circle(x + 34, y + 34, 9, { fill: C.grau }) +
-    `</g>`;
 }
 
 export function person(cx, cy, s = 1, op = 1) {
@@ -66,7 +57,7 @@ export function karteikarte(x, y, w, h, s, op = 1) {
   if (op <= 0) return '';
   return `<g${op < 1 ? ` opacity="${f(op)}"` : ''}>` +
     rect(x, y, w, h, { fill: C.weiss, stroke: C.grau, sw: 2 }) +
-    line(x + 24, y + 30, x + w - 24, y + 30, { stroke: C.grauHell, sw: 2 }) +
-    txt(x + 28, y + h / 2 + 26, s, { size: 40, fill: C.text }) +
+    line(x + 28, y + 34, x + w - 28, y + 34, { stroke: C.grauHell, sw: 2 }) +
+    txt(x + 32, y + h / 2 + 30, s, { size: 44, fill: C.text }) +
     `</g>`;
 }

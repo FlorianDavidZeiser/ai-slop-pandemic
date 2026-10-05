@@ -10,14 +10,15 @@ function textband(szene, plan, t) {
   if (szene.anzeige === 'titel') {
     plan.anzeigen.forEach((a) => {
       const op = easeIO(seg(t, a.start, 0.6));
-      s += txt(W / 2, 220, a.zeilen[0], { size: 72, fam: 'serif', anchor: 'middle', op });
+      s += txt(W / 2, 236, a.zeilen[0], { size: 84, fam: 'serif', anchor: 'middle', op });
     });
     return s;
   }
   plan.anzeigen.forEach((a, i) => {
-    const ein = seg(t, a.start, BLOCK_BLENDE);
+    // erst aus, dann ein: beide Hälften je 150 ms, so geistert kein alter Text unter dem neuen
+    const ein = seg(t, a.start, BLOCK_BLENDE / 2);
     const naechste = plan.anzeigen[i + 1];
-    const aus = naechste ? 1 - seg(t, naechste.start, BLOCK_BLENDE) : 1;
+    const aus = naechste ? 1 - seg(t, naechste.start - BLOCK_BLENDE / 2, BLOCK_BLENDE / 2) : 1;
     const op = Math.min(ein, aus);
     if (op <= 0) return;
     a.zeilen.forEach((z, zi) => {

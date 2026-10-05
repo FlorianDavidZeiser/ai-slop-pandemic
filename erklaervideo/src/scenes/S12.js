@@ -5,7 +5,7 @@ import { umbrechenFrei } from '../lib/text.js';
 // Skala der Automatisierung. Der Prüfhaken wird nach rechts größer und genauer.
 export function render(t, p, szene) {
   const felder = szene.beschriftungen;
-  const x0 = 160, gesamt = 1600, luecke = 24, w = (gesamt - 2 * luecke) / 3, y = 440, h = 150;
+  const x0 = 160, gesamt = 1600, luecke = 24, w = (gesamt - 2 * luecke) / 3, y = 470, h = 170;
   let s = '';
   s += line(x0, y + h + 46, x0 + gesamt, y + h + 46, { stroke: C.grau, sw: 2, op: eseg(t, 0.2) });
   felder.forEach((label, i) => {
@@ -15,7 +15,7 @@ export function render(t, p, szene) {
     const zeilen = umbrechenFrei(label, 36, w - 60);
     const yy = y + h / 2 - ((zeilen.length - 1) * 44) / 2 + 13;
     zeilen.forEach((z, zi) => { s += txt(x + w / 2, yy + zi * 44, z, { size: 36, anchor: 'middle', op }); });
-    const r = [30, 44, 60][i];
+    const r = [34, 50, 68][i];
     s += pruefhaken(x + w / 2, y - 40 - r, r, eseg(t, p.beschriftungEnde - 1.4 + i * 0.6), i);
   });
   return s;

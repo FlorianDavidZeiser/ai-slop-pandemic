@@ -1,7 +1,8 @@
-# Szenendauern
-
-Berechnet aus Leseregel und Animationszeiten. Schriften: Gelasio / Carlito.
-
+Schriftprüfung bestanden: Gelasio / Carlito
+Hinweis: S05 Block 1 passt nicht in zwei Zeilen und wird an der Satzgrenze in 2 Anzeigen geteilt.
+Hinweis: S06 Block 2 passt nicht in zwei Zeilen und wird an der Satzgrenze in 2 Anzeigen geteilt.
+Hinweis: S07 Block 1 passt nicht in zwei Zeilen und wird an der Satzgrenze in 2 Anzeigen geteilt.
+Hinweis: S08 Block 1 passt nicht in zwei Zeilen und wird an der Satzgrenze in 2 Anzeigen geteilt.
 | Szene | C2 (s) | berechnet (s) | Differenz | Beginn |
 |---|---|---|---|---|
 | S00 Titel | 4.6 | 4.5 | -0.1 | 0:00 |
@@ -23,3 +24,5 @@ Berechnet aus Leseregel und Animationszeiten. Schriften: Gelasio / Carlito.
 | S16 Die Frage | 14.2 | 17.2 | +3.0 | 4:06 |
 | S17 Abspann | 6.0 | 6.0 | +0.0 | 4:24 |
 | **Summe einschließlich Übergänge** | 250,7 | 270.5 | | Ende 4:30 |
+Bild 0 von 8115
+Bild 300 von 8115
