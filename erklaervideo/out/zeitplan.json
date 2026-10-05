@@ -1,5 +1,5 @@
 {
- "gesamt": 312.4943469387755,
+ "gesamt": 312.11691836734695,
  "schriften": {
   "serif": "Gelasio",
   "sans": "Carlito"
@@ -26,258 +26,258 @@
    "id": "S01",
    "titel": "Heute",
    "start": 4.9,
-   "dauer": 22.72408163265306,
+   "dauer": 21.339591836734694,
    "sprechStart": 1,
-   "sprechEnde": 21.92408163265306,
+   "sprechEnde": 20.539591836734694,
    "bildtext": {
     "text": "2022 ist KI für alle da. 2025 wird KI-Kompetenz Pflicht.",
     "zeilen": [
      "2022 ist KI für alle da.",
      "2025 wird KI-Kompetenz Pflicht."
     ],
-    "start": 16.572
+    "start": 14.451
    },
    "marke": null
   },
   {
    "id": "S02",
    "titel": "Der Spiegel",
-   "start": 28.024081632653058,
-   "dauer": 21.801632653061226,
+   "start": 26.639591836734695,
+   "dauer": 19.99918367346939,
    "sprechStart": 0.6,
-   "sprechEnde": 21.001632653061225,
+   "sprechEnde": 19.19918367346939,
    "bildtext": {
     "text": "1882 ist Strom für alle da.",
     "zeilen": [
      "1882 ist Strom für alle da."
     ],
-    "start": 14.334999999999999
+    "start": 13.045
    },
    "marke": null
   },
   {
    "id": "S03",
    "titel": "Die Welle",
-   "start": 50.52571428571429,
-   "dauer": 25.674285714285713,
+   "start": 47.33877551020409,
+   "dauer": 26.192,
    "sprechStart": 2,
-   "sprechEnde": 24.674285714285713,
+   "sprechEnde": 25.118367346938776,
    "bildtext": {
     "text": "Die Technik ist neu. Der Aufbau bleibt alt.",
     "zeilen": [
      "Die Technik ist neu. Der Aufbau bleibt alt."
     ],
-    "start": 21.474
+    "start": 22.392
    },
    "marke": {
     "text": "Heute: KI verstehen ist nicht Zusammenhänge verstehen",
-    "start": 23.474285714285713
+    "start": 23.992
    }
   },
   {
    "id": "S04",
    "titel": "Der Umbau",
-   "start": 76.60000000000001,
-   "dauer": 24.26530612244898,
+   "start": 73.93077551020409,
+   "dauer": 24.213061224489795,
    "sprechStart": 0.8,
-   "sprechEnde": 23.26530612244898,
+   "sprechEnde": 23.213061224489795,
    "bildtext": {
     "text": "Der Gewinn kommt mit der neuen Anordnung.",
     "zeilen": [
      "Der Gewinn kommt mit der neuen Anordnung."
     ],
-    "start": 11.771
+    "start": 12.026000000000002
    },
    "marke": {
     "text": "Heute: Organisation und Prozesse",
-    "start": 22.06530612244898
+    "start": 22.013061224489796
    }
   },
   {
    "id": "S05",
    "titel": "Was man verstehen musste",
-   "start": 101.26530612244899,
-   "dauer": 20.0334693877551,
+   "start": 98.54383673469388,
+   "dauer": 21.052244897959184,
    "sprechStart": 0.8,
-   "sprechEnde": 19.0334693877551,
+   "sprechEnde": 20.052244897959184,
    "bildtext": {
     "text": "Verstehen, wie die Arbeit läuft.",
     "zeilen": [
      "Verstehen, wie die Arbeit läuft."
     ],
-    "start": 10.435
+    "start": 10.962000000000002
    },
    "marke": {
     "text": "Heute: Digital Ready",
-    "start": 17.833469387755102
+    "start": 18.852244897959185
    }
   },
   {
    "id": "S06",
    "titel": "Die Regeln",
-   "start": 121.6987755102041,
-   "dauer": 23.620408163265306,
+   "start": 119.99608163265307,
+   "dauer": 23.98612244897959,
    "sprechStart": 1.2,
-   "sprechEnde": 22.620408163265306,
+   "sprechEnde": 22.98612244897959,
    "bildtext": {
     "text": "Regeln machen den Betrieb sicher.",
     "zeilen": [
      "Regeln machen den Betrieb sicher."
     ],
-    "start": 11.295
+    "start": 11.795
    },
    "marke": {
     "text": "Heute: Pflicht ist nicht Mehrwert",
-    "start": 21.420408163265307
+    "start": 21.78612244897959
    }
   },
   {
    "id": "S07",
    "titel": "Strom als Dienstleistung",
-   "start": 145.71918367346942,
-   "dauer": 20.546938775510203,
+   "start": 144.38220408163266,
+   "dauer": 19.815510204081633,
    "sprechStart": 1,
-   "sprechEnde": 19.546938775510203,
+   "sprechEnde": 18.815510204081633,
    "bildtext": {
     "text": "Aus der Technik wird ein Geschäftsmodell.",
     "zeilen": [
      "Aus der Technik wird ein Geschäftsmodell."
     ],
-    "start": 9.875
+    "start": 9.149
    },
    "marke": {
     "text": "Heute: Geschäftsmodelle",
-    "start": 18.346938775510203
+    "start": 17.615510204081634
    }
   },
   {
    "id": "S08",
    "titel": "Daten",
-   "start": 166.9661224489796,
-   "dauer": 22.547,
+   "start": 164.8977142857143,
+   "dauer": 20.189,
    "sprechStart": 0.8,
-   "sprechEnde": 21.332244897959185,
+   "sprechEnde": 18.902857142857144,
    "bildtext": {
     "text": "Ein Kunde, drei Schreibweisen: drei Wahrheiten oder keine.",
     "zeilen": [
      "Ein Kunde, drei Schreibweisen:",
      "drei Wahrheiten oder keine."
     ],
-    "start": 18.747
+    "start": 16.389
    },
    "marke": {
     "text": "Heute: Daten",
-    "start": 20.347
+    "start": 17.989
    }
   },
   {
    "id": "S09",
    "titel": "Die Sicherung",
-   "start": 189.9131224489796,
-   "dauer": 19.511020408163265,
+   "start": 185.4867142857143,
+   "dauer": 18.779591836734696,
    "sprechStart": 0.8,
-   "sprechEnde": 18.511020408163265,
+   "sprechEnde": 17.779591836734696,
    "bildtext": {
     "text": "Ein plausibler Fehler löst nichts aus.",
     "zeilen": [
      "Ein plausibler Fehler löst nichts aus."
     ],
-    "start": 14.349
+    "start": 14.036000000000001
    },
    "marke": {
     "text": "Heute: Mensch entscheidet, KI unterstützt",
-    "start": 17.311020408163266
+    "start": 16.579591836734696
    }
   },
   {
    "id": "S10",
    "titel": "Der Grad",
-   "start": 209.82414285714287,
-   "dauer": 14.13877551020408,
+   "start": 204.66630612244901,
+   "dauer": 14.24326530612245,
    "sprechStart": 0.6,
-   "sprechEnde": 13.13877551020408,
+   "sprechEnde": 13.24326530612245,
    "bildtext": {
     "text": "Je selbstständiger das System, desto genauer die Prüfung.",
     "zeilen": [
      "Je selbstständiger das System,",
      "desto genauer die Prüfung."
     ],
-    "start": 8.664
+    "start": 8.621
    },
    "marke": {
     "text": "Heute: Automatisierung",
-    "start": 11.938775510204081
+    "start": 12.04326530612245
    }
   },
   {
    "id": "S11",
    "titel": "Der fehlende Zwang",
-   "start": 224.36291836734696,
-   "dauer": 21.522448979591836,
+   "start": 219.30957142857147,
+   "dauer": 21.653061224489797,
    "sprechStart": 0.8,
-   "sprechEnde": 20.522448979591836,
+   "sprechEnde": 20.653061224489797,
    "bildtext": {
     "text": "Der Zwang zum Prüfen fehlt.",
     "zeilen": [
      "Der Zwang zum Prüfen fehlt."
     ],
-    "start": 15.462000000000002
+    "start": 15.337000000000002
    },
    "marke": null
   },
   {
    "id": "S12",
    "titel": "Das Fundament",
-   "start": 246.5853673469388,
-   "dauer": 15.906938775510204,
+   "start": 241.66263265306125,
+   "dauer": 16.742857142857144,
    "sprechStart": 0.6,
-   "sprechEnde": 15.306938775510204,
+   "sprechEnde": 16.142857142857142,
    "bildtext": {
     "text": "Alle brauchen dasselbe Fundament.",
     "zeilen": [
      "Alle brauchen dasselbe Fundament."
     ],
-    "start": 7.704
+    "start": 9.193999999999999
    },
    "marke": null
   },
   {
    "id": "S13",
    "titel": "Die Stufen",
-   "start": 262.892306122449,
-   "dauer": 24.988571428571426,
+   "start": 258.8054897959184,
+   "dauer": 27.33959183673469,
    "sprechStart": 0.4,
-   "sprechEnde": 23.988571428571426,
+   "sprechEnde": 26.33959183673469,
    "bildtext": {
     "text": "Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1.",
     "zeilen": [
      "Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1."
     ],
-    "start": 13.324
+    "start": 15.945
    },
    "marke": null
   },
   {
    "id": "S14",
    "titel": "Die Frage",
-   "start": 288.2808775510204,
-   "dauer": 16.8134693877551,
+   "start": 286.5450816326531,
+   "dauer": 18.171836734693876,
    "sprechStart": 1.2,
-   "sprechEnde": 14.3134693877551,
+   "sprechEnde": 15.671836734693876,
    "bildtext": {
     "text": "Haben wir den Ablauf geprüft, oder hängen wir KI an die alte Welle?",
     "zeilen": [
      "Haben wir den Ablauf geprüft,",
      "oder hängen wir KI an die alte Welle?"
     ],
-    "start": 10.587
+    "start": 11.482999999999999
    },
    "marke": null
   },
   {
    "id": "S15",
    "titel": "Abspann",
-   "start": 305.4943469387755,
+   "start": 305.11691836734695,
    "dauer": 7,
    "sprechStart": 0.5,
    "sprechEnde": 0.5,
