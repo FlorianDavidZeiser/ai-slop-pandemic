@@ -1,0 +1,318 @@
+{
+  "fassung": "Drehbuch Fassung 3, Stand 5. Oktober 2026",
+  "szenen": [
+    {
+      "id": "S00",
+      "titel": "Titel",
+      "akt": 0,
+      "kopfzeile": null,
+      "anzeige": "titel",
+      "bloecke": [
+        "Zwei Umbrüche, ein Muster."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [],
+      "animation_vorlauf_s": 1.5,
+      "animation_zwischen_s": 0,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S01",
+      "titel": "KI-Vorgeschichte",
+      "akt": 1,
+      "kopfzeile": null,
+      "bloecke": [
+        "Seit den 1950er-Jahren wird an Künstlicher Intelligenz geforscht.",
+        "Zweimal folgen große Erwartungen. Zweimal bricht das Interesse ein."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": ["KI", "1950er"],
+      "animation_vorlauf_s": 1.5,
+      "animation_zwischen_s": 2,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S02",
+      "titel": "Der Moment",
+      "akt": 1,
+      "kopfzeile": null,
+      "bloecke": [
+        "Im November 2022 ist KI plötzlich für alle da."
+      ],
+      "kleingedruckt": "Nach Schätzungen 100 Millionen Nutzer in zwei Monaten.",
+      "begriffsmarke": null,
+      "beschriftungen": ["2022"],
+      "animation_vorlauf_s": 1.5,
+      "animation_zwischen_s": 0,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S03",
+      "titel": "Der Spiegel",
+      "akt": 1,
+      "kopfzeile": null,
+      "bloecke": [
+        "Beim Strom war es ähnlich. 1867 wird das Prinzip der Dynamomaschine vorgestellt.",
+        "1882 gehen in London und New York die ersten Kraftwerke für die Stadt ans Netz."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": ["Strom", "1867", "1882"],
+      "animation_vorlauf_s": 1.5,
+      "animation_zwischen_s": 1.5,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S04",
+      "titel": "Die offene Frage",
+      "akt": 1,
+      "kopfzeile": null,
+      "bloecke": [
+        "Wohin KI führt, weiß heute niemand. Was folgt, ist ein Vergleich. Er ist keine Vorhersage."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [],
+      "animation_vorlauf_s": 1.5,
+      "animation_zwischen_s": 0.5,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S05",
+      "titel": "Die Welle",
+      "akt": 2,
+      "kopfzeile": null,
+      "bloecke": [
+        "Eine Dampfmaschine treibt alle Maschinen über eine lange Welle an. Die Maschinen stehen dort, wo die Welle sie erreicht.",
+        "Die Fabriken kaufen Elektromotoren. Und hängen sie an dieselbe Welle.",
+        "Über drei Jahrzehnte steigt die Produktivität kaum."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: KI verstehen ist nicht Zusammenhänge verstehen",
+      "beschriftungen": [],
+      "animation_vorlauf_s": 4,
+      "animation_zwischen_s": 2,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S06",
+      "titel": "Der Umbau",
+      "akt": 2,
+      "kopfzeile": null,
+      "bloecke": [
+        "Dann bekommt jede Maschine ihren eigenen Motor.",
+        "Jetzt können die Maschinen in der Reihenfolge stehen, in der die Arbeit läuft. Das Material fließt besser durch die Fabrik.",
+        "In den 1920er-Jahren trägt die Elektrifizierung die Hälfte des Produktivitätswachstums der Industrie."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Organisation und Prozesse",
+      "beschriftungen": [],
+      "animation_vorlauf_s": 2,
+      "animation_zwischen_s": [4, 1.5],
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S07",
+      "titel": "Was man verstehen musste",
+      "akt": 2,
+      "kopfzeile": null,
+      "bloecke": [
+        "Niemand musste dafür einen Dynamo bauen können. Aber man musste wissen, wie die Arbeit läuft, und prüfen, ob die alte Anordnung noch passt."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Digital Ready",
+      "beschriftungen": [],
+      "animation_vorlauf_s": 2.5,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S08",
+      "titel": "Die Regeln",
+      "akt": 3,
+      "kopfzeile": null,
+      "bloecke": [
+        "1895 entstehen die ersten Sicherheitsvorschriften für Starkstromanlagen. Sie schaffen die Grundlage für einen sicheren Betrieb.",
+        "Den Produktivitätsgewinn bringen sie allein nicht."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Pflicht ist nicht Mehrwert",
+      "beschriftungen": ["Sicherheitsvorschriften 1895"],
+      "animation_vorlauf_s": 2,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S09",
+      "titel": "Strom als Dienstleistung",
+      "akt": 3,
+      "kopfzeile": null,
+      "bloecke": [
+        "Bald erzeugen viele Fabriken keinen eigenen Strom mehr. Sie kaufen ihn als Dienstleistung aus dem Netz."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Geschäftsmodelle",
+      "beschriftungen": [],
+      "animation_vorlauf_s": 3,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S10",
+      "titel": "Daten",
+      "akt": 4,
+      "kopfzeile": "Wo der Vergleich nicht trägt",
+      "bloecke": [
+        "Ist derselbe Kunde dreimal unterschiedlich erfasst, findet ein Agent drei Wahrheiten oder keine.",
+        "Daten entstehen jeden Tag, bei jeder Eingabe."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Daten",
+      "beschriftungen": ["Müller GmbH", "Mueller GmbH", "Müller G."],
+      "animation_vorlauf_s": 3,
+      "animation_zwischen_s": 1.5,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S11",
+      "titel": "Die Sicherung",
+      "akt": 4,
+      "kopfzeile": "Wo der Vergleich nicht trägt",
+      "bloecke": [
+        "Bei Überlast springt die Sicherung.",
+        "KI arbeitet mit Wahrscheinlichkeiten. Ein plausibler Fehler löst nichts aus.",
+        "Deshalb muss feststehen, wo ein Mensch prüft."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Mensch entscheidet, KI unterstützt",
+      "beschriftungen": [],
+      "animation_vorlauf_s": 2.5,
+      "animation_zwischen_s": 2,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S12",
+      "titel": "Der Grad",
+      "akt": 4,
+      "kopfzeile": "Wo der Vergleich nicht trägt",
+      "bloecke": [
+        "Je selbstständiger ein System arbeitet, desto genauer muss diese Stelle festgelegt sein."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": "Heute: Automatisierung",
+      "beschriftungen": ["unterstützt", "führt Schritte aus", "arbeitet innerhalb festgelegter Grenzen selbstständig"],
+      "animation_vorlauf_s": 2,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S13",
+      "titel": "Kein Umbau",
+      "akt": 4,
+      "kopfzeile": "Wo der Vergleich nicht trägt",
+      "bloecke": [
+        "KI braucht keinen Umbau der Fabrik. Sie kommt als Software auf den bestehenden Arbeitsplatz."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [],
+      "animation_vorlauf_s": 2.5,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S14",
+      "titel": "Das Fundament",
+      "akt": 5,
+      "kopfzeile": null,
+      "bloecke": [
+        "Alle brauchen dasselbe Fundament: Spielregeln und das Verständnis der Zusammenhänge."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [
+        "1 Verstehen",
+        "Spielregeln",
+        "erlaubte Werkzeuge, zulässige Daten, Risiken, Grenzen",
+        "Art. 4 KI-Verordnung",
+        "Digital Ready: die Zusammenhänge",
+        "Organisation",
+        "Prozesse",
+        "Daten",
+        "KI",
+        "Automatisierung",
+        "Geschäftsmodelle",
+        "Querschnitt: Mensch entscheidet, KI unterstützt.",
+        "PFLICHT",
+        "MEHRWERT"
+      ],
+      "animation_vorlauf_s": 2,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 0.5
+    },
+    {
+      "id": "S15",
+      "titel": "Die Stufen",
+      "akt": 5,
+      "kopfzeile": null,
+      "bloecke": [
+        "Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1."
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [
+        "2 Nutzen",
+        "3 Umsetzen",
+        "4 Transformieren",
+        "Alle Mitarbeitenden",
+        "Wissensarbeitende",
+        "KI-Enabler in den Fachbereichen",
+        "zentrales Team und ausgewählte Fach- und Führungskräfte",
+        "Führung als Querschnitt"
+      ],
+      "animation_vorlauf_s": 1,
+      "animation_zwischen_s": 1,
+      "animation_nachlauf_s": 1
+    },
+    {
+      "id": "S16",
+      "titel": "Die Frage",
+      "akt": 6,
+      "kopfzeile": null,
+      "bloecke": [
+        "Bei KI wissen wir nicht, wohin sie führt.",
+        "Aber wir können bei jedem Einsatz fragen: Haben wir den Ablauf geprüft, oder hängen wir KI an die alte Welle?"
+      ],
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [],
+      "animation_vorlauf_s": 2.5,
+      "animation_zwischen_s": 1.5,
+      "animation_nachlauf_s": 1
+    },
+    {
+      "id": "S17",
+      "titel": "Abspann",
+      "akt": 6,
+      "kopfzeile": null,
+      "anzeige": "abspann",
+      "bloecke": [],
+      "abspann": {
+        "hinweis": "Mehr dazu im Konzeptpapier „AI Literacy und Digital Ready“.",
+        "quellen": [
+          "David 1990",
+          "Devine 1983",
+          "Brynjolfsson, Rock und Syverson 2021",
+          "VDE-Geschichte"
+        ],
+        "vermerk": "Animation vollständig per Code erstellt."
+      },
+      "kleingedruckt": null,
+      "begriffsmarke": null,
+      "beschriftungen": [],
+      "dauer_fest_s": 6
+    }
+  ]
+}

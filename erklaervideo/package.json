@@ -1,0 +1,13 @@
+{
+  "name": "erklaervideo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preview": "node render/serve.js",
+    "stills": "node render/render.js --stills",
+    "render": "node render/render.js && bash render/encode.sh"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}
