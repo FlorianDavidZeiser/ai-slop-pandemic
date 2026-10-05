@@ -4,7 +4,7 @@
 // Pegel: Stimme auf -16 LUFS, Musik auf den Wert aus script.json (Standard -33 LUFS), unter der Stimme um weitere 6 dB abgesenkt.
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 const wurzel = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const aus = (...p) => path.join(wurzel, 'out', ...p);
@@ -15,9 +15,10 @@ const ff = (args) => execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...args
 
 // Integrierte Lautheit einer Datei in LUFS
 function lufs(datei) {
-  const out = execFileSync('ffmpeg', ['-i', datei, '-af', 'ebur128', '-f', 'null', '-'], { stdio: ['ignore', 'pipe', 'pipe'] }).toString();
-  const txt = execFileSync('ffmpeg', ['-i', datei, '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  const m = (out + txt).match(/I:\s+(-?[\d.]+) LUFS/g);
+  // ffmpeg schreibt die Zusammenfassung auf stderr
+  const r = spawnSync('ffmpeg', ['-i', datei, '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8' });
+  const m = (r.stderr || '').match(/I:\s+(-?[\d.]+) LUFS/g);
+  if (!m) throw new Error(`Lautheit nicht messbar: ${datei}`);
   return Number(m[m.length - 1].match(/-?[\d.]+/)[0]);
 }
 
