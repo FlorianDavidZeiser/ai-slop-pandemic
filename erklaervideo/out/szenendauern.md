@@ -1,25 +1,23 @@
 # Szenendauern
 
-Berechnet aus Leseregel und Animationszeiten. Schriften: Gelasio / Carlito.
+Die Stimme bestimmt die Dauer. Schriften: Gelasio / Carlito.
 
-| Szene | C2 (s) | berechnet (s) | Differenz | Beginn |
-|---|---|---|---|---|
-| S00 Titel | 4.6 | 4.5 | -0.1 | 0:00 |
-| S01 KI-Vorgeschichte | 11.8 | 12.4 | +0.6 | 0:04 |
-| S02 Der Moment | 10.8 | 9.6 | -1.2 | 0:17 |
-| S03 Der Spiegel | 16.4 | 16.2 | -0.2 | 0:27 |
-| S04 Die offene Frage | 8.0 | 8.4 | +0.4 | 0:44 |
-| S05 Die Welle | 26.3 | 27.7 | +1.4 | 0:53 |
-| S06 Der Umbau | 26.7 | 29.5 | +2.8 | 1:21 |
-| S07 Was man verstehen musste | 13.2 | 15.2 | +2.0 | 1:51 |
-| S08 Die Regeln | 14.9 | 17.3 | +2.4 | 2:07 |
-| S09 Strom als Dienstleistung | 11.4 | 12.0 | +0.6 | 2:24 |
-| S10 Daten | 17.4 | 17.4 | +0.0 | 2:37 |
-| S11 Die Sicherung | 17.3 | 19.1 | +1.8 | 2:55 |
-| S12 Der Grad | 14.1 | 12.5 | -1.6 | 3:14 |
-| S13 Kein Umbau | 7.6 | 8.6 | +1.0 | 3:27 |
-| S14 Das Fundament | 14.6 | 15.7 | +1.1 | 3:36 |
-| S15 Die Stufen | 15.4 | 13.5 | -1.9 | 3:53 |
-| S16 Die Frage | 14.2 | 17.2 | +3.0 | 4:06 |
-| S17 Abspann | 6.0 | 6.0 | +0.0 | 4:24 |
-| **Summe einschließlich Übergänge** | 250,7 | 270.5 | | Ende 4:30 |
+| Szene | Beginn | Dauer (s) | davon Sprechzeit (s) |
+|---|---|---|---|
+| S00 Titel | 0:00 | 4.5 | 0.0 |
+| S01 Heute | 0:04 | 23.9 | 22.1 |
+| S02 Der Spiegel | 0:29 | 23.0 | 21.6 |
+| S03 Die Welle | 0:52 | 27.0 | 24.0 |
+| S04 Der Umbau | 1:20 | 25.5 | 23.7 |
+| S05 Was man verstehen musste | 1:46 | 21.1 | 19.3 |
+| S06 Die Regeln | 2:07 | 24.8 | 22.6 |
+| S07 Strom als Dienstleistung | 2:32 | 21.6 | 19.6 |
+| S08 Daten | 2:55 | 23.5 | 21.7 |
+| S09 Die Sicherung | 3:19 | 20.6 | 18.8 |
+| S10 Der Grad | 3:40 | 14.9 | 13.3 |
+| S11 Der fehlende Zwang | 3:55 | 22.6 | 20.8 |
+| S12 Das Fundament | 4:18 | 16.8 | 15.6 |
+| S13 Die Stufen | 4:35 | 26.3 | 24.9 |
+| S14 Die Frage | 5:02 | 17.6 | 13.9 |
+| S15 Abspann | 5:20 | 7.0 | 0.0 |
+| **Gesamt einschließlich Übergänge** | | 327.7 | Ende 5:27 |

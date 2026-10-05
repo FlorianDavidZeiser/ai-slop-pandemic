@@ -1,12 +1,21 @@
 # Erklärvideo AI Literacy
 
-Video nach dem Gesamtbriefing, Fassung 3. Komplett per Code erzeugt: SVG und JavaScript im Browser, eigene deterministische Zeitsteuerung, Render mit Playwright und ffmpeg. Kein Remotion, keine generativen Bild- oder Videowerkzeuge, keine externen Bilder.
+Video nach Drehbuch Fassung 4 (`content/drehbuch_v4.md`), mit Sprecherstimme. Bild komplett per Code: SVG und JavaScript im Browser, eigene deterministische Zeitsteuerung, Render mit Playwright und ffmpeg. Stimme und Hintergrundmusik synthetisch über HeyGen, einmal erzeugt und im Projekt abgelegt (`content/sprecher/`). Kein Remotion, keine generativen Bild- oder Videowerkzeuge, keine externen Bilder.
 
 ## Stand
 
-Alle Szenen ausgearbeitet, Gesamtrender in 1080p (`out/erklaervideo.mp4`, nicht im Repository, Befehl unten). Offen aus D6: der Lesetest mit drei Testpersonen (Schritt 3) und die Abnahme (Schritt 6). Beide führt der Auftraggeber durch.
+Fassung 4 mit Stimme, Gesamtrender in 1080p (`out/erklaervideo.mp4`, nicht im Repository, Befehl unten). Fassung 3 ohne Stimme liegt als `content/script_v3.json` bei.
 
-Standbilder: `out/stills/` (die fünf Freigabebilder) und `out/stills/szenen/` (ein Bild pro Szene).
+Standbilder: `out/stills/` (Freigabebilder) und `out/stills/szenen/` (ein Bild pro Szene).
+
+## Ablauf mit Stimme
+
+1. `script.json` enthält je Szene den Sprechtext (`sprecher`, mit `<break time="0.4s"/>` für Pausen), einen Bildtext (`bildtext`) und das Wort, bei dem der Bildtext erscheint (`bildtext_ab`).
+2. `npm run stimme` erzeugt je Szene eine Aufnahme über HeyGen (`POST /v3/voices/speech`, 0,6 Credits je Sprechminute) und speichert Audio und Zeitstempel je Wort unter `content/sprecher/`. Nur Szenen, deren Text, Stimme oder Tempo sich geändert hat, werden neu erzeugt. `npm run stimme -- --musik` lädt die Hintergrundmusik.
+3. Die Szenendauer ist Vorlauf plus Sprechzeit plus Nachlauf. Animation und Bildtext hängen an Wörtern der Aufnahme: In jeder Szene steht `p.w('Elektromotor')` für den Moment, in dem das Wort gesprochen wird.
+4. `npm run render` rendert die Bilder, kodiert das Video, mischt den Ton (`render/mischen.js`: Stimme auf -16 LUFS, Musik auf -33 LUFS, unter der Stimme abgesenkt) und führt beides zusammen.
+
+Zugang zu HeyGen: Die Umgebung hängt den Header `X-Api-Key` an Anfragen an `api.heygen.com` an, oder die Variable `HEYGEN_API_KEY` ist gesetzt. Die Aufrufe laufen über `curl`, damit der Proxy der Umgebung greift.
 
 ## Voraussetzungen
 
@@ -26,10 +35,12 @@ Wenn Playwright seinen Chromium nicht findet: `CHROMIUM_PATH=/pfad/zu/chromium n
 | Fünf Freigabebilder | `npm run stills` |
 | Ein Bild pro Szene | `node render/render.js --szenen` |
 | Bildstreifen eines Zeitbereichs zum Prüfen | `node render/ausschnitt.js <von_s> <bis_s> <schritt_s>` |
-| Alle Bilder und MP4 | `npm run render` |
+| Stimme erzeugen (nur geänderte Szenen) | `npm run stimme` |
+| Nur Ton neu mischen und einfügen | `npm run ton` |
+| Alle Bilder, MP4, Ton | `npm run render` |
 | Animatic in halber Auflösung | `node render/render.js --skala 0.5 && bash render/encode.sh` |
 
-Jeder Render schreibt `out/szenendauern.md`: die berechneten Szenendauern im Vergleich zu C2.
+Jeder Render schreibt `out/szenendauern.md` (Szenendauern und Sprechzeiten) und `out/zeitplan.json` (Grundlage der Tonmischung).
 
 ## Schriften
 
@@ -56,18 +67,16 @@ Szenendauern werden aus der Leseregel (D4) und den Animationszeiten berechnet, n
 
 Erweiterungen am Format von `script.json` gegenüber D3:
 
-- `animation_nachlauf_s`: Pause am Szenenende
-- `animation_zwischen_s` darf eine Liste sein, ein Wert je Lücke (S06 braucht vor dem Umbau mehr Zeit als danach)
-- `anzeige`: `titel` (S00) oder `abspann` (S17), `abspann` mit Hinweis, Quellen, Vermerk; `dauer_fest_s` für S17
+- `sprecher`, `bildtext`, `bildtext_ab`, `vorlauf_s`, `nachlauf_s` je Szene, `stimme` und `musik` am Anfang
+- `anzeige`: `titel` (S00) oder `abspann` (S15), `abspann` mit Hinweis, Quellen, Vermerk; `dauer_fest_s` für Szenen ohne Stimme
 
 ## Gestaltungsentscheidungen, die über das Briefing hinausgehen
 
-- **Textwechsel:** Der alte Block blendet erst aus (150 ms), dann der neue ein (150 ms). D4a nennt 300 ms Überblendung. Bei gleichzeitiger Überblendung an derselben Stelle überlagern sich die Buchstaben, deshalb nacheinander.
-- **Begriffsmarke** steht unten rechts in einer eigenen Zeile unter dem Textblock. Die lange Marke in S05 würde sonst mit dem Text überlappen.
-- **Lange Blöcke:** Vier Blöcke (S05 Block 1, S06 Block 2, S07, S08 Block 1) passen nicht in zwei Zeilen mit 55 Zeichen. Sie werden an der Satzgrenze in zwei Anzeigen geteilt, der Wortlaut bleibt Zeichen für Zeichen gleich. Die Leseregel gilt je Anzeige.
-- **Material in der alten Fabrik:** In S05 läuft das Material im Zickzack zwischen den Reihen, in S06 nach dem Umbau gerade. So ist „Das Material fließt besser“ im Bild zu sehen, nicht nur im Text.
-- **S11:** Die Person markiert am Ende die unauffällige Stelle im Text. Das ist das Bild für „wo ein Mensch prüft“.
-- **Übergänge ohne weiße Fläche** bei S00→S01, S07→S08 und S15→S16, weil dort dasselbe Bild weiterläuft (Kontinuität nach D4b).
-- **Kleingedrucktes in S02** zählt mit 0,4 s je Wort, ohne die zusätzliche Sekunde eines eigenen Blocks.
+- **Sprecherstimme und Musik** gegen D4 „kein Ton“. Begründung in `content/drehbuch_v4.md`, Teil 1.
+- **Ein Bildtext je Szene** statt mehrerer Blöcke. Er erscheint, wenn die Stimme den Gedanken ausgesprochen hat, und bleibt bis zum Szenenwechsel.
+- **Begriffsmarke** steht unten rechts in einer eigenen Zeile unter dem Bildtext.
+- **Material in der alten Fabrik:** In S03 läuft das Material im Zickzack zwischen den Reihen, in S04 nach dem Umbau gerade. So ist „Das Material fließt besser“ im Bild zu sehen, nicht nur im Text.
+- **S09:** Die Person markiert am Ende die unauffällige Stelle im Text. Das ist das Bild für „wo ein Mensch prüft“.
+- **Übergänge ohne weiße Fläche** bei S00→S01, S05→S06 und S13→S14, weil dort dasselbe Bild weiterläuft (Kontinuität nach D4b).
 - **Zielgruppen im Endbild** nach dem Wortlaut in D5, nicht nach der PNG („zentrales Team und ausgewählte Fach- und Führungskräfte“).
 - **MEHRWERT** in Gold statt Orange, weil D4b Orange auf Begriffsmarken, Kopfzeile, Trennlinie und Balken 3 beschränkt.

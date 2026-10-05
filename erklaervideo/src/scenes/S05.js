@@ -1,19 +1,14 @@
 import { eseg } from '../lib/core.js';
-import { fabrik, gestaffelt } from '../lib/fabrik.js';
-import { blockEnde } from '../lib/fabrikZustand.js';
+import { fabrik } from '../lib/fabrik.js';
+import { nachUmbau } from '../lib/fabrikZustand.js';
 
-// Dampfmaschine, Welle, Riemen, Maschinen. Material im Zickzack. Dann Tausch gegen den Elektromotor.
+// Person neben dem Arbeitsfluss, die alte Anordnung als blasse Kontur, daneben der Prüfhaken
 export function render(t, p) {
-  const tausch = blockEnde(p, 0) + 0.2;
-  const ab = eseg(t, tausch, 0.5);
+  const kontur = p.w('prüfen', 8) - 0.3;
   return fabrik({
-    halleOp: eseg(t, 0.1),
-    dampfOp: eseg(t, 0.6) * (1 - ab),
-    welleOp: eseg(t, 1.0), riemenOp: eseg(t, 1.5),
-    maschinenOp: gestaffelt(t, 1.8, 0.1, 0.5),
-    rotT: t,
-    zickOp: eseg(t, 2.8), zickWegOp: eseg(t, 2.6), materialT: t,
-    motorOp: eseg(t, tausch + 0.5),
-    kraftwerkOp: eseg(t, tausch + 1.1),
+    ...nachUmbau(p, t),
+    personOp: eseg(t, p.w('jemand', 3) - 0.3),
+    konturOp: eseg(t, kontur, 0.8) * (1 - eseg(t, p.w('Das Papier', kontur + 5) + 0.8)),
+    hakenOp: eseg(t, p.w('passt', kontur + 2) - 0.2),
   });
 }

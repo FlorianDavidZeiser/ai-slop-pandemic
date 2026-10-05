@@ -1,0 +1,287 @@
+{
+ "hash": "78179f2cd9da07ce",
+ "dauer": 22.674285714285713,
+ "woerter": [
+  {
+   "end": 0.4267,
+   "start": 0.299,
+   "word": "So"
+  },
+  {
+   "end": 0.725,
+   "start": 0.469,
+   "word": "sieht"
+  },
+  {
+   "end": 0.853,
+   "start": 0.768,
+   "word": "eine"
+  },
+  {
+   "end": 1.195,
+   "start": 0.896,
+   "word": "Fabrik"
+  },
+  {
+   "end": 1.365,
+   "start": 1.28,
+   "word": "um"
+  },
+  {
+   "end": 2.389,
+   "start": 1.408,
+   "word": "1890"
+  },
+  {
+   "end": 2.987,
+   "start": 2.475,
+   "word": "aus."
+  },
+  {
+   "end": 3.4987,
+   "start": 3.328,
+   "word": "Eine"
+  },
+  {
+   "end": 4.1387,
+   "start": 3.584,
+   "word": "Dampfmaschine"
+  },
+  {
+   "end": 4.992,
+   "start": 4.395,
+   "word": "treibt"
+  },
+  {
+   "end": 5.1627,
+   "start": 5.035,
+   "word": "über"
+  },
+  {
+   "end": 5.2907,
+   "start": 5.205,
+   "word": "eine"
+  },
+  {
+   "end": 5.589,
+   "start": 5.376,
+   "word": "lange"
+  },
+  {
+   "end": 5.973,
+   "start": 5.717,
+   "word": "Welle"
+  },
+  {
+   "end": 6.5707,
+   "start": 6.101,
+   "word": "alle"
+  },
+  {
+   "end": 7.04,
+   "start": 6.613,
+   "word": "Maschinen"
+  },
+  {
+   "end": 7.488,
+   "start": 7.083,
+   "word": "an."
+  },
+  {
+   "end": 8.064,
+   "start": 7.765,
+   "word": "Jede"
+  },
+  {
+   "end": 8.405,
+   "start": 8.107,
+   "word": "Maschine"
+  },
+  {
+   "end": 8.704,
+   "start": 8.533,
+   "word": "steht"
+  },
+  {
+   "end": 9.109,
+   "start": 8.747,
+   "word": "dort,"
+  },
+  {
+   "end": 9.344,
+   "start": 9.301,
+   "word": "wo"
+  },
+  {
+   "end": 9.5147,
+   "start": 9.387,
+   "word": "die"
+  },
+  {
+   "end": 9.685,
+   "start": 9.557,
+   "word": "Welle"
+  },
+  {
+   "end": 9.8987,
+   "start": 9.728,
+   "word": "sie"
+  },
+  {
+   "end": 10.581,
+   "start": 9.941,
+   "word": "erreicht."
+  },
+  {
+   "end": 10.965,
+   "start": 10.88,
+   "word": "Das"
+  },
+  {
+   "end": 11.392,
+   "start": 11.051,
+   "word": "Material"
+  },
+  {
+   "end": 11.861,
+   "start": 11.605,
+   "word": "wandert"
+  },
+  {
+   "end": 12.2027,
+   "start": 11.947,
+   "word": "kreuz"
+  },
+  {
+   "end": 12.3307,
+   "start": 12.245,
+   "word": "und"
+  },
+  {
+   "end": 12.5867,
+   "start": 12.373,
+   "word": "quer"
+  },
+  {
+   "end": 12.757,
+   "start": 12.629,
+   "word": "durch"
+  },
+  {
+   "end": 12.885,
+   "start": 12.8,
+   "word": "die"
+  },
+  {
+   "end": 13.203,
+   "start": 12.928,
+   "word": "Halle."
+  },
+  {
+   "end": 14.098,
+   "start": 13.757,
+   "word": "Dann"
+  },
+  {
+   "end": 14.525,
+   "start": 14.269,
+   "word": "kommt"
+  },
+  {
+   "end": 14.61,
+   "start": 14.568,
+   "word": "der"
+  },
+  {
+   "end": 15.57,
+   "start": 14.653,
+   "word": "Elektromotor."
+  },
+  {
+   "end": 15.976,
+   "start": 15.848,
+   "word": "Die"
+  },
+  {
+   "end": 16.402,
+   "start": 16.018,
+   "word": "Fabriken"
+  },
+  {
+   "end": 16.829,
+   "start": 16.445,
+   "word": "kaufen"
+  },
+  {
+   "end": 17.298,
+   "start": 16.872,
+   "word": "ihn."
+  },
+  {
+   "end": 17.725,
+   "start": 17.554,
+   "word": "Und"
+  },
+  {
+   "end": 18.023,
+   "start": 17.767,
+   "word": "hängen"
+  },
+  {
+   "end": 18.194,
+   "start": 18.066,
+   "word": "ihn"
+  },
+  {
+   "end": 18.322,
+   "start": 18.237,
+   "word": "an"
+  },
+  {
+   "end": 18.791,
+   "start": 18.365,
+   "word": "dieselbe"
+  },
+  {
+   "end": 19.052,
+   "start": 18.834,
+   "word": "Welle."
+  },
+  {
+   "end": 19.688,
+   "start": 19.474,
+   "word": "Über"
+  },
+  {
+   "end": 19.986,
+   "start": 19.73,
+   "word": "drei"
+  },
+  {
+   "end": 20.541,
+   "start": 20.029,
+   "word": "Jahrzehnte"
+  },
+  {
+   "end": 20.968,
+   "start": 20.669,
+   "word": "steigt"
+  },
+  {
+   "end": 21.053,
+   "start": 21.01,
+   "word": "die"
+  },
+  {
+   "end": 21.821,
+   "start": 21.096,
+   "word": "Produktivität"
+  },
+  {
+   "end": 22.428,
+   "start": 21.906,
+   "word": "kaum."
+  }
+ ],
+ "stimme": "Mordecai"
+}

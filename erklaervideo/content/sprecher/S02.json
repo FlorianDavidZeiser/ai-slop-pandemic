@@ -1,0 +1,232 @@
+{
+ "hash": "36fc44ad2dd58cfe",
+ "dauer": 20.401632653061224,
+ "woerter": [
+  {
+   "end": 0.4267,
+   "start": 0.256,
+   "word": "Das"
+  },
+  {
+   "end": 0.64,
+   "start": 0.469,
+   "word": "gab"
+  },
+  {
+   "end": 0.725,
+   "start": 0.683,
+   "word": "es"
+  },
+  {
+   "end": 0.896,
+   "start": 0.768,
+   "word": "schon"
+  },
+  {
+   "end": 1.34,
+   "start": 0.939,
+   "word": "einmal."
+  },
+  {
+   "end": 3.499,
+   "start": 1.877,
+   "word": "1867"
+  },
+  {
+   "end": 4.011,
+   "start": 3.84,
+   "word": "wird"
+  },
+  {
+   "end": 4.139,
+   "start": 4.053,
+   "word": "das"
+  },
+  {
+   "end": 4.693,
+   "start": 4.224,
+   "word": "Prinzip"
+  },
+  {
+   "end": 5.12,
+   "start": 4.949,
+   "word": "der"
+  },
+  {
+   "end": 5.845,
+   "start": 5.163,
+   "word": "Dynamomaschine"
+  },
+  {
+   "end": 6.997,
+   "start": 5.931,
+   "word": "vorgestellt."
+  },
+  {
+   "end": 9.173,
+   "start": 7.424,
+   "word": "1882"
+  },
+  {
+   "end": 9.472,
+   "start": 9.259,
+   "word": "gehen"
+  },
+  {
+   "end": 9.813,
+   "start": 9.643,
+   "word": "in"
+  },
+  {
+   "end": 10.197,
+   "start": 9.856,
+   "word": "London"
+  },
+  {
+   "end": 10.795,
+   "start": 10.368,
+   "word": "und"
+  },
+  {
+   "end": 10.965,
+   "start": 10.88,
+   "word": "New"
+  },
+  {
+   "end": 11.221,
+   "start": 11.008,
+   "word": "York"
+  },
+  {
+   "end": 11.648,
+   "start": 11.477,
+   "word": "die"
+  },
+  {
+   "end": 11.947,
+   "start": 11.691,
+   "word": "ersten"
+  },
+  {
+   "end": 12.459,
+   "start": 11.989,
+   "word": "Kraftwerke"
+  },
+  {
+   "end": 12.672,
+   "start": 12.544,
+   "word": "für"
+  },
+  {
+   "end": 12.757,
+   "start": 12.715,
+   "word": "die"
+  },
+  {
+   "end": 12.971,
+   "start": 12.8,
+   "word": "Stadt"
+  },
+  {
+   "end": 13.099,
+   "start": 13.013,
+   "word": "ans"
+  },
+  {
+   "end": 13.588,
+   "start": 13.184,
+   "word": "Netz."
+  },
+  {
+   "end": 14.034,
+   "start": 13.735,
+   "word": "Strom"
+  },
+  {
+   "end": 14.418,
+   "start": 14.29,
+   "word": "ist"
+  },
+  {
+   "end": 14.631,
+   "start": 14.503,
+   "word": "für"
+  },
+  {
+   "end": 14.802,
+   "start": 14.674,
+   "word": "alle"
+  },
+  {
+   "end": 15.058,
+   "start": 14.844,
+   "word": "da."
+  },
+  {
+   "end": 15.612,
+   "start": 15.442,
+   "word": "Was"
+  },
+  {
+   "end": 15.996,
+   "start": 15.698,
+   "word": "danach"
+  },
+  {
+   "end": 16.124,
+   "start": 16.082,
+   "word": "in"
+  },
+  {
+   "end": 16.252,
+   "start": 16.167,
+   "word": "den"
+  },
+  {
+   "end": 16.636,
+   "start": 16.295,
+   "word": "Fabriken"
+  },
+  {
+   "end": 17.276,
+   "start": 16.722,
+   "word": "passiert,"
+  },
+  {
+   "end": 17.532,
+   "start": 17.404,
+   "word": "ist"
+  },
+  {
+   "end": 17.746,
+   "start": 17.66,
+   "word": "ein"
+  },
+  {
+   "end": 18.3,
+   "start": 17.788,
+   "word": "Muster."
+  },
+  {
+   "end": 18.77,
+   "start": 18.684,
+   "word": "Es"
+  },
+  {
+   "end": 18.898,
+   "start": 18.812,
+   "word": "ist"
+  },
+  {
+   "end": 19.196,
+   "start": 18.983,
+   "word": "keine"
+  },
+  {
+   "end": 20.16451247165533,
+   "start": 19.282,
+   "word": "Vorhersage."
+  }
+ ],
+ "stimme": "Mordecai"
+}

@@ -1,0 +1,282 @@
+{
+ "hash": "75adafa8264d3193",
+ "dauer": 22.46530612244898,
+ "woerter": [
+  {
+   "end": 0.4267,
+   "start": 0.256,
+   "word": "Der"
+  },
+  {
+   "end": 0.725,
+   "start": 0.469,
+   "word": "Gewinn"
+  },
+  {
+   "end": 1.109,
+   "start": 0.896,
+   "word": "kommt"
+  },
+  {
+   "end": 1.472,
+   "start": 1.152,
+   "word": "erst,"
+  },
+  {
+   "end": 1.664,
+   "start": 1.579,
+   "word": "als"
+  },
+  {
+   "end": 1.9627,
+   "start": 1.707,
+   "word": "jede"
+  },
+  {
+   "end": 2.304,
+   "start": 2.005,
+   "word": "Maschine"
+  },
+  {
+   "end": 2.56,
+   "start": 2.389,
+   "word": "ihren"
+  },
+  {
+   "end": 2.901,
+   "start": 2.603,
+   "word": "eigenen"
+  },
+  {
+   "end": 3.2427,
+   "start": 2.944,
+   "word": "Motor"
+  },
+  {
+   "end": 3.635,
+   "start": 3.285,
+   "word": "bekommt."
+  },
+  {
+   "end": 4.48,
+   "start": 4.096,
+   "word": "Jetzt"
+  },
+  {
+   "end": 4.651,
+   "start": 4.523,
+   "word": "kann"
+  },
+  {
+   "end": 4.821,
+   "start": 4.693,
+   "word": "sie"
+  },
+  {
+   "end": 4.949,
+   "start": 4.864,
+   "word": "dort"
+  },
+  {
+   "end": 5.525,
+   "start": 5.077,
+   "word": "stehen,"
+  },
+  {
+   "end": 5.803,
+   "start": 5.717,
+   "word": "wo"
+  },
+  {
+   "end": 5.931,
+   "start": 5.845,
+   "word": "die"
+  },
+  {
+   "end": 6.187,
+   "start": 5.973,
+   "word": "Arbeit"
+  },
+  {
+   "end": 6.315,
+   "start": 6.229,
+   "word": "sie"
+  },
+  {
+   "end": 7.019,
+   "start": 6.357,
+   "word": "braucht."
+  },
+  {
+   "end": 7.467,
+   "start": 7.339,
+   "word": "Die"
+  },
+  {
+   "end": 7.893,
+   "start": 7.509,
+   "word": "Fabriken"
+  },
+  {
+   "end": 8.32,
+   "start": 7.979,
+   "word": "ordnen"
+  },
+  {
+   "end": 8.576,
+   "start": 8.405,
+   "word": "ihre"
+  },
+  {
+   "end": 8.875,
+   "start": 8.619,
+   "word": "Hallen"
+  },
+  {
+   "end": 9.301,
+   "start": 9.003,
+   "word": "entlang"
+  },
+  {
+   "end": 9.472,
+   "start": 9.387,
+   "word": "des"
+  },
+  {
+   "end": 10.155,
+   "start": 9.515,
+   "word": "Arbeitsflusses"
+  },
+  {
+   "end": 10.428,
+   "start": 10.197,
+   "word": "neu."
+  },
+  {
+   "end": 11.355,
+   "start": 10.971,
+   "word": "In"
+  },
+  {
+   "end": 11.483,
+   "start": 11.397,
+   "word": "den"
+  },
+  {
+   "end": 12.805,
+   "start": 11.525,
+   "word": "1920er-Jahren"
+  },
+  {
+   "end": 13.701,
+   "start": 13.061,
+   "word": "trägt"
+  },
+  {
+   "end": 13.787,
+   "start": 13.744,
+   "word": "die"
+  },
+  {
+   "end": 14.725,
+   "start": 13.829,
+   "word": "Elektrifizierung"
+  },
+  {
+   "end": 15.024,
+   "start": 14.853,
+   "word": "die"
+  },
+  {
+   "end": 15.451,
+   "start": 15.067,
+   "word": "Hälfte"
+  },
+  {
+   "end": 15.621,
+   "start": 15.536,
+   "word": "des"
+  },
+  {
+   "end": 16.816,
+   "start": 15.664,
+   "word": "Produktivitätswachstums"
+  },
+  {
+   "end": 16.987,
+   "start": 16.901,
+   "word": "der"
+  },
+  {
+   "end": 17.861,
+   "start": 17.029,
+   "word": "Industrie."
+  },
+  {
+   "end": 18.437,
+   "start": 18.267,
+   "word": "Den"
+  },
+  {
+   "end": 18.736,
+   "start": 18.48,
+   "word": "Motor"
+  },
+  {
+   "end": 18.907,
+   "start": 18.779,
+   "word": "gab"
+  },
+  {
+   "end": 18.992,
+   "start": 18.949,
+   "word": "es"
+  },
+  {
+   "end": 19.163,
+   "start": 19.077,
+   "word": "da"
+  },
+  {
+   "end": 19.291,
+   "start": 19.205,
+   "word": "seit"
+  },
+  {
+   "end": 19.547,
+   "start": 19.333,
+   "word": "über"
+  },
+  {
+   "end": 19.803,
+   "start": 19.589,
+   "word": "drei"
+  },
+  {
+   "end": 20.613,
+   "start": 19.845,
+   "word": "Jahrzehnten."
+  },
+  {
+   "end": 20.997,
+   "start": 20.827,
+   "word": "Neu"
+  },
+  {
+   "end": 21.168,
+   "start": 21.083,
+   "word": "war"
+  },
+  {
+   "end": 21.296,
+   "start": 21.211,
+   "word": "die"
+  },
+  {
+   "end": 22.231,
+   "start": 21.339,
+   "word": "Organisation."
+  }
+ ],
+ "stimme": "Mordecai"
+}

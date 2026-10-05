@@ -1,39 +1,28 @@
-// Setzt ein Einzelbild zusammen: Szene, Kopfzeile, Textband, Begriffsmarke, Übergänge.
+// Setzt ein Einzelbild zusammen: Szene, Kopfzeile, Textband mit Bildtext und Begriffsmarke, Übergänge.
 import { C, W, H, RASTER, FONTS, f, txt, rect, seg, easeIO } from './core.js';
 import { messen } from './text.js';
 
-const BLOCK_BLENDE = 0.3; // D4a: Überblendung 300 ms
+const TEXT_BLENDE = 0.4;
 const MARKE_BLENDE = 0.5;
 
 function textband(szene, plan, t) {
   let s = '';
+  if (!plan.bildtext) return s;
   if (szene.anzeige === 'titel') {
-    plan.anzeigen.forEach((a) => {
-      const op = easeIO(seg(t, a.start, 0.6));
-      s += txt(W / 2, 236, a.zeilen[0], { size: 84, fam: 'serif', anchor: 'middle', op });
-    });
-    return s;
+    const op = easeIO(seg(t, plan.bildtext.start, 0.8));
+    return txt(W / 2, 236, plan.bildtext.text, { size: 84, fam: 'serif', anchor: 'middle', op });
   }
-  plan.anzeigen.forEach((a, i) => {
-    // erst aus, dann ein: beide Hälften je 150 ms, so geistert kein alter Text unter dem neuen
-    const ein = seg(t, a.start, BLOCK_BLENDE / 2);
-    const naechste = plan.anzeigen[i + 1];
-    const aus = naechste ? 1 - seg(t, naechste.start - BLOCK_BLENDE / 2, BLOCK_BLENDE / 2) : 1;
-    const op = Math.min(ein, aus);
-    if (op <= 0) return;
-    a.zeilen.forEach((z, zi) => {
+  const op = easeIO(seg(t, plan.bildtext.start, TEXT_BLENDE));
+  if (op > 0) {
+    plan.bildtext.zeilen.forEach((z, zi) => {
       s += txt(RASTER.textX, RASTER.bandOben + 44 + zi * 56, z, { size: 44, op });
     });
-    if (a.klein) {
-      const kop = Math.min(seg(t, a.start + 1.2, 0.5), aus);
-      s += txt(RASTER.textX, RASTER.bandOben + 44 + a.zeilen.length * 56 + 4, a.klein, { size: 28, fill: C.grau, op: kop });
-    }
-  });
+  }
   if (plan.marke) s += begriffsmarke(plan.marke.text, easeIO(seg(t, plan.marke.start, MARKE_BLENDE)));
   return s;
 }
 
-// D4: unten rechts im Textband, rechtsbündig, orange Linie links, dunkler Text auf FFF3EA
+// unten rechts im Textband, rechtsbündig, orange Linie links, dunkler Text auf FFF3EA
 export function begriffsmarke(text, op) {
   if (op <= 0) return '';
   const size = 40;
@@ -50,7 +39,6 @@ function kopfzeile(text) {
   return txt(RASTER.rand, RASTER.bildOben + 24, text.toUpperCase(), { size: 30, fill: C.orange, ls: 3, weight: 700 });
 }
 
-// Vollständiges Bild einer Szene zur lokalen Zeit t
 export function szenenBild(szene, plan, modul, t) {
   const tt = Math.max(0, Math.min(t, plan.dauer));
   let s = `<rect width="${W}" height="${H}" fill="${C.weiss}"/>`;
@@ -69,10 +57,7 @@ export function gesamtBild(T, ctx) {
   const p = (T - ab.start) / (ab.ende - ab.start);
   const a = bildVon(ab.i, pl[ab.i].dauer);
   const b = bildVon(ab.i + 1, 0);
-  if (ab.art === 'blende') {
-    return `${a}<g opacity="${f(easeIO(p))}">${b}</g>`;
-  }
-  // D4b: zwischen Akten über eine kurze weiße Fläche
+  if (ab.art === 'blende') return `${a}<g opacity="${f(easeIO(p))}">${b}</g>`;
   if (p < 0.5) return `${a}<rect width="${W}" height="${H}" fill="${C.weiss}" opacity="${f(easeIO(p * 2))}"/>`;
   return `${b}<rect width="${W}" height="${H}" fill="${C.weiss}" opacity="${f(1 - easeIO((p - 0.5) * 2))}"/>`;
 }

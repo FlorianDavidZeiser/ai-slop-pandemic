@@ -1,0 +1,247 @@
+{
+ "hash": "e53ceb82895ad0b2",
+ "dauer": 18.546938775510203,
+ "woerter": [
+  {
+   "end": 0.469,
+   "start": 0.256,
+   "word": "Bald"
+  },
+  {
+   "end": 1.024,
+   "start": 0.555,
+   "word": "erzeugen"
+  },
+  {
+   "end": 1.28,
+   "start": 1.067,
+   "word": "viele"
+  },
+  {
+   "end": 1.7067,
+   "start": 1.323,
+   "word": "Fabriken"
+  },
+  {
+   "end": 2.176,
+   "start": 1.835,
+   "word": "keinen"
+  },
+  {
+   "end": 2.517,
+   "start": 2.219,
+   "word": "eigenen"
+  },
+  {
+   "end": 2.816,
+   "start": 2.56,
+   "word": "Strom"
+  },
+  {
+   "end": 3.285,
+   "start": 2.901,
+   "word": "mehr."
+  },
+  {
+   "end": 3.7547,
+   "start": 3.541,
+   "word": "Sie"
+  },
+  {
+   "end": 4.053,
+   "start": 3.797,
+   "word": "kaufen"
+  },
+  {
+   "end": 4.2667,
+   "start": 4.096,
+   "word": "ihn"
+  },
+  {
+   "end": 4.3947,
+   "start": 4.309,
+   "word": "als"
+  },
+  {
+   "end": 5.12,
+   "start": 4.523,
+   "word": "Dienstleistung"
+  },
+  {
+   "end": 5.2907,
+   "start": 5.163,
+   "word": "aus"
+  },
+  {
+   "end": 5.461,
+   "start": 5.333,
+   "word": "dem"
+  },
+  {
+   "end": 6.101,
+   "start": 5.504,
+   "word": "Netz."
+  },
+  {
+   "end": 6.6987,
+   "start": 6.485,
+   "word": "Aus"
+  },
+  {
+   "end": 6.912,
+   "start": 6.741,
+   "word": "einer"
+  },
+  {
+   "end": 7.3387,
+   "start": 6.955,
+   "word": "Technik"
+  },
+  {
+   "end": 7.637,
+   "start": 7.467,
+   "word": "wird"
+  },
+  {
+   "end": 7.765,
+   "start": 7.68,
+   "word": "ein"
+  },
+  {
+   "end": 8.414,
+   "start": 7.808,
+   "word": "Geschäftsmodell."
+  },
+  {
+   "end": 9.045,
+   "start": 8.875,
+   "word": "Auch"
+  },
+  {
+   "end": 9.216,
+   "start": 9.088,
+   "word": "das"
+  },
+  {
+   "end": 9.643,
+   "start": 9.301,
+   "word": "wiederholt"
+  },
+  {
+   "end": 10.016,
+   "start": 9.685,
+   "word": "sich."
+  },
+  {
+   "end": 10.39,
+   "start": 10.219,
+   "word": "Aus"
+  },
+  {
+   "end": 10.603,
+   "start": 10.432,
+   "word": "einem"
+  },
+  {
+   "end": 11.115,
+   "start": 10.646,
+   "word": "verkauften"
+  },
+  {
+   "end": 11.456,
+   "start": 11.158,
+   "word": "Melder"
+  },
+  {
+   "end": 11.926,
+   "start": 11.627,
+   "word": "wird"
+  },
+  {
+   "end": 12.054,
+   "start": 11.968,
+   "word": "ein"
+  },
+  {
+   "end": 12.566,
+   "start": 12.096,
+   "word": "Dienst,"
+  },
+  {
+   "end": 12.907,
+   "start": 12.736,
+   "word": "der"
+  },
+  {
+   "end": 13.248,
+   "start": 12.95,
+   "word": "selbst"
+  },
+  {
+   "end": 13.76,
+   "start": 13.291,
+   "word": "meldet,"
+  },
+  {
+   "end": 14.016,
+   "start": 13.846,
+   "word": "wann"
+  },
+  {
+   "end": 14.102,
+   "start": 14.059,
+   "word": "er"
+  },
+  {
+   "end": 14.443,
+   "start": 14.144,
+   "word": "Wartung"
+  },
+  {
+   "end": 15.062,
+   "start": 14.486,
+   "word": "braucht."
+  },
+  {
+   "end": 15.467,
+   "start": 15.296,
+   "word": "Und"
+  },
+  {
+   "end": 15.595,
+   "start": 15.51,
+   "word": "die"
+  },
+  {
+   "end": 15.851,
+   "start": 15.638,
+   "word": "Frage"
+  },
+  {
+   "end": 16.192,
+   "start": 15.894,
+   "word": "lautet"
+  },
+  {
+   "end": 16.704,
+   "start": 16.278,
+   "word": "wieder:"
+  },
+  {
+   "end": 17.174,
+   "start": 16.918,
+   "word": "Wer"
+  },
+  {
+   "end": 17.643,
+   "start": 17.259,
+   "word": "zahlt"
+  },
+  {
+   "end": 18.446961451247166,
+   "start": 17.856,
+   "word": "wofür?"
+  }
+ ],
+ "stimme": "Mordecai"
+}

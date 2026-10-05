@@ -117,8 +117,9 @@ export function endbild(B, z = {}) {
 
 // Texte des Endbilds aus den Beschriftungen von S14 und S15 (script.json bleibt einzige Quelle)
 export function endbildTexte(script) {
-  const b14 = script.szenen.find((s) => s.id === 'S14').beschriftungen;
-  const b15 = script.szenen.find((s) => s.id === 'S15').beschriftungen;
+  // Die Szenen mit dem Fundament und den Stufen, unabhängig von ihrer Nummer
+  const b14 = script.szenen.find((s) => s.beschriftungen.includes('PFLICHT')).beschriftungen;
+  const b15 = script.szenen.find((s) => s.beschriftungen.includes('Führung als Querschnitt')).beschriftungen;
   return {
     stufe1: b14[0].replace(/^1\s+/, ''),
     spielregeln: b14[1], spielregelnText: b14[2], vermerk: b14[3], digitalReady: b14[4],

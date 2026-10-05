@@ -1,14 +1,10 @@
-import { eseg } from '../lib/core.js';
-import { endbild } from '../lib/endbild.js';
-import { K } from '../lib/kontext.js';
+import { C, eseg, txt } from '../lib/core.js';
 
-// Die Stufen 2, 3, 4 setzen sich auf das Fundament, die Zielgruppen erscheinen rechts
-export function render(t, p) {
-  const k = p.beschriftungEnde / 7.6;
-  const at = (x) => x * k;
-  return endbild(K.endbild, {
-    balken: [0, 1, 2].map((i) => eseg(t, at(0.4 + i * 1.5), 0.7)),
-    ziel: [eseg(t, at(0.1)), ...[0, 1, 2].map((i) => eseg(t, at(1.1 + i * 1.5)))],
-    klammer: eseg(t, at(5.6)),
-  });
+// Abspann: Verweis auf das Papier, Quellen, Vermerk
+export function render(t, p, szene) {
+  const a = szene.abspann;
+  let s = txt(960, 380, a.hinweis, { size: 52, anchor: 'middle', op: eseg(t, 0.2) });
+  a.quellen.forEach((q, i) => { s += txt(960, 500 + i * 40, q, { size: 28, fill: C.grau, anchor: 'middle', op: eseg(t, 1.0) }); });
+  s += txt(960, 900, a.vermerk, { size: 28, fill: C.grau, anchor: 'middle', op: eseg(t, 1.6) });
+  return s;
 }

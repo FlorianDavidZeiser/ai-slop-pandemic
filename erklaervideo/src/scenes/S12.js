@@ -1,22 +1,18 @@
-import { C, eseg, rect, line, txt } from '../lib/core.js';
-import { pruefhaken } from '../lib/symbole.js';
-import { umbrechenFrei } from '../lib/text.js';
+import { eseg } from '../lib/core.js';
+import { endbild } from '../lib/endbild.js';
+import { K } from '../lib/kontext.js';
 
-// Skala der Automatisierung. Der Prüfhaken wird nach rechts größer und genauer.
-export function render(t, p, szene) {
-  const felder = szene.beschriftungen;
-  const x0 = 160, gesamt = 1600, luecke = 24, w = (gesamt - 2 * luecke) / 3, y = 470, h = 170;
-  let s = '';
-  s += line(x0, y + h + 46, x0 + gesamt, y + h + 46, { stroke: C.grau, sw: 2, op: eseg(t, 0.2) });
-  felder.forEach((label, i) => {
-    const x = x0 + i * (w + luecke);
-    const op = eseg(t, 0.3 + i * 0.6);
-    s += rect(x, y, w, h, { fill: C.flaeche, stroke: C.blau, sw: 2, op });
-    const zeilen = umbrechenFrei(label, 36, w - 60);
-    const yy = y + h / 2 - ((zeilen.length - 1) * 44) / 2 + 13;
-    zeilen.forEach((z, zi) => { s += txt(x + w / 2, yy + zi * 44, z, { size: 36, anchor: 'middle', op }); });
-    const r = [34, 50, 68][i];
-    s += pruefhaken(x + w / 2, y - 40 - r, r, eseg(t, p.beschriftungEnde - 1.4 + i * 0.6), i);
+// Das Fundament baut sich auf: beide Hälften, dann Spielregeln, Digital Ready mit Kästen, Trennlinie
+export function render(t, p) {
+  const fund = p.w('Fundament', 3) - 0.3;
+  const spiel = p.w('Spielregeln', fund + 4) - 0.3;
+  const gold = p.w('Verständnis', spiel + 3) - 0.3;
+  const wirksam = p.w('wirksam', gold + 3);
+  return endbild(K.endbild, {
+    spiel: eseg(t, fund), spielText: eseg(t, spiel),
+    gold: eseg(t, fund + 0.3), goldTitel: eseg(t, gold),
+    kaesten: [0, 1, 2, 3, 4, 5].map((i) => eseg(t, gold + 0.5 + i * 0.3, 0.5)),
+    quer: eseg(t, gold + 2.6), linie: eseg(t, wirksam, 0.7), pm: eseg(t, wirksam + 0.5),
+    balken: [0, 0, 0], ziel: [0, 0, 0, 0], klammer: 0,
   });
-  return s;
 }

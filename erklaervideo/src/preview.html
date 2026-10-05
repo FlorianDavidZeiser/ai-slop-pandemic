@@ -36,8 +36,7 @@ try {
   window.__bild = (T) => { buehne.innerHTML = app.bild(T); };
   window.__info = { gesamt: zp.gesamt, schriften: app.schriften, meldungen: zp.meldungen,
     szenen: zp.plaene.map((p, i) => ({ id: p.id, titel: script.szenen[i].titel, start: p.start, dauer: p.dauer,
-      anzeigen: p.anzeigen.map((a) => ({ start: a.start, lese: a.lese, zeilen: a.zeilen, block: a.block, teil: a.teil })),
-      marke: p.marke })) };
+      sprechStart: p.sprechStart, sprechEnde: p.sprechEnde, bildtext: p.bildtext, marke: p.marke })) };
   window.__bereit = true;
   if (!q.has('render')) {
     const zeit = document.getElementById('zeit'), sel = document.getElementById('szene'), anz = document.getElementById('anzeige');
