@@ -1,0 +1,307 @@
+{
+ "hash": "5fe172df4d535940",
+ "dauer": 25.939591836734692,
+ "woerter": [
+  {
+   "end": 0.64,
+   "start": 0.256,
+   "word": "Darauf"
+  },
+  {
+   "end": 0.981,
+   "start": 0.725,
+   "word": "bauen"
+  },
+  {
+   "end": 1.3227,
+   "start": 1.067,
+   "word": "drei"
+  },
+  {
+   "end": 1.7067,
+   "start": 1.365,
+   "word": "Stufen"
+  },
+  {
+   "end": 1.984,
+   "start": 1.749,
+   "word": "auf."
+  },
+  {
+   "end": 3.307,
+   "start": 2.56,
+   "word": "Nutzen,"
+  },
+  {
+   "end": 3.755,
+   "start": 3.584,
+   "word": "für"
+  },
+  {
+   "end": 3.989,
+   "start": 3.797,
+   "word": "alle,"
+  },
+  {
+   "end": 4.096,
+   "start": 4.053,
+   "word": "die"
+  },
+  {
+   "end": 4.48,
+   "start": 4.139,
+   "word": "KI"
+  },
+  {
+   "end": 5.035,
+   "start": 4.523,
+   "word": "regelmäßig"
+  },
+  {
+   "end": 5.163,
+   "start": 5.12,
+   "word": "in"
+  },
+  {
+   "end": 5.376,
+   "start": 5.205,
+   "word": "ihren"
+  },
+  {
+   "end": 5.803,
+   "start": 5.419,
+   "word": "Aufgaben"
+  },
+  {
+   "end": 6.366,
+   "start": 5.845,
+   "word": "einsetzen."
+  },
+  {
+   "end": 7.701,
+   "start": 6.827,
+   "word": "Umsetzen,"
+  },
+  {
+   "end": 8.064,
+   "start": 7.893,
+   "word": "für"
+  },
+  {
+   "end": 8.277,
+   "start": 8.107,
+   "word": "die,"
+  },
+  {
+   "end": 8.448,
+   "start": 8.32,
+   "word": "die"
+  },
+  {
+   "end": 8.917,
+   "start": 8.491,
+   "word": "Lösungen"
+  },
+  {
+   "end": 9.088,
+   "start": 8.96,
+   "word": "für"
+  },
+  {
+   "end": 9.259,
+   "start": 9.131,
+   "word": "ihr"
+  },
+  {
+   "end": 9.472,
+   "start": 9.301,
+   "word": "Team"
+  },
+  {
+   "end": 9.823,
+   "start": 9.515,
+   "word": "bauen."
+  },
+  {
+   "end": 11.534,
+   "start": 10.681,
+   "word": "Transformieren,"
+  },
+  {
+   "end": 11.918,
+   "start": 11.748,
+   "word": "für"
+  },
+  {
+   "end": 12.26,
+   "start": 11.961,
+   "word": "die,"
+  },
+  {
+   "end": 12.558,
+   "start": 12.43,
+   "word": "die"
+  },
+  {
+   "end": 13.07,
+   "start": 12.601,
+   "word": "Prozesse"
+  },
+  {
+   "end": 13.412,
+   "start": 13.241,
+   "word": "und"
+  },
+  {
+   "end": 13.838,
+   "start": 13.497,
+   "word": "Daten"
+  },
+  {
+   "end": 14.35,
+   "start": 14.052,
+   "word": "neu"
+  },
+  {
+   "end": 15.046,
+   "start": 14.521,
+   "word": "ordnen."
+  },
+  {
+   "end": 15.801,
+   "start": 15.545,
+   "word": "Nicht"
+  },
+  {
+   "end": 16.1,
+   "start": 15.844,
+   "word": "jede"
+  },
+  {
+   "end": 16.398,
+   "start": 16.185,
+   "word": "Rolle"
+  },
+  {
+   "end": 16.697,
+   "start": 16.441,
+   "word": "braucht"
+  },
+  {
+   "end": 16.996,
+   "start": 16.74,
+   "word": "Stufe"
+  },
+  {
+   "end": 17.614,
+   "start": 17.038,
+   "word": "4."
+  },
+  {
+   "end": 18.19,
+   "start": 17.892,
+   "word": "Jede"
+  },
+  {
+   "end": 18.788,
+   "start": 18.446,
+   "word": "braucht"
+  },
+  {
+   "end": 19.086,
+   "start": 18.83,
+   "word": "Stufe"
+  },
+  {
+   "end": 19.464,
+   "start": 19.129,
+   "word": "1."
+  },
+  {
+   "end": 20.558,
+   "start": 20.174,
+   "word": "Und"
+  },
+  {
+   "end": 20.9,
+   "start": 20.601,
+   "word": "Führung"
+  },
+  {
+   "end": 21.454,
+   "start": 20.942,
+   "word": "beantwortet"
+  },
+  {
+   "end": 21.582,
+   "start": 21.497,
+   "word": "eine"
+  },
+  {
+   "end": 22.052,
+   "start": 21.668,
+   "word": "Frage,"
+  },
+  {
+   "end": 22.137,
+   "start": 22.095,
+   "word": "die"
+  },
+  {
+   "end": 22.351,
+   "start": 22.18,
+   "word": "alle"
+  },
+  {
+   "end": 22.649,
+   "start": 22.436,
+   "word": "hören"
+  },
+  {
+   "end": 23.311,
+   "start": 22.692,
+   "word": "wollen:"
+  },
+  {
+   "end": 24.27,
+   "start": 23.673,
+   "word": "Wofür"
+  },
+  {
+   "end": 24.569,
+   "start": 24.313,
+   "word": "nutzen"
+  },
+  {
+   "end": 24.697,
+   "start": 24.612,
+   "word": "wir"
+  },
+  {
+   "end": 24.825,
+   "start": 24.74,
+   "word": "die"
+  },
+  {
+   "end": 25.102,
+   "start": 24.868,
+   "word": "Zeit,"
+  },
+  {
+   "end": 25.209,
+   "start": 25.166,
+   "word": "die"
+  },
+  {
+   "end": 25.422,
+   "start": 25.252,
+   "word": "frei"
+  },
+  {
+   "end": 25.894,
+   "start": 25.508,
+   "word": "wird?"
+  }
+ ],
+ "stimme": "Quiet Dieter - Serious"
+}

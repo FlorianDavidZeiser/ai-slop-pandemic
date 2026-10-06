@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Erklärvideo Vorschau</title>
+<style>
+  html, body { margin: 0; background: #1A2430; color: #F2F5FA; font: 15px system-ui, sans-serif; }
+  body.render { background: #fff; }
+  body.render #ui { display: none; }
+  #buehne { width: 1920px; height: 1080px; background: #fff; transform-origin: 0 0; }
+  body:not(.render) #rahmen { margin: 12px auto; overflow: hidden; }
+  #ui { display: flex; gap: 12px; align-items: center; padding: 10px 16px; flex-wrap: wrap; }
+  #zeit { flex: 1; min-width: 300px; }
+  #meldungen { color: #FFB27A; padding: 0 16px; white-space: pre-wrap; }
+  button, select { font: inherit; }
+</style>
+</head>
+<body>
+<div id="ui">
+  <button id="play">▶</button>
+  <select id="szene"></select>
+  <input id="zeit" type="range" min="0" max="1" step="0.0333" value="0">
+  <span id="anzeige">0:00.0</span>
+  <span id="schriften"></span>
+</div>
+<div id="meldungen"></div>
+<div id="rahmen"><div id="buehne"></div></div>
+<script type="module">
+import { starten } from './lib/start.js';
+const q = new URLSearchParams(location.search);
+const buehne = document.getElementById('buehne');
+if (q.has('render')) document.body.classList.add('render');
+try {
+  const app = await starten();
+  const { zp, script } = app.ctx;
+  window.__bild = (T) => { buehne.innerHTML = app.bild(T); };
+  window.__info = { gesamt: zp.gesamt, schriften: app.schriften, meldungen: zp.meldungen,
+    szenen: zp.plaene.map((p, i) => ({ id: p.id, titel: script.szenen[i].titel, start: p.start, dauer: p.dauer,
+      sprechStart: p.sprechStart, sprechEnde: p.sprechEnde, bildtext: p.bildtext, marke: p.marke })) };
+  window.__bereit = true;
+  if (!q.has('render')) {
+    const zeit = document.getElementById('zeit'), sel = document.getElementById('szene'), anz = document.getElementById('anzeige');
+    document.getElementById('schriften').textContent = `Schriften: ${app.schriften.serif} / ${app.schriften.sans}`;
+    document.getElementById('meldungen').textContent = zp.meldungen.join('\n');
+    zeit.max = zp.gesamt;
+    zp.plaene.forEach((p, i) => sel.add(new Option(`${p.id} ${script.szenen[i].titel} (${p.dauer.toFixed(1)} s)`, p.start)));
+    const skala = () => { const s = Math.min(1, (innerWidth - 24) / 1920); buehne.style.transform = `scale(${s})`; document.getElementById('rahmen').style.width = `${1920 * s}px`; document.getElementById('rahmen').style.height = `${1080 * s}px`; };
+    addEventListener('resize', skala); skala();
+    const fmt = (T) => `${Math.floor(T / 60)}:${(T % 60).toFixed(1).padStart(4, '0')}`;
+    let T = Number(q.get('t') || 0), laeuft = false, letzt = 0;
+    const zeige = () => { window.__bild(T); zeit.value = T; anz.textContent = `${fmt(T)} / ${fmt(zp.gesamt)}`; };
+    zeit.oninput = () => { T = Number(zeit.value); zeige(); };
+    sel.onchange = () => { T = Number(sel.value); zeige(); };
+    // Die Wiedergabe in der Vorschau nutzt die Uhr nur, um t weiterzuschalten. Das Bild hängt allein von t ab.
+    const schritt = (ms) => { if (!laeuft) return; T = Math.min(zp.gesamt, T + (ms - letzt) / 1000); letzt = ms; zeige(); if (T < zp.gesamt) requestAnimationFrame(schritt); };
+    document.getElementById('play').onclick = (e) => { laeuft = !laeuft; e.target.textContent = laeuft ? '❚❚' : '▶'; if (laeuft) { letzt = performance.now(); requestAnimationFrame(schritt); } };
+    zeige();
+  }
+} catch (e) {
+  window.__fehler = String(e.message || e);
+  document.getElementById('meldungen').textContent = window.__fehler;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+node_modules/
+out/*.mp4
+out/frames/
+out/pruef/
+out/render.log
+out/animatic.log
+out/ton.wav

@@ -1,0 +1,125 @@
+{
+  "fassung": "Drehbuch Fassung 4 mit Sprecherstimme, Stand 5. Oktober 2026",
+  "stimme": { "anbieter": "heygen", "voice_id": "9baaa52569594e718cf70af5ad1b17b3", "name": "Quiet Dieter - Serious", "sprache": "de", "tempo": 1.0 },
+  "musik": { "anbieter": "heygen", "id": "24d00467278d4e729714670f619b787f", "beschreibung": "calm minimal ambient, contemplative, serious boardroom tone", "pegel_lufs": -33 },
+  "szenen": [
+    {
+      "id": "S00", "titel": "Titel", "akt": 0, "kopfzeile": null, "anzeige": "titel",
+      "sprecher": null,
+      "bildtext": "Zwei Umbrüche, ein Muster.", "bildtext_ab": null,
+      "begriffsmarke": null, "beschriftungen": [],
+      "vorlauf_s": 1.2, "dauer_fest_s": 4.5
+    },
+    {
+      "id": "S01", "titel": "Heute", "akt": 1, "kopfzeile": null,
+      "sprecher": "Seit November 2022 ist Künstliche Intelligenz für alle da. <break time=\"0.4s\"/> Seit Februar 2025 verlangt die EU-KI-Verordnung, dass Unternehmen ihre Mitarbeitenden im Umgang mit KI befähigen. <break time=\"0.4s\"/> Werkzeuge sind eingeführt, Schulungen gemacht. Und an vielen Arbeitsplätzen ändert sich wenig.",
+      "bildtext": "2022 ist KI für alle da. 2025 wird KI-Kompetenz Pflicht.", "bildtext_ab": "Werkzeuge",
+      "begriffsmarke": null, "beschriftungen": ["KI", "2022", "2025", "Art. 4 KI-Verordnung"],
+      "vorlauf_s": 1.0, "nachlauf_s": 0.8
+    },
+    {
+      "id": "S02", "titel": "Der Spiegel", "akt": 1, "kopfzeile": null,
+      "sprecher": "Das gab es schon einmal. <break time=\"0.4s\"/> 1867 wird das Prinzip der Dynamomaschine vorgestellt. 1882 gehen in London und New York die ersten Kraftwerke für die Stadt ans Netz. Strom ist für alle da. <break time=\"0.5s\"/> Was danach in den Fabriken passiert, ist ein Muster. Es ist keine Vorhersage.",
+      "bildtext": "1882 ist Strom für alle da.", "bildtext_ab": "Strom ist",
+      "begriffsmarke": null, "beschriftungen": ["Strom", "1867", "1882"],
+      "vorlauf_s": 0.6, "nachlauf_s": 0.8
+    },
+    {
+      "id": "S03", "titel": "Die Welle", "akt": 2, "kopfzeile": null,
+      "sprecher": "So sieht eine Fabrik um 1890 aus. Eine Dampfmaschine treibt über eine lange Welle alle Maschinen an. Jede Maschine steht dort, wo die Welle sie erreicht. Das Material wandert kreuz und quer durch die Halle. <break time=\"0.6s\"/> Dann kommt der Elektromotor. Die Fabriken kaufen ihn. Und hängen ihn an dieselbe Welle. <break time=\"0.4s\"/> Über drei Jahrzehnte steigt die Produktivität kaum.",
+      "bildtext": "Die Technik ist neu. Der Aufbau bleibt alt.", "bildtext_ab": "Über drei",
+      "begriffsmarke": "Heute: KI verstehen ist nicht Zusammenhänge verstehen", "beschriftungen": [],
+      "vorlauf_s": 2.0, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S04", "titel": "Der Umbau", "akt": 2, "kopfzeile": null,
+      "sprecher": "Der Gewinn kommt erst, als jede Maschine ihren eigenen Motor bekommt. <break time=\"0.3s\"/> Jetzt kann sie dort stehen, wo die Arbeit sie braucht. Die Fabriken ordnen ihre Hallen entlang des Arbeitsflusses neu. <break time=\"0.5s\"/> In den 1920er-Jahren trägt die Elektrifizierung die Hälfte des Produktivitätswachstums der Industrie. Den Motor gab es da seit über drei Jahrzehnten. Neu war die Organisation.",
+      "bildtext": "Der Gewinn kommt mit der neuen Anordnung.", "bildtext_ab": "In den 1920er-Jahren",
+      "begriffsmarke": "Heute: Organisation und Prozesse", "beschriftungen": [],
+      "vorlauf_s": 0.8, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S05", "titel": "Was man verstehen musste", "akt": 2, "kopfzeile": null,
+      "sprecher": "Dafür musste niemand einen Dynamo bauen können. Aber jemand musste wissen, wie die Arbeit durch die Halle läuft. Und er musste prüfen, ob die alte Anordnung noch passt. <break time=\"0.5s\"/> Das Papier nennt dieses Wissen Digital Ready: verstehen, wie Organisation, Prozesse, Daten, KI und Automatisierung zusammenwirken.",
+      "bildtext": "Verstehen, wie die Arbeit läuft.", "bildtext_ab": "Das Papier",
+      "begriffsmarke": "Heute: Digital Ready", "beschriftungen": [],
+      "vorlauf_s": 0.8, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S06", "titel": "Die Regeln", "akt": 3, "kopfzeile": null,
+      "sprecher": "1895 entstehen die ersten Sicherheitsvorschriften für Starkstromanlagen. Sie machen den Betrieb sicher. Den Produktivitätsgewinn bringen sie allein nicht. <break time=\"0.5s\"/> Heute ist das die Pflicht nach Artikel 4: wissen, welche Werkzeuge erlaubt sind und welche Daten nicht in einen Chatbot gehören. Wer das weiß, arbeitet dadurch noch keinen Tag besser.",
+      "bildtext": "Regeln machen den Betrieb sicher.", "bildtext_ab": "Heute ist das",
+      "begriffsmarke": "Heute: Pflicht ist nicht Mehrwert", "beschriftungen": ["Sicherheitsvorschriften 1895"],
+      "vorlauf_s": 1.2, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S07", "titel": "Strom als Dienstleistung", "akt": 3, "kopfzeile": null,
+      "sprecher": "Bald erzeugen viele Fabriken keinen eigenen Strom mehr. Sie kaufen ihn als Dienstleistung aus dem Netz. Aus einer Technik wird ein Geschäftsmodell. <break time=\"0.5s\"/> Auch das wiederholt sich. Aus einem verkauften Melder wird ein Dienst, der selbst meldet, wann er Wartung braucht. Und die Frage lautet wieder: Wer zahlt wofür?",
+      "bildtext": "Aus der Technik wird ein Geschäftsmodell.", "bildtext_ab": "Auch das",
+      "begriffsmarke": "Heute: Geschäftsmodelle", "beschriftungen": [],
+      "vorlauf_s": 1.0, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S08", "titel": "Daten", "akt": 4, "kopfzeile": "Was bei KI anders ist",
+      "sprecher": "An drei Stellen trägt der Vergleich nicht. <break time=\"0.4s\"/> Erstens die Daten. Beim Strom gab es nichts, was jeden Tag an jedem Arbeitsplatz neu entsteht. Bei KI ist das die Grundlage. <break time=\"0.4s\"/> Ist derselbe Kunde dreimal unterschiedlich erfasst, findet ein Agent drei Wahrheiten oder keine. Daten entstehen bei uns, bei jeder Eingabe.",
+      "bildtext": "Ein Kunde, drei Schreibweisen: drei Wahrheiten oder keine.", "bildtext_ab": "Daten entstehen",
+      "begriffsmarke": "Heute: Daten", "beschriftungen": ["Müller GmbH", "Mueller GmbH", "Müller G."],
+      "vorlauf_s": 0.8, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S09", "titel": "Die Sicherung", "akt": 4, "kopfzeile": "Was bei KI anders ist",
+      "sprecher": "Zweitens die Fehler. Bei Überlast springt die Sicherung. Der Fehler ist messbar, und etwas reagiert. <break time=\"0.5s\"/> KI arbeitet mit Wahrscheinlichkeiten. Ein falscher Satz sieht aus wie ein richtiger, und nichts springt. <break time=\"0.4s\"/> Deshalb muss vorher feststehen, wo ein Mensch prüft.",
+      "bildtext": "Ein plausibler Fehler löst nichts aus.", "bildtext_ab": "Deshalb",
+      "begriffsmarke": "Heute: Mensch entscheidet, KI unterstützt", "beschriftungen": [],
+      "vorlauf_s": 0.8, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S10", "titel": "Der Grad", "akt": 4, "kopfzeile": "Was bei KI anders ist",
+      "sprecher": "Wie genau, hängt vom Grad ab. Unterstützt ein System nur, reicht ein Blick. Führt es Schritte aus, braucht es eine Freigabe. Arbeitet es innerhalb festgelegter Grenzen selbstständig, müssen die Grenzen vorher stehen.",
+      "bildtext": "Je selbstständiger das System, desto genauer die Prüfung.", "bildtext_ab": "Arbeitet es",
+      "begriffsmarke": "Heute: Automatisierung", "beschriftungen": ["unterstützt", "führt Schritte aus", "arbeitet innerhalb festgelegter Grenzen selbstständig"],
+      "vorlauf_s": 0.6, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S11", "titel": "Der fehlende Zwang", "akt": 4, "kopfzeile": "Was bei KI anders ist",
+      "sprecher": "Drittens der Zwang. Für den Einzelantrieb mussten die Fabriken umgebaut werden. Der Umbau hat dazu gezwungen, die Abläufe anzusehen. <break time=\"0.5s\"/> KI braucht keinen Umbau. Sie kommt als Software auf den bestehenden Arbeitsplatz. <break time=\"0.5s\"/> Niemand zwingt uns, die Abläufe zu prüfen. Diesen Schritt müssen wir uns selbst vornehmen.",
+      "bildtext": "Der Zwang zum Prüfen fehlt.", "bildtext_ab": "Niemand zwingt",
+      "begriffsmarke": null, "beschriftungen": [],
+      "vorlauf_s": 0.8, "nachlauf_s": 1.0
+    },
+    {
+      "id": "S12", "titel": "Das Fundament", "akt": 5, "kopfzeile": null,
+      "sprecher": "Was braucht eine Organisation dafür? <break time=\"0.4s\"/> Das Papier beschreibt vier Stufen und ein Fundament. Das Fundament gilt für alle. Es hat zwei Hälften: die Spielregeln für einen sicheren Einsatz und das Verständnis der Zusammenhänge, das ihn wirksam macht.",
+      "bildtext": "Alle brauchen dasselbe Fundament.", "bildtext_ab": "Es hat zwei",
+      "begriffsmarke": null,
+      "beschriftungen": ["1 Verstehen", "Spielregeln", "erlaubte Werkzeuge, zulässige Daten, Risiken, Grenzen", "Art. 4 KI-Verordnung", "Digital Ready: die Zusammenhänge", "Organisation", "Prozesse", "Daten", "KI", "Automatisierung", "Geschäftsmodelle", "Querschnitt: Mensch entscheidet, KI unterstützt.", "PFLICHT", "MEHRWERT"],
+      "vorlauf_s": 0.6, "nachlauf_s": 0.6
+    },
+    {
+      "id": "S13", "titel": "Die Stufen", "akt": 5, "kopfzeile": null,
+      "sprecher": "Darauf bauen drei Stufen auf. <break time=\"0.3s\"/> Nutzen, für alle, die KI regelmäßig in ihren Aufgaben einsetzen. <break time=\"0.3s\"/> Umsetzen, für die, die Lösungen für ihr Team bauen. <break time=\"0.3s\"/> Transformieren, für die, die Prozesse und Daten neu ordnen. <break time=\"0.4s\"/> Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1. <break time=\"0.4s\"/> Und Führung beantwortet eine Frage, die alle hören wollen: Wofür nutzen wir die Zeit, die frei wird?",
+      "bildtext": "Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1.", "bildtext_ab": "Nicht jede",
+      "begriffsmarke": null,
+      "beschriftungen": ["2 Nutzen", "3 Umsetzen", "4 Transformieren", "Alle Mitarbeitenden", "Wissensarbeitende", "KI-Enabler in den Fachbereichen", "zentrales Team und ausgewählte Fach- und Führungskräfte", "Führung als Querschnitt"],
+      "vorlauf_s": 0.4, "nachlauf_s": 1.0
+    },
+    {
+      "id": "S14", "titel": "Die Frage", "akt": 6, "kopfzeile": null,
+      "sprecher": "Wohin KI führt, weiß heute niemand. 1890 wusste das beim Strom auch niemand. <break time=\"0.5s\"/> Aber eine Frage können wir bei jedem Einsatz stellen: <break time=\"0.3s\"/> Haben wir den Ablauf geprüft? Oder hängen wir KI an die alte Welle?",
+      "bildtext": "Haben wir den Ablauf geprüft, oder hängen wir KI an die alte Welle?", "bildtext_ab": "Haben wir",
+      "begriffsmarke": null, "beschriftungen": [],
+      "vorlauf_s": 1.2, "nachlauf_s": 2.5
+    },
+    {
+      "id": "S15", "titel": "Abspann", "akt": 6, "kopfzeile": null, "anzeige": "abspann",
+      "sprecher": null,
+      "abspann": {
+        "hinweis": "Mehr dazu im Konzeptpapier „AI Literacy und Digital Ready“.",
+        "quellen": ["David 1990", "Devine 1983", "Brynjolfsson, Rock und Syverson 2021", "VDE-Geschichte"],
+        "vermerk": "Animation vollständig per Code erstellt. Stimme und Musik synthetisch erzeugt."
+      },
+      "bildtext": null, "begriffsmarke": null, "beschriftungen": [],
+      "dauer_fest_s": 7
+    }
+  ]
+}

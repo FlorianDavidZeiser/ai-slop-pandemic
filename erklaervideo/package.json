@@ -1,0 +1,15 @@
+{
+  "name": "erklaervideo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stimme": "node render/sprecher.js",
+    "ton": "node render/mischen.js",
+    "preview": "node render/serve.js",
+    "stills": "node render/render.js --stills",
+    "render": "node render/render.js && bash render/encode.sh && node render/mischen.js"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

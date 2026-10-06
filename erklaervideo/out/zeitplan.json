@@ -1,0 +1,288 @@
+{
+ "gesamt": 312.11691836734695,
+ "schriften": {
+  "serif": "Gelasio",
+  "sans": "Carlito"
+ },
+ "meldungen": [],
+ "szenen": [
+  {
+   "id": "S00",
+   "titel": "Titel",
+   "start": 0,
+   "dauer": 4.5,
+   "sprechStart": 1.2,
+   "sprechEnde": 1.2,
+   "bildtext": {
+    "text": "Zwei Umbrüche, ein Muster.",
+    "zeilen": [
+     "Zwei Umbrüche, ein Muster."
+    ],
+    "start": 1.2
+   },
+   "marke": null
+  },
+  {
+   "id": "S01",
+   "titel": "Heute",
+   "start": 4.9,
+   "dauer": 21.339591836734694,
+   "sprechStart": 1,
+   "sprechEnde": 20.539591836734694,
+   "bildtext": {
+    "text": "2022 ist KI für alle da. 2025 wird KI-Kompetenz Pflicht.",
+    "zeilen": [
+     "2022 ist KI für alle da.",
+     "2025 wird KI-Kompetenz Pflicht."
+    ],
+    "start": 14.451
+   },
+   "marke": null
+  },
+  {
+   "id": "S02",
+   "titel": "Der Spiegel",
+   "start": 26.639591836734695,
+   "dauer": 19.99918367346939,
+   "sprechStart": 0.6,
+   "sprechEnde": 19.19918367346939,
+   "bildtext": {
+    "text": "1882 ist Strom für alle da.",
+    "zeilen": [
+     "1882 ist Strom für alle da."
+    ],
+    "start": 13.045
+   },
+   "marke": null
+  },
+  {
+   "id": "S03",
+   "titel": "Die Welle",
+   "start": 47.33877551020409,
+   "dauer": 26.192,
+   "sprechStart": 2,
+   "sprechEnde": 25.118367346938776,
+   "bildtext": {
+    "text": "Die Technik ist neu. Der Aufbau bleibt alt.",
+    "zeilen": [
+     "Die Technik ist neu. Der Aufbau bleibt alt."
+    ],
+    "start": 22.392
+   },
+   "marke": {
+    "text": "Heute: KI verstehen ist nicht Zusammenhänge verstehen",
+    "start": 23.992
+   }
+  },
+  {
+   "id": "S04",
+   "titel": "Der Umbau",
+   "start": 73.93077551020409,
+   "dauer": 24.213061224489795,
+   "sprechStart": 0.8,
+   "sprechEnde": 23.213061224489795,
+   "bildtext": {
+    "text": "Der Gewinn kommt mit der neuen Anordnung.",
+    "zeilen": [
+     "Der Gewinn kommt mit der neuen Anordnung."
+    ],
+    "start": 12.026000000000002
+   },
+   "marke": {
+    "text": "Heute: Organisation und Prozesse",
+    "start": 22.013061224489796
+   }
+  },
+  {
+   "id": "S05",
+   "titel": "Was man verstehen musste",
+   "start": 98.54383673469388,
+   "dauer": 21.052244897959184,
+   "sprechStart": 0.8,
+   "sprechEnde": 20.052244897959184,
+   "bildtext": {
+    "text": "Verstehen, wie die Arbeit läuft.",
+    "zeilen": [
+     "Verstehen, wie die Arbeit läuft."
+    ],
+    "start": 10.962000000000002
+   },
+   "marke": {
+    "text": "Heute: Digital Ready",
+    "start": 18.852244897959185
+   }
+  },
+  {
+   "id": "S06",
+   "titel": "Die Regeln",
+   "start": 119.99608163265307,
+   "dauer": 23.98612244897959,
+   "sprechStart": 1.2,
+   "sprechEnde": 22.98612244897959,
+   "bildtext": {
+    "text": "Regeln machen den Betrieb sicher.",
+    "zeilen": [
+     "Regeln machen den Betrieb sicher."
+    ],
+    "start": 11.795
+   },
+   "marke": {
+    "text": "Heute: Pflicht ist nicht Mehrwert",
+    "start": 21.78612244897959
+   }
+  },
+  {
+   "id": "S07",
+   "titel": "Strom als Dienstleistung",
+   "start": 144.38220408163266,
+   "dauer": 19.815510204081633,
+   "sprechStart": 1,
+   "sprechEnde": 18.815510204081633,
+   "bildtext": {
+    "text": "Aus der Technik wird ein Geschäftsmodell.",
+    "zeilen": [
+     "Aus der Technik wird ein Geschäftsmodell."
+    ],
+    "start": 9.149
+   },
+   "marke": {
+    "text": "Heute: Geschäftsmodelle",
+    "start": 17.615510204081634
+   }
+  },
+  {
+   "id": "S08",
+   "titel": "Daten",
+   "start": 164.8977142857143,
+   "dauer": 20.189,
+   "sprechStart": 0.8,
+   "sprechEnde": 18.902857142857144,
+   "bildtext": {
+    "text": "Ein Kunde, drei Schreibweisen: drei Wahrheiten oder keine.",
+    "zeilen": [
+     "Ein Kunde, drei Schreibweisen:",
+     "drei Wahrheiten oder keine."
+    ],
+    "start": 16.389
+   },
+   "marke": {
+    "text": "Heute: Daten",
+    "start": 17.989
+   }
+  },
+  {
+   "id": "S09",
+   "titel": "Die Sicherung",
+   "start": 185.4867142857143,
+   "dauer": 18.779591836734696,
+   "sprechStart": 0.8,
+   "sprechEnde": 17.779591836734696,
+   "bildtext": {
+    "text": "Ein plausibler Fehler löst nichts aus.",
+    "zeilen": [
+     "Ein plausibler Fehler löst nichts aus."
+    ],
+    "start": 14.036000000000001
+   },
+   "marke": {
+    "text": "Heute: Mensch entscheidet, KI unterstützt",
+    "start": 16.579591836734696
+   }
+  },
+  {
+   "id": "S10",
+   "titel": "Der Grad",
+   "start": 204.66630612244901,
+   "dauer": 14.24326530612245,
+   "sprechStart": 0.6,
+   "sprechEnde": 13.24326530612245,
+   "bildtext": {
+    "text": "Je selbstständiger das System, desto genauer die Prüfung.",
+    "zeilen": [
+     "Je selbstständiger das System,",
+     "desto genauer die Prüfung."
+    ],
+    "start": 8.621
+   },
+   "marke": {
+    "text": "Heute: Automatisierung",
+    "start": 12.04326530612245
+   }
+  },
+  {
+   "id": "S11",
+   "titel": "Der fehlende Zwang",
+   "start": 219.30957142857147,
+   "dauer": 21.653061224489797,
+   "sprechStart": 0.8,
+   "sprechEnde": 20.653061224489797,
+   "bildtext": {
+    "text": "Der Zwang zum Prüfen fehlt.",
+    "zeilen": [
+     "Der Zwang zum Prüfen fehlt."
+    ],
+    "start": 15.337000000000002
+   },
+   "marke": null
+  },
+  {
+   "id": "S12",
+   "titel": "Das Fundament",
+   "start": 241.66263265306125,
+   "dauer": 16.742857142857144,
+   "sprechStart": 0.6,
+   "sprechEnde": 16.142857142857142,
+   "bildtext": {
+    "text": "Alle brauchen dasselbe Fundament.",
+    "zeilen": [
+     "Alle brauchen dasselbe Fundament."
+    ],
+    "start": 9.193999999999999
+   },
+   "marke": null
+  },
+  {
+   "id": "S13",
+   "titel": "Die Stufen",
+   "start": 258.8054897959184,
+   "dauer": 27.33959183673469,
+   "sprechStart": 0.4,
+   "sprechEnde": 26.33959183673469,
+   "bildtext": {
+    "text": "Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1.",
+    "zeilen": [
+     "Nicht jede Rolle braucht Stufe 4. Jede braucht Stufe 1."
+    ],
+    "start": 15.945
+   },
+   "marke": null
+  },
+  {
+   "id": "S14",
+   "titel": "Die Frage",
+   "start": 286.5450816326531,
+   "dauer": 18.171836734693876,
+   "sprechStart": 1.2,
+   "sprechEnde": 15.671836734693876,
+   "bildtext": {
+    "text": "Haben wir den Ablauf geprüft, oder hängen wir KI an die alte Welle?",
+    "zeilen": [
+     "Haben wir den Ablauf geprüft,",
+     "oder hängen wir KI an die alte Welle?"
+    ],
+    "start": 11.482999999999999
+   },
+   "marke": null
+  },
+  {
+   "id": "S15",
+   "titel": "Abspann",
+   "start": 305.11691836734695,
+   "dauer": 7,
+   "sprechStart": 0.5,
+   "sprechEnde": 0.5,
+   "bildtext": null,
+   "marke": null
+  }
+ ]
+}
